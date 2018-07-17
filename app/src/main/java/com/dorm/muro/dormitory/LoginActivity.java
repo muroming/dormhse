@@ -1,6 +1,7 @@
 package com.dorm.muro.dormitory;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -12,10 +13,18 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LoginActivity extends AppCompatActivity {
+
+    public static final String SHARED_PREFERENCES = "APP_DORMITORY_PREFS";
+    public static final String IS_LOGGED = "LOGIN_STATUS";
+
     @BindView(R.id.et_app_login)
     public EditText mLoginEditText;
+
     @BindView(R.id.et_app_password)
     public EditText mPasswordEditText;
+
+    private SharedPreferences preferences;
+    private Intent mainActivityIntent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -23,19 +32,28 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.login_activity);
         ButterKnife.bind(this);
 
+        preferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
+        mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+
+        if(preferences.getBoolean(IS_LOGGED, false)){
+            startActivity(mainActivityIntent);
+        }
     }
 
     @OnClick(R.id.bn_app_sign_up)
     public void signUp() {
         //TODO: create sign up method
         Toast.makeText(getApplicationContext(), "Create sign up method", Toast.LENGTH_SHORT).show();
+
     }
 
     @OnClick(R.id.bn_app_sign_in)
     public void signIn(){
         if(checkUser()){
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
+            preferences.edit()
+                    .putBoolean(IS_LOGGED, true)
+                    .apply();
+            startActivity(mainActivityIntent);
         }
     }
 

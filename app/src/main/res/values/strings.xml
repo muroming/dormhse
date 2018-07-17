@@ -10,4 +10,11 @@
     <string name="forgot_password">Forgot password?</string>
     <string name="sign_in">Sign in</string>
     <string name="sign_up">Sign up</string>
+    <string name="notification_channel_name">DORMITORY_APP</string>
+    <string name="notification_channel_description">This channel is used for Dormitory app notifications</string>
+    <string name="notification_payment_title">Time to PAY >:c</string>
+    <string name="notification_payment_context">Long boring context that no one will ever read</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
