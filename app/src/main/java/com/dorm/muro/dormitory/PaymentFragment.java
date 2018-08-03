@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,9 @@ public class PaymentFragment extends Fragment {
     @BindView(R.id.pb_payment_loading_progress)
     ProgressBar mLoadingProgressBar;
 
+    @BindView(R.id.srl_payment_swipe_refresh)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+
     public static final String USER_FIO = "USER_FIO";
     public static final String CONTRACT_ID = "CONTRACT_ID";
     private final String PAYMENT_URL = "https://pay.hse.ru/moscow/prg";
@@ -51,6 +55,21 @@ public class PaymentFragment extends Fragment {
         ButterKnife.bind(this, view);
         preferences = getActivity().getSharedPreferences(MainActivity.SHARED_PREFERENCES, Context.MODE_PRIVATE);
 
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mLoadingProgressBar.setVisibility(View.VISIBLE);
+                mPaymentWebView.setVisibility(View.INVISIBLE);
+                loadPage();
+            }
+        });
+
+        loadPage();
+
+        return view;
+    }
+
+    private void loadPage(){
         //TODO: redo fill form
         mPaymentWebView.getSettings().setJavaScriptEnabled(true);
         mPaymentWebView.loadUrl(PAYMENT_URL);
@@ -59,11 +78,9 @@ public class PaymentFragment extends Fragment {
                 mPaymentWebView.setVisibility(View.VISIBLE);
                 mLoadingProgressBar.setVisibility(View.GONE);
                 fillData(view);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
-
-
-        return view;
     }
 
     private void fillData(WebView view) {
