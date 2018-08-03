@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String CHANNEL_ID = "DORMITORY_CHANNEL";
     public static final int NOTIFICATION_ID = 1;
     public static final String APP_SECTION_TITLE = "SECTION_TITLE";
+    public static final String SHARED_PREFERENCES = "APP_DORMITORY_PREFS";
+
 
     private Fragment paymentFragment;
 

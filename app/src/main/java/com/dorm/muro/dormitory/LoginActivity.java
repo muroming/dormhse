@@ -12,9 +12,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.dorm.muro.dormitory.MainActivity.SHARED_PREFERENCES;
+
 public class LoginActivity extends AppCompatActivity {
 
-    public static final String SHARED_PREFERENCES = "APP_DORMITORY_PREFS";
     public static final String IS_LOGGED = "LOGIN_STATUS";
 
     @BindView(R.id.et_app_login)
