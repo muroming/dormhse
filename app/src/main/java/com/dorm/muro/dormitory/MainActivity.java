@@ -2,6 +2,7 @@ package com.dorm.muro.dormitory;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,6 +10,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String SHARED_PREFERENCES = "APP_DORMITORY_PREFS";
 
 
-    private Fragment paymentFragment;
+    private Fragment paymentFragment, scheduleFragment, workTimeFragment;
 
     @BindView(R.id.navigation)
     BottomNavigationView navigation;
@@ -46,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
         createNotificationChannel();
 
         paymentFragment = new PaymentFragment();
+        scheduleFragment = new ScheduleFragment();
+        workTimeFragment = new ShopsWorkingTimeFragment();
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
@@ -61,6 +66,23 @@ public class MainActivity extends AppCompatActivity {
             NotificationManager manager = getSystemService(NotificationManager.class);
             manager.createNotificationChannel(channel);
         }
+    }
+
+    void createPaymentNotification() {
+        Intent actionIntent = new Intent(this, MainActivity.class);
+        //ToDo: add extras to intent to open this fragment
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, actionIntent, 0);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, MainActivity.CHANNEL_ID)
+                .setSmallIcon(R.drawable.settings_icon)
+                .setContentTitle(getString(R.string.notification_payment_title))
+                .setContentText(getString(R.string.notification_payment_context))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat compat = NotificationManagerCompat.from(this);
+        compat.notify(NOTIFICATION_ID, builder.build());
     }
 
     @Override
@@ -104,14 +126,18 @@ public class MainActivity extends AppCompatActivity {
 
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    sectionTitle.setText("Home");
+                    sectionTitle.setText("Nearby Places");
+                    fragmentTransaction.replace(R.id.fl_main_fragment_container, workTimeFragment);
+                    fragmentTransaction.commit();
                     return true;
                 case R.id.navigation_dashboard:
-                    sectionTitle.setText("Dash");
+                    sectionTitle.setText("Cleaning Schedule");
+                    fragmentTransaction.replace(R.id.fl_main_fragment_container, scheduleFragment);
+                    fragmentTransaction.commit();
                     return true;
                 case R.id.navigation_notifications:
                     sectionTitle.setText("Payment");
-                    fragmentTransaction.add(R.id.fl_main_fragment_container, paymentFragment);
+                    fragmentTransaction.replace(R.id.fl_main_fragment_container, paymentFragment);
                     fragmentTransaction.commit();
                     return true;
             }

@@ -19,9 +19,18 @@
     <string name="no_payment_credits_set">Some payment credits are not set</string>
     <string name="settings">Settings</string>
     <string name="settings_fio">User FIO:</string>
-    <string name="settings_contract">Contract info:</string>
     <string name="settings_fio_hint">Enter FIO</string>
+    <string name="settings_contract">Contract info:</string>
     <string name="settings_contract_hint">Enter contract info</string>
+    <string name="settings_cost_per_month">Price per month:</string>
+    <string name="settings_cost_per_month_hint">Enter monthly price</string>
+    <string name="settings_months_to_pay_for">Months to pay for:</string>
+    <string name="settings_months_select">Press to set</string>
+    <string name="settings_date_picker_title">Select first and last date to pay for</string>
+    <string name="select">Select</string>
+    <string name="cancel">Cancel</string>
+    <string name="settings_date_picker_invalid_dates">Invalid dates, please check</string>
+
     <string name="save">Save</string>
 
     <!-- TODO: Remove or change this placeholder text -->

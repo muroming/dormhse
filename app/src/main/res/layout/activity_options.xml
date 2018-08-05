@@ -52,5 +52,36 @@
                 android:layout_marginLeft="10dp"
                 android:hint="@string/settings_contract_hint"/>
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_cost_per_month"
+                android:textSize="20sp"/>
+            <EditText
+                android:id="@+id/et_settings_cost_per_month"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:inputType="number"
+                android:hint="@string/settings_cost_per_month_hint"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_months_to_pay_for"
+                android:textSize="20sp"/>
+            <Button
+                android:id="@+id/bn_settings_months_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@string/settings_months_select"/>
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

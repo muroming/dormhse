@@ -1,14 +1,10 @@
 package com.dorm.muro.dormitory;
 
 
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +17,6 @@ import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 
 public class PaymentFragment extends Fragment {
@@ -37,9 +32,13 @@ public class PaymentFragment extends Fragment {
 
     public static final String USER_FIO = "USER_FIO";
     public static final String CONTRACT_ID = "CONTRACT_ID";
+    public static final String MONTHLY_COST = "MONTHLY_COST";
+    public static final String SELCTED_MONTHS = "SELECTED_MONTHS";
     private final String PAYMENT_URL = "https://pay.hse.ru/moscow/prg";
     private final String FIRST_QUERY = "var a=document.getElementById('fio').value='%s';" +
-            "var b=document.getElementById('order').value='%s';";
+            "var b=document.getElementById('order').value='%s';" +
+            "var c=document.getElementsByClassName(\"pay_button\")[0].click();";
+
     private SharedPreferences preferences;
 
     public PaymentFragment() {
@@ -77,16 +76,17 @@ public class PaymentFragment extends Fragment {
             public void onPageFinished(WebView view, String url) {
                 mPaymentWebView.setVisibility(View.VISIBLE);
                 mLoadingProgressBar.setVisibility(View.GONE);
-                fillData(view);
+                fillStartPageAndProceed(view);
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
     }
 
-    private void fillData(WebView view) {
+    private void fillStartPageAndProceed(WebView view) {
         if (preferences.contains(USER_FIO) && preferences.contains(CONTRACT_ID)) {
             String fio = preferences.getString(USER_FIO, "");
-            String contractId = preferences.getString(CONTRACT_ID, "");
+            String cId = preferences.getString(CONTRACT_ID, "");
+            String contractId = cId.split("\\\\")[0] + "\\\\" + cId.split("\\\\")[1];
             String query = String.format(FIRST_QUERY, fio, contractId);
             view.evaluateJavascript(query, new ValueCallback<String>() {
                 @Override
@@ -98,24 +98,4 @@ public class PaymentFragment extends Fragment {
             Toast.makeText(getContext(), getString(R.string.no_payment_credits_set), Toast.LENGTH_LONG).show();
         }
     }
-
-
-    void createPaymentNotification() {
-        Intent actionIntent = new Intent(getContext(), MainActivity.class);
-        //ToDo: add extras to intent to open this fragment
-        PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0, actionIntent, 0);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getContext(), MainActivity.CHANNEL_ID)
-                .setSmallIcon(R.drawable.settings_icon)
-                .setContentTitle(getString(R.string.notification_payment_title))
-                .setContentText(getString(R.string.notification_payment_context))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
-
-        NotificationManagerCompat compat = NotificationManagerCompat.from(getContext());
-        compat.notify(MainActivity.NOTIFICATION_ID, builder.build());
-    }
-
-
 }
