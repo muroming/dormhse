@@ -33,11 +33,23 @@ public class PaymentFragment extends Fragment {
     public static final String USER_FIO = "USER_FIO";
     public static final String CONTRACT_ID = "CONTRACT_ID";
     public static final String MONTHLY_COST = "MONTHLY_COST";
-    public static final String SELCTED_MONTHS = "SELECTED_MONTHS";
+    public static final String MONTHS_FROM = "MONTHS_FROM";
+    public static final String MONTHS_TO = "MONTHS_TO";
+    public static final String MOSCOW_PAY_URL_FIRST = "https://pay.hse.ru/moscow/prg";
+
     private final String PAYMENT_URL = "https://pay.hse.ru/moscow/prg";
     private final String FIRST_QUERY = "var a=document.getElementById('fio').value='%s';" +
             "var b=document.getElementById('order').value='%s';" +
             "var c=document.getElementsByClassName(\"pay_button\")[0].click();";
+    private final String SECOND_QUERY = "var a=document.getElementById(\"desination\").value='%s';" +
+            "var b=document.getElementById(\"amount\").value='%s';" +
+            "var c=document.getElementById(\"kop\").value='%s';" +
+            "var d=document.getElementsByClassName(\"pay_button\")[0].click();";
+    private final String SKIP_REVIEW_QUERY = "var a=document.getElementById(\"button-checkout\").click();";
+    private final String ENTER_CARD_AND_CONFIRM_INFO = "var a=document.getElementById(\"iPAN_sub\").value='%s';" +
+            "var b=document.getElementById(\"input-month\").value=%s;" +
+            "var c=document.getElementById(\"input-year\").value=%s;" +
+            "var d=document.getElementById(\"iTEXT\").value='%s';";
 
     private SharedPreferences preferences;
 
@@ -68,7 +80,7 @@ public class PaymentFragment extends Fragment {
         return view;
     }
 
-    private void loadPage(){
+    private void loadPage() {
         //TODO: redo fill form
         mPaymentWebView.getSettings().setJavaScriptEnabled(true);
         mPaymentWebView.loadUrl(PAYMENT_URL);
@@ -76,7 +88,16 @@ public class PaymentFragment extends Fragment {
             public void onPageFinished(WebView view, String url) {
                 mPaymentWebView.setVisibility(View.VISIBLE);
                 mLoadingProgressBar.setVisibility(View.GONE);
-                fillStartPageAndProceed(view);
+                if (url.equalsIgnoreCase(MOSCOW_PAY_URL_FIRST)) {  //Still on the first page, input payment info
+                    fillStartPageAndProceed(view);
+                    fillSecondPage(view);
+                } else {
+                    if (url.contains("checkout")) {  //Skip final page reviewing payment info
+                        view.evaluateJavascript(SKIP_REVIEW_QUERY, null);
+                    } else {  //Input card info and confirm payment
+
+                    }
+                }
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -88,12 +109,22 @@ public class PaymentFragment extends Fragment {
             String cId = preferences.getString(CONTRACT_ID, "");
             String contractId = cId.split("\\\\")[0] + "\\\\" + cId.split("\\\\")[1];
             String query = String.format(FIRST_QUERY, fio, contractId);
-            view.evaluateJavascript(query, new ValueCallback<String>() {
-                @Override
-                public void onReceiveValue(String value) {
+            view.evaluateJavascript(query, null);
+        } else {
+            Toast.makeText(getContext(), getString(R.string.no_payment_credits_set), Toast.LENGTH_LONG).show();
+        }
+    }
 
-                }
-            });
+    private void fillSecondPage(WebView view) {
+        if (preferences.contains(MONTHLY_COST) && preferences.contains(MONTHS_FROM) && preferences.contains(MONTHS_TO)) {
+            String monthsFrom = preferences.getString(MONTHS_FROM, "");
+            String monthsTo = preferences.getString(MONTHS_TO, "");
+            String range = "с" + monthsFrom + " по " + monthsTo;
+            String mFrom = monthsFrom.split("/")[0], yFrom = monthsFrom.split("/")[1], mTo = monthsTo.split("/")[0], yTo = monthsTo.split("/")[1];
+            int totalMonths = (Integer.parseInt(yTo) - Integer.parseInt(yFrom)) * 12 + Integer.parseInt(mTo) - Integer.parseInt(mFrom);
+            double price = totalMonths * preferences.getFloat(MONTHLY_COST, 0);
+            String query = String.format(SECOND_QUERY, range, (int) price, price - ((int) price));
+            view.evaluateJavascript(query, null);
         } else {
             Toast.makeText(getContext(), getString(R.string.no_payment_credits_set), Toast.LENGTH_LONG).show();
         }

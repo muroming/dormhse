@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int NOTIFICATION_ID = 1;
     public static final String APP_SECTION_TITLE = "SECTION_TITLE";
     public static final String SHARED_PREFERENCES = "APP_DORMITORY_PREFS";
+    public static final String DIALOG_TAG = "DIALOG_TAG";
 
 
     private Fragment paymentFragment, scheduleFragment, workTimeFragment;
