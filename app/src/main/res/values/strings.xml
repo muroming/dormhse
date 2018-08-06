@@ -38,6 +38,7 @@
     <string name="settings_cardholder_name_hint">Enter cardholder name</string>
     <string name="settings_card_date">Card date</string>
     <string name="settings_card_date_hint">Enter card date</string>
+    <string name="payment_progress">Filling form [%1$d / 2]</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

@@ -59,8 +59,8 @@ public class OptionsActivity extends AppCompatActivity implements DatePickerFrag
         mCardNumber.setText(preferences.getString(PaymentFragment.CARD_NUMBER, ""));
         mCardHolderName.setText(preferences.getString(PaymentFragment.CARDHOLDER_NAME, ""));
         mCardDate.setText(preferences.getString(PaymentFragment.CARD_MONTH, "") + "/" + preferences.getString(PaymentFragment.CARD_YEAR, ""));
-        mMonthsToPayTo.setText(preferences.getString(PaymentFragment.MONTHS_TO, ""));
-        mMonthsToPayFrom.setText(preferences.getString(PaymentFragment.MONTHS_FROM, ""));
+        mMonthsToPayTo.setText(preferences.getString(PaymentFragment.MONTHS_TO, getString(R.string.select)));
+        mMonthsToPayFrom.setText(preferences.getString(PaymentFragment.MONTHS_FROM, getString(R.string.select)));
         mMonthsToPayFrom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
