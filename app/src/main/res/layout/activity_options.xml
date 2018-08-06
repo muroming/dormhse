@@ -72,6 +72,54 @@
                 android:inputType="numberDecimal"
                 android:hint="@string/settings_cost_per_month_hint"/>
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_card_number"
+                android:textSize="20sp"/>
+            <EditText
+                android:id="@+id/et_settings_card_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:inputType="text"
+                android:hint="@string/settings_card_number_hint"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_cardholder_name"
+                android:textSize="20sp"/>
+            <EditText
+                android:id="@+id/et_settings_cardholder_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:inputType="textCapCharacters"
+                android:hint="@string/settings_cardholder_name_hint"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_card_date"
+                android:textSize="20sp"/>
+            <EditText
+                android:id="@+id/et_settings_card_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:inputType="date"
+                android:hint="@string/settings_card_date_hint"/>
+        </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

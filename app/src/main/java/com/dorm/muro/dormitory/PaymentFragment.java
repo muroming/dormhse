@@ -35,6 +35,10 @@ public class PaymentFragment extends Fragment {
     public static final String MONTHLY_COST = "MONTHLY_COST";
     public static final String MONTHS_FROM = "MONTHS_FROM";
     public static final String MONTHS_TO = "MONTHS_TO";
+    public static final String CARD_NUMBER = "CARD_NUMBER";
+    public static final String CARDHOLDER_NAME = "CARDHOLDER_NAME";
+    public static final String CARD_YEAR = "CARD_YEAR";
+    public static final String CARD_MONTH = "CARD_MONTH";
     public static final String MOSCOW_PAY_URL_FIRST = "https://pay.hse.ru/moscow/prg";
 
     private final String PAYMENT_URL = "https://pay.hse.ru/moscow/prg";
@@ -95,7 +99,16 @@ public class PaymentFragment extends Fragment {
                     if (url.contains("checkout")) {  //Skip final page reviewing payment info
                         view.evaluateJavascript(SKIP_REVIEW_QUERY, null);
                     } else {  //Input card info and confirm payment
-
+                        if (preferences.contains(CARDHOLDER_NAME) && preferences.contains(CARD_NUMBER) && preferences.contains(CARD_YEAR) && preferences.contains(CARD_MONTH)) {
+                            String cardholderName = preferences.getString(CARDHOLDER_NAME, "");
+                            String cardNumber = preferences.getString(CARD_NUMBER, "");
+                            String cardYear = preferences.getString(CARD_YEAR, "");
+                            String cardMonth = preferences.getString(CARD_MONTH, "");
+                            String query = String.format(ENTER_CARD_AND_CONFIRM_INFO, cardNumber, cardMonth, cardYear, cardholderName);
+                            view.evaluateJavascript(query, null);
+                        } else {
+                            Toast.makeText(getContext(), getString(R.string.no_payment_credits_set), Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
                 mSwipeRefreshLayout.setRefreshing(false);

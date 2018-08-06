@@ -32,20 +32,13 @@
     <string name="settings_date_picker_invalid_dates">Invalid dates, please check</string>
     <string name="save">Save</string>
     <string name="months_hint">Months</string>
-    <string-array name="months">
-        <item>Jan</item>
-        <item>Feb</item>
-        <item>Mar</item>
-        <item>Apr</item>
-        <item>May</item>
-        <item>Jun</item>
-        <item>Jul</item>
-        <item>Aug</item>
-        <item>Sep</item>
-        <item>Oct</item>
-        <item>Nov</item>
-        <item>Dec</item>
-    </string-array>
+    <string name="settings_card_number">Card number</string>
+    <string name="settings_card_number_hint">Enter card number</string>
+    <string name="settings_cardholder_name">Cardholder name</string>
+    <string name="settings_cardholder_name_hint">Enter cardholder name</string>
+    <string name="settings_card_date">Card date</string>
+    <string name="settings_card_date_hint">Enter card date</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

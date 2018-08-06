@@ -4,6 +4,8 @@ import android.content.SharedPreferences;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,6 +30,15 @@ public class OptionsActivity extends AppCompatActivity implements DatePickerFrag
     @BindView(R.id.bn_settings_select_date_to)
     Button mMonthsToPayTo;
 
+    @BindView(R.id.et_settings_card_number)
+    EditText mCardNumber;
+
+    @BindView(R.id.et_settings_cardholder_name)
+    EditText mCardHolderName;
+
+    @BindView(R.id.et_settings_card_date)
+    EditText mCardDate;
+
     private SharedPreferences preferences;
     private Toast savedToast;
     public static final String FROM = "FROM";
@@ -45,6 +56,11 @@ public class OptionsActivity extends AppCompatActivity implements DatePickerFrag
         mContractInfo.setText(preferences.getString(PaymentFragment.CONTRACT_ID, ""));
         mFIO.setText(preferences.getString(PaymentFragment.USER_FIO, ""));
         mCostPerMonth.setText(String.valueOf(preferences.getFloat(PaymentFragment.MONTHLY_COST, 0)));
+        mCardNumber.setText(preferences.getString(PaymentFragment.CARD_NUMBER, ""));
+        mCardHolderName.setText(preferences.getString(PaymentFragment.CARDHOLDER_NAME, ""));
+        mCardDate.setText(preferences.getString(PaymentFragment.CARD_MONTH, "") + "/" + preferences.getString(PaymentFragment.CARD_YEAR, ""));
+        mMonthsToPayTo.setText(preferences.getString(PaymentFragment.MONTHS_TO, ""));
+        mMonthsToPayFrom.setText(preferences.getString(PaymentFragment.MONTHS_FROM, ""));
         mMonthsToPayFrom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,17 +82,23 @@ public class OptionsActivity extends AppCompatActivity implements DatePickerFrag
                 datePicker.show(getSupportFragmentManager(), "DatePickerFragment");
             }
         });
+
         savedToast = Toast.makeText(this, "Changes saved", Toast.LENGTH_SHORT);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+
         preferences.edit()
                 .putString(PaymentFragment.CONTRACT_ID, mContractInfo.getText().toString())
                 .putString(PaymentFragment.USER_FIO, mFIO.getText().toString())
                 .putFloat(PaymentFragment.MONTHLY_COST, Float.parseFloat(mCostPerMonth.getText().toString()))
                 .putString(PaymentFragment.MONTHS_TO, mMonthsToPayTo.getText().toString())
+                .putString(PaymentFragment.CARD_NUMBER, mCardNumber.getText().toString())
+                .putString(PaymentFragment.CARDHOLDER_NAME, mCardHolderName.getText().toString())
+                .putString(PaymentFragment.CARD_MONTH, mCardDate.getText().toString().split("/")[0])
+                .putString(PaymentFragment.CARD_YEAR, mCardDate.getText().toString().split("/")[1])
                 .putString(PaymentFragment.MONTHS_FROM, mMonthsToPayFrom.getText().toString())
                 .apply();
         savedToast.show();
@@ -84,12 +106,12 @@ public class OptionsActivity extends AppCompatActivity implements DatePickerFrag
 
     @Override
     public void onDateSelected(int year, int month, String dialogTag) {
-        switch (dialogTag){
-            case FROM:{
+        switch (dialogTag) {
+            case FROM: {
                 mMonthsToPayFrom.setText(month + "/" + year);
                 break;
             }
-            case TO:{
+            case TO: {
                 mMonthsToPayTo.setText(month + "/" + year);
                 break;
             }
