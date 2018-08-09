@@ -55,10 +55,14 @@ public class OptionsActivity extends AppCompatActivity implements DatePickerFrag
 
         mContractInfo.setText(preferences.getString(PaymentFragment.CONTRACT_ID, ""));
         mFIO.setText(preferences.getString(PaymentFragment.USER_FIO, ""));
-        mCostPerMonth.setText(String.valueOf(preferences.getFloat(PaymentFragment.MONTHLY_COST, 0)));
+        if (preferences.contains(PaymentFragment.MONTHLY_COST)) {
+            mCostPerMonth.setText(String.valueOf(preferences.getFloat(PaymentFragment.MONTHLY_COST, 0)));
+        }
         mCardNumber.setText(preferences.getString(PaymentFragment.CARD_NUMBER, ""));
         mCardHolderName.setText(preferences.getString(PaymentFragment.CARDHOLDER_NAME, ""));
-        mCardDate.setText(preferences.getString(PaymentFragment.CARD_MONTH, "") + "/" + preferences.getString(PaymentFragment.CARD_YEAR, ""));
+        if (preferences.contains(PaymentFragment.CARD_MONTH) && preferences.contains(PaymentFragment.CARD_YEAR)) {
+            mCardDate.setText(getString(R.string.settings_card_date_format, preferences.getString(PaymentFragment.CARD_MONTH, ""), preferences.getString(PaymentFragment.CARD_YEAR, "")));
+        }
         mMonthsToPayTo.setText(preferences.getString(PaymentFragment.MONTHS_TO, getString(R.string.select)));
         mMonthsToPayFrom.setText(preferences.getString(PaymentFragment.MONTHS_FROM, getString(R.string.select)));
         mMonthsToPayFrom.setOnClickListener(new View.OnClickListener() {
@@ -95,12 +99,16 @@ public class OptionsActivity extends AppCompatActivity implements DatePickerFrag
                 .putString(PaymentFragment.USER_FIO, mFIO.getText().toString())
                 .putFloat(PaymentFragment.MONTHLY_COST, Float.parseFloat(mCostPerMonth.getText().toString()))
                 .putString(PaymentFragment.MONTHS_TO, mMonthsToPayTo.getText().toString())
+                .putString(PaymentFragment.MONTHS_FROM, mMonthsToPayFrom.getText().toString())
                 .putString(PaymentFragment.CARD_NUMBER, mCardNumber.getText().toString())
                 .putString(PaymentFragment.CARDHOLDER_NAME, mCardHolderName.getText().toString())
-                .putString(PaymentFragment.CARD_MONTH, mCardDate.getText().toString().split("/")[0])
-                .putString(PaymentFragment.CARD_YEAR, mCardDate.getText().toString().split("/")[1])
-                .putString(PaymentFragment.MONTHS_FROM, mMonthsToPayFrom.getText().toString())
                 .apply();
+        if (mCardDate.getText().toString().contains("/")) {
+            preferences.edit()
+                    .putString(PaymentFragment.CARD_MONTH, mCardDate.getText().toString().split("/")[0])
+                    .putString(PaymentFragment.CARD_YEAR, mCardDate.getText().toString().split("/")[1])
+                    .apply();
+        }
         savedToast.show();
     }
 
@@ -108,11 +116,11 @@ public class OptionsActivity extends AppCompatActivity implements DatePickerFrag
     public void onDateSelected(int year, int month, String dialogTag) {
         switch (dialogTag) {
             case FROM: {
-                mMonthsToPayFrom.setText(month + "/" + year);
+                mMonthsToPayFrom.setText(getString(R.string.settings_card_date_format, String.valueOf(month), String.valueOf(year)));
                 break;
             }
             case TO: {
-                mMonthsToPayTo.setText(month + "/" + year);
+                mMonthsToPayTo.setText(getString(R.string.settings_card_date_format, String.valueOf(month), String.valueOf(year)));
                 break;
             }
         }

@@ -37,8 +37,16 @@
     <string name="settings_cardholder_name">Cardholder name</string>
     <string name="settings_cardholder_name_hint">Enter cardholder name</string>
     <string name="settings_card_date">Card date</string>
+    <string name="settings_card_date_format">$1%s/$2%s</string>
     <string name="settings_card_date_hint">Enter card date</string>
-    <string name="payment_progress">Filling form [%1$d / 2]</string>
+    <string name="payment_user_not_found">User with given FIO and Contract ID wasn\'t found</string>
+    <string-array name="payment_progress">
+        <item>Robbing bank&#8230;</item>
+        <item>Taking loans&#8230;</item>
+        <item>Electing Putin&#8230;</item>
+        <item>Watering lawn&#8230;</item>
+        <item>Catching bugs&#8230;</item>
+    </string-array>
 
 
     <!-- TODO: Remove or change this placeholder text -->
