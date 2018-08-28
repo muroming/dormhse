@@ -1,4 +1,4 @@
-package com.dorm.muro.dormitory;
+package com.dorm.muro.dormitory.MainFragments;
 
 
 import android.app.Activity;
@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -20,6 +21,9 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.dorm.muro.dormitory.MainActivity;
+import com.dorm.muro.dormitory.R;
 
 import java.util.Random;
 
@@ -61,7 +65,7 @@ public class PaymentFragment extends Fragment {
             "document.getElementsByClassName('pay_button')[0].click();\n" +
             "function checkFlag() {\n" +
             "if(check.offsetParent == null) {\n" +
-            "if(alertMsg.innerHTLM != \"\"){\n" +
+            "if(alertMsg.innerText != \"\"){\n" +
             "window.ErrorHandler.handleErrorMsg();\n" +
             "}else{ \n" +
             "window.setTimeout(checkFlag, 100);}\n" +
@@ -99,10 +103,10 @@ public class PaymentFragment extends Fragment {
             @Override
             public void onRefresh() {
                 mLoadingProgressBar.setVisibility(View.VISIBLE);
-//                mPaymentWebView.setVisibility(View.INVISIBLE);
+                mPaymentWebView.setVisibility(View.INVISIBLE);
                 mPaymentProgress.setVisibility(View.VISIBLE);
                 mPaymentProgress.setText(progressTitles[new Random().nextInt(progressTitles.length)]);
-                mPaymentWebView.reload();
+                mPaymentWebView.loadUrl(PAYMENT_URL);
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -135,7 +139,11 @@ public class PaymentFragment extends Fragment {
 
         });
 
-        mPaymentWebView.loadUrl(PAYMENT_URL);
+        if (savedInstanceState == null) {
+            mPaymentWebView.loadUrl(PAYMENT_URL);
+        } else {
+            mPaymentWebView.restoreState(savedInstanceState);
+        }
 
         return view;
     }
@@ -161,14 +169,19 @@ public class PaymentFragment extends Fragment {
     private String processContractId(String contractId) {
         String res = "";
         for (int i = 0; i < contractId.length(); i++) {
-            if(contractId.charAt(i) == '\\'){
+            if (contractId.charAt(i) == '\\') {
                 res += "\\";
                 res += "\\";
-            }else{
+            } else {
                 res += contractId.charAt(i);
             }
         }
         return res;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        mPaymentWebView.saveState(outState);
     }
 
     class JSInterface {

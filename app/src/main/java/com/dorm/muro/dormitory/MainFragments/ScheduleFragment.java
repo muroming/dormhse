@@ -1,4 +1,4 @@
-package com.dorm.muro.dormitory;
+package com.dorm.muro.dormitory.MainFragments;
 
 
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.dorm.muro.dormitory.R;
 
 
 /**

@@ -16,7 +16,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.dorm.muro.dormitory.MainFragments.PaymentFragment;
+import com.dorm.muro.dormitory.MainFragments.ScheduleFragment;
+import com.dorm.muro.dormitory.MainFragments.ShopsWorkingTimeFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

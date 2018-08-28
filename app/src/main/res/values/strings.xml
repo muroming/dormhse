@@ -37,7 +37,7 @@
     <string name="settings_cardholder_name">Cardholder name</string>
     <string name="settings_cardholder_name_hint">Enter cardholder name</string>
     <string name="settings_card_date">Card date</string>
-    <string name="settings_card_date_format">$1%s/$2%s</string>
+    <string name="settings_card_date_format">%s/%s</string>
     <string name="settings_card_date_hint">Enter card date</string>
     <string name="payment_user_not_found">User with given FIO and Contract ID wasn\'t found</string>
     <string-array name="payment_progress">
