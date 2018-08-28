@@ -61,7 +61,7 @@ public class PaymentFragment extends Fragment {
             "document.getElementsByClassName('pay_button')[0].click();\n" +
             "function checkFlag() {\n" +
             "if(check.offsetParent == null) {\n" +
-            "if(!alertMsg.innerHTLM != \"\"){\n" +
+            "if(alertMsg.innerHTLM != \"\"){\n" +
             "window.ErrorHandler.handleErrorMsg();\n" +
             "}else{ \n" +
             "window.setTimeout(checkFlag, 100);}\n" +
@@ -144,23 +144,34 @@ public class PaymentFragment extends Fragment {
         if (preferences.contains(USER_FIO) && preferences.contains(CONTRACT_ID) && preferences.contains(MONTHLY_COST) && preferences.contains(MONTHS_FROM) && preferences.contains(MONTHS_TO)) {
             String fio = preferences.getString(USER_FIO, "");
             String contractId = preferences.getString(CONTRACT_ID, "");
-            if(contractId.contains("\\\\")) {
-                contractId = contractId.split("\\\\")[0] + "\\\\" + contractId.split("\\\\")[1];
-            }
+            contractId = processContractId(contractId);
             String monthsFrom = preferences.getString(MONTHS_FROM, "");
             String monthsTo = preferences.getString(MONTHS_TO, "");
             String range = "с " + monthsFrom + " по " + monthsTo;
             String mFrom = monthsFrom.split("/")[0], yFrom = monthsFrom.split("/")[1], mTo = monthsTo.split("/")[0], yTo = monthsTo.split("/")[1];
             int totalMonths = (Integer.parseInt(yTo) - Integer.parseInt(yFrom)) * 12 + Integer.parseInt(mTo) - Integer.parseInt(mFrom);
             double price = totalMonths * preferences.getFloat(MONTHLY_COST, 0);
-            String query = String.format(FIRST_QUERY, fio, contractId, range, (int)price, price - ((int)price));
+            String query = String.format(FIRST_QUERY, fio, contractId, range, (int) price, price - ((int) price));
             view.evaluateJavascript(query, null);
         } else {
             Toast.makeText(getContext(), getString(R.string.no_payment_credits_set), Toast.LENGTH_LONG).show();
         }
     }
 
-    class JSInterface{
+    private String processContractId(String contractId) {
+        String res = "";
+        for (int i = 0; i < contractId.length(); i++) {
+            if(contractId.charAt(i) == '\\'){
+                res += "\\";
+                res += "\\";
+            }else{
+                res += contractId.charAt(i);
+            }
+        }
+        return res;
+    }
+
+    class JSInterface {
         Activity holderActivity;
 
         JSInterface(Activity holderActivity) {
@@ -168,7 +179,7 @@ public class PaymentFragment extends Fragment {
         }
 
         @JavascriptInterface
-        public void handleErrorMsg(){
+        public void handleErrorMsg() {
             Toast.makeText(holderActivity, getString(R.string.payment_user_not_found), Toast.LENGTH_LONG).show();
         }
     }
