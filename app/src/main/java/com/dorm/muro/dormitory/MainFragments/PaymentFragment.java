@@ -4,7 +4,6 @@ package com.dorm.muro.dormitory.MainFragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -13,9 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
-import android.webkit.JsResult;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -42,8 +38,11 @@ public class PaymentFragment extends Fragment {
     @BindView(R.id.srl_payment_swipe_refresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
 
-    @BindView(R.id.tv_payment_progress)
-    TextView mPaymentProgress;
+    @BindView(R.id.tv_payment_progress_title)
+    TextView mPaymentProgressTitle;
+
+    @BindView(R.id.tv_payment_progress_steps)
+    TextView mPaymentProgressSteps;
 
     public static final String USER_FIO = "USER_FIO";
     public static final String CONTRACT_ID = "CONTRACT_ID";
@@ -54,8 +53,6 @@ public class PaymentFragment extends Fragment {
     public static final String CARDHOLDER_NAME = "CARDHOLDER_NAME";
     public static final String CARD_YEAR = "CARD_YEAR";
     public static final String CARD_MONTH = "CARD_MONTH";
-    public static final String USER_NOT_FOUND_MESSAGE = "USER_NOT_FOUND";
-
     private final String PAYMENT_URL = "https://pay.hse.ru/moscow/prg";
     private final String FIRST_QUERY = "(function(){\n" +
             "var check = document.getElementById('amount');\n" +
@@ -66,10 +63,11 @@ public class PaymentFragment extends Fragment {
             "function checkFlag() {\n" +
             "if(check.offsetParent == null) {\n" +
             "if(alertMsg.innerText != \"\"){\n" +
-            "window.ErrorHandler.handleErrorMsg();\n" +
+            "window.CallBack.handleErrorMsg();\n" +
             "}else{ \n" +
             "window.setTimeout(checkFlag, 100);}\n" +
             "} else {\n" +
+            "window.CallBack.incrementProgressStep();" +
             "var a=document.getElementById('desination').value='%s';\n" +
             "document.getElementById('amount').value='%s';\n" +
             "var c=document.getElementById('kop').value='%s';\n" +
@@ -97,22 +95,22 @@ public class PaymentFragment extends Fragment {
         ButterKnife.bind(this, view);
         preferences = getActivity().getSharedPreferences(MainActivity.SHARED_PREFERENCES, Context.MODE_PRIVATE);
         progressTitles = getResources().getStringArray(R.array.payment_progress);
-        mPaymentProgress.setText(progressTitles[new Random().nextInt(progressTitles.length)]);
+        mPaymentProgressTitle.setText(progressTitles[new Random().nextInt(progressTitles.length)]);
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 mLoadingProgressBar.setVisibility(View.VISIBLE);
                 mPaymentWebView.setVisibility(View.INVISIBLE);
-                mPaymentProgress.setVisibility(View.VISIBLE);
-                mPaymentProgress.setText(progressTitles[new Random().nextInt(progressTitles.length)]);
+                mPaymentProgressTitle.setVisibility(View.VISIBLE);
+                mPaymentProgressTitle.setText(progressTitles[new Random().nextInt(progressTitles.length)]);
                 mPaymentWebView.loadUrl(PAYMENT_URL);
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
 
         mPaymentWebView.getSettings().setJavaScriptEnabled(true);
-        mPaymentWebView.addJavascriptInterface(new JSInterface(getActivity()), "ErrorHandler");
+        mPaymentWebView.addJavascriptInterface(new JSInterface(getActivity()), "CallBack");
         mPaymentWebView.setWebViewClient(new WebViewClient() {
             public void onPageFinished(WebView view, String url) {
                 if (url.equalsIgnoreCase(PAYMENT_URL)) {  //Still on the first page, input payment info
@@ -121,7 +119,7 @@ public class PaymentFragment extends Fragment {
                     if (url.contains("checkout")) {  //Skip final page reviewing payment info
                         mPaymentWebView.setVisibility(View.VISIBLE);
                         mLoadingProgressBar.setVisibility(View.INVISIBLE);
-                        mPaymentProgress.setVisibility(View.INVISIBLE);
+                        mPaymentProgressTitle.setVisibility(View.INVISIBLE);
                     } else {  //Input card info and confirm payment
                         if (preferences.contains(CARDHOLDER_NAME) && preferences.contains(CARD_NUMBER) && preferences.contains(CARD_YEAR) && preferences.contains(CARD_MONTH)) {
                             String cardholderName = preferences.getString(CARDHOLDER_NAME, "");
@@ -143,6 +141,8 @@ public class PaymentFragment extends Fragment {
             mPaymentWebView.loadUrl(PAYMENT_URL);
         } else {
             mPaymentWebView.restoreState(savedInstanceState);
+            mPaymentProgressSteps.setVisibility(View.INVISIBLE);
+            mPaymentProgressTitle.setVisibility(View.INVISIBLE);
         }
 
         return view;
@@ -167,16 +167,16 @@ public class PaymentFragment extends Fragment {
     }
 
     private String processContractId(String contractId) {
-        String res = "";
+        StringBuilder res = new StringBuilder();
         for (int i = 0; i < contractId.length(); i++) {
             if (contractId.charAt(i) == '\\') {
-                res += "\\";
-                res += "\\";
+                res.append("\\");
+                res.append("\\");
             } else {
-                res += contractId.charAt(i);
+                res.append(contractId.charAt(i));
             }
         }
-        return res;
+        return res.toString();
     }
 
     @Override
@@ -194,6 +194,9 @@ public class PaymentFragment extends Fragment {
         @JavascriptInterface
         public void handleErrorMsg() {
             Toast.makeText(holderActivity, getString(R.string.payment_user_not_found), Toast.LENGTH_LONG).show();
+        }
+        public void incrementProgressStep(){
+            mPaymentProgressSteps.setText("[2 / 2]");
         }
     }
 }

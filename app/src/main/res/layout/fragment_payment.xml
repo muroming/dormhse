@@ -26,12 +26,20 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"/>
         <TextView
-            android:id="@+id/tv_payment_progress"
+            android:id="@+id/tv_payment_progress_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_gravity="center"
             android:textSize="20sp"
             android:text="Progress"/>
+        <TextView
+            android:id="@+id/tv_payment_progress_steps"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="15sp"
+            android:text="[1 / 2]"
+            android:layout_gravity="center"/>
     </LinearLayout>
 </FrameLayout>
