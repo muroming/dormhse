@@ -67,7 +67,7 @@ public class PaymentFragment extends Fragment {
             "}else{ \n" +
             "window.setTimeout(checkFlag, 100);}\n" +
             "} else {\n" +
-            "window.CallBack.incrementProgressStep();" +
+            "window.CallBack.incrementStep();\n" +
             "var a=document.getElementById('desination').value='%s';\n" +
             "document.getElementById('amount').value='%s';\n" +
             "var c=document.getElementById('kop').value='%s';\n" +
@@ -110,7 +110,7 @@ public class PaymentFragment extends Fragment {
         });
 
         mPaymentWebView.getSettings().setJavaScriptEnabled(true);
-        mPaymentWebView.addJavascriptInterface(new JSInterface(getActivity()), "CallBack");
+        mPaymentWebView.addJavascriptInterface(this, "CallBack");
         mPaymentWebView.setWebViewClient(new WebViewClient() {
             public void onPageFinished(WebView view, String url) {
                 if (url.equalsIgnoreCase(PAYMENT_URL)) {  //Still on the first page, input payment info
@@ -120,6 +120,7 @@ public class PaymentFragment extends Fragment {
                         mPaymentWebView.setVisibility(View.VISIBLE);
                         mLoadingProgressBar.setVisibility(View.INVISIBLE);
                         mPaymentProgressTitle.setVisibility(View.INVISIBLE);
+                        mPaymentProgressSteps.setVisibility(View.INVISIBLE);
                     } else {  //Input card info and confirm payment
                         if (preferences.contains(CARDHOLDER_NAME) && preferences.contains(CARD_NUMBER) && preferences.contains(CARD_YEAR) && preferences.contains(CARD_MONTH)) {
                             String cardholderName = preferences.getString(CARDHOLDER_NAME, "");
@@ -159,7 +160,7 @@ public class PaymentFragment extends Fragment {
             String mFrom = monthsFrom.split("/")[0], yFrom = monthsFrom.split("/")[1], mTo = monthsTo.split("/")[0], yTo = monthsTo.split("/")[1];
             int totalMonths = (Integer.parseInt(yTo) - Integer.parseInt(yFrom)) * 12 + Integer.parseInt(mTo) - Integer.parseInt(mFrom);
             double price = totalMonths * preferences.getFloat(MONTHLY_COST, 0);
-            String query = String.format(FIRST_QUERY, fio, contractId, range, (int) price, price - ((int) price));
+            String query = String.format(FIRST_QUERY, fio, contractId, range, (int) price, String.format("%.2f", price - ((int) price)));
             view.evaluateJavascript(query, null);
         } else {
             Toast.makeText(getContext(), getString(R.string.no_payment_credits_set), Toast.LENGTH_LONG).show();
@@ -184,19 +185,18 @@ public class PaymentFragment extends Fragment {
         mPaymentWebView.saveState(outState);
     }
 
-    class JSInterface {
-        Activity holderActivity;
+    @JavascriptInterface
+    public void handleErrorMsg() {
+        Toast.makeText(getContext(), getString(R.string.payment_user_not_found), Toast.LENGTH_LONG).show();
+    }
 
-        JSInterface(Activity holderActivity) {
-            this.holderActivity = holderActivity;
-        }
-
-        @JavascriptInterface
-        public void handleErrorMsg() {
-            Toast.makeText(holderActivity, getString(R.string.payment_user_not_found), Toast.LENGTH_LONG).show();
-        }
-        public void incrementProgressStep(){
-            mPaymentProgressSteps.setText("[2 / 2]");
-        }
+    @JavascriptInterface
+    public void incrementStep(){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mPaymentProgressSteps.setText("[2 / 2]");
+            }
+        });
     }
 }
