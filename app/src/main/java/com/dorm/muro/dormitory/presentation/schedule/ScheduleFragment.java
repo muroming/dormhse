@@ -8,6 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dorm.muro.dormitory.R;
+import com.savvi.rangedatepicker.CalendarPickerView;
+
+import java.util.Calendar;
+import java.util.Date;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
@@ -25,7 +32,9 @@ public class ScheduleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_schedule, container, false);
+        View view = inflater.inflate(R.layout.fragment_schedule, container, false);
+
+        return view;
     }
 
 }
