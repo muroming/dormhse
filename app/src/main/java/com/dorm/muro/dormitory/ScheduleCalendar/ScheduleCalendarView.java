@@ -1,4 +1,4 @@
-package com.dorm.muro.dormitory;
+package com.dorm.muro.dormitory.ScheduleCalendar;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -8,7 +8,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
+import com.dorm.muro.dormitory.R;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;

@@ -91,7 +91,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
             navigation.setSelectedItemId(R.id.navigation_payment);
         }
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.top_menu, menu);

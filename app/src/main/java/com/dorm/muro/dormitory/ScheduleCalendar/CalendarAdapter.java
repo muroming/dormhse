@@ -1,11 +1,14 @@
-package com.dorm.muro.dormitory;
+package com.dorm.muro.dormitory.ScheduleCalendar;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.dorm.muro.dormitory.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,9 +30,7 @@ public class CalendarAdapter extends ArrayAdapter<Date> {
         Date date = getItem(position);
         Calendar c = Calendar.getInstance();
         c.setTime(date);
-        int day = c.get(Calendar.DAY_OF_MONTH);
         int month = c.get(Calendar.MONTH);
-        int year = c.get(Calendar.YEAR);
 
         // today
         Date today = new Date();
@@ -39,7 +40,15 @@ public class CalendarAdapter extends ArrayAdapter<Date> {
             view = inflater.inflate(R.layout.schedule_calendar_day, parent, false);
 
         // set text
-            ((TextView)view).setText(String.valueOf(c.get(Calendar.DAY_OF_MONTH)));
+        TextView text = (TextView) view;
+        text.setText(String.valueOf(c.get(Calendar.DAY_OF_MONTH)));
+        c.setTime(today);
+        //if month equals to current month then set text color to black
+        if(month == c.get(Calendar.MONTH)){
+            text.setTextColor(Color.BLACK);
+        } else { //else grey
+            text.setTextColor(Color.GRAY);
+        }
 
         return view;
     }
