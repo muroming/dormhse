@@ -7,6 +7,7 @@
     tools:context=".MainFragments.ScheduleFragment">
 
     <com.dorm.muro.dormitory.ScheduleCalendar.ScheduleCalendarView
+        android:id="@+id/schedule_calendar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
@@ -25,22 +26,46 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/tv_schedule_room_1"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:textSize="25sp"
+                android:layout_marginLeft="15dp"
                 android:text="1"/>
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/tv_schedule_room_2"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:textSize="25sp"
+                android:layout_marginLeft="15dp"
                 android:text="2"/>
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/tv_schedule_room_3"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:textSize="25sp"
+                android:layout_marginLeft="15dp"
                 android:text="3"/>
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/tv_schedule_room_4"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:textSize="25sp"
+                android:layout_marginLeft="15dp"
                 android:text="4"/>
         </LinearLayout>
+        <TextView
+            android:id="@+id/tv_schedule_commentary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="#c1c1c1"
+            android:text="@string/schedule_room_comment"/>
     </LinearLayout>
 
 </LinearLayout>

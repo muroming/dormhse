@@ -16,4 +16,8 @@
     <color name="separatorColor">#19000000</color>
     <color name="secondaryText">#68000000</color>
     <color name="paymentConfirm">#00D8CB</color>
+    <color name="redWarning">#a6ff1313</color>
+    <color name="room_background">#FFCEFDFB</color>
+    <color name="room_text">#5db8b3</color>
+    <color name="room_duty">#FF00D7CC</color>
 </resources>

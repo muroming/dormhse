@@ -79,4 +79,6 @@
     <string name="forgot_password_back">Вернуться ко входу</string>
     <string name="forgot_password_callback_fail">Упс! Аккаунта с такой почтой не существует</string>
     <string name="forgot_password_callback_success">Отлично! Мы отправили ссылку для восстановления пароля на</string>
+    <string name="schedule_room">Комната</string>
+    <string name="schedule_room_comment">Комментарий</string>
 </resources>
