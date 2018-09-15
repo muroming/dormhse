@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@android:color/white">
 
     <!-- days header -->
@@ -13,14 +13,6 @@
         android:layout_height="40dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:textColor="#222222"
-            android:text="SUN"/>
 
         <TextView
             android:layout_width="0dp"
@@ -69,6 +61,15 @@
             android:gravity="center_horizontal"
             android:textColor="#222222"
             android:text="SAT"/>
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:textColor="#222222"
+            android:text="SUN"/>
     </LinearLayout>
 
     <!-- days view -->
