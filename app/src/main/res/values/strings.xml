@@ -5,47 +5,47 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-    <string name="login">Login</string>
-    <string name="logout">Logout</string>
-    <string name="about_app">About app</string>
-    <string name="password">Password</string>
-    <string name="forgot_password">Forgot password?</string>
-    <string name="sign_in">Sign in</string>
-    <string name="sign_up">Sign up</string>
+    <string name="login">Войти</string>
+    <string name="logout">Выйти</string>
+    <string name="about_app">О приложении</string>
+    <string name="password">Пароль</string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="sign_in">Войти</string>
+    <string name="sign_up">Создать аккаунт</string>
     <string name="notification_channel_name">DORMITORY_APP</string>
     <string name="notification_channel_description">This channel is used for Dormitory app notifications</string>
     <string name="notification_payment_title">Time to PAY >:c</string>
     <string name="notification_payment_context">Long boring context that no one will ever read</string>
-    <string name="no_payment_credits_set">Some payment credits are not set</string>
-    <string name="settings">Settings</string>
-    <string name="settings_fio">User FIO:</string>
-    <string name="settings_fio_hint">Enter FIO</string>
-    <string name="settings_contract">Contract info:</string>
-    <string name="settings_contract_hint">Enter contract info</string>
-    <string name="settings_cost_per_month">Price per month:</string>
-    <string name="settings_cost_per_month_hint">Enter monthly price</string>
-    <string name="settings_months_to_pay_for">Months to pay for:</string>
-    <string name="settings_months_select">Press to set</string>
-    <string name="settings_date_picker_title">Select first and last date to pay for</string>
-    <string name="select">Select</string>
-    <string name="cancel">Cancel</string>
-    <string name="settings_date_picker_invalid_dates">Invalid dates, please check</string>
-    <string name="save">Save</string>
-    <string name="months_hint">Months</string>
-    <string name="settings_card_number">Card number</string>
-    <string name="settings_card_number_hint">Enter card number</string>
-    <string name="settings_cardholder_name">Cardholder name</string>
-    <string name="settings_cardholder_name_hint">Enter cardholder name</string>
-    <string name="settings_card_date">Card date</string>
+    <string name="no_payment_credits_set">Некоторые платежные данные не заданы</string>
+    <string name="settings">Настройки</string>
+    <string name="settings_fio">ФИО:</string>
+    <string name="settings_fio_hint">Введите ФИО</string>
+    <string name="settings_contract">Номер договора:</string>
+    <string name="settings_contract_hint">Введите номер договора</string>
+    <string name="settings_cost_per_month">Цена за месяц:</string>
+    <string name="settings_cost_per_month_hint">Введите цену за месяц</string>
+    <string name="settings_months_to_pay_for">Оплата за месяца:</string>
+    <string name="settings_months_select">Выбрать</string>
+    <string name="settings_date_picker_title">Выберите первую и последнюю даты оплаты</string>
+    <string name="select">Подтвердить</string>
+    <string name="cancel">Отменить</string>
+    <string name="settings_date_picker_invalid_dates">Введены неверные даты</string>
+    <string name="save">Сохранить</string>
+    <string name="months_hint">Месяца</string>
+    <string name="settings_card_number">Номер карты</string>
+    <string name="settings_card_number_hint">Введите номер карты</string>
+    <string name="settings_cardholder_name">Имя владельца</string>
+    <string name="settings_cardholder_name_hint">Введите имя владельца</string>
+    <string name="settings_card_date">Дата карты</string>
     <string name="settings_card_date_format">%s/%s</string>
-    <string name="settings_card_date_hint">Enter card date</string>
-    <string name="payment_user_not_found">User with given FIO and Contract ID wasn\'t found</string>
+    <string name="settings_card_date_hint">Введите дату карты</string>
+    <string name="payment_user_not_found">Пользователь с указаными ФИО и договором не найден</string>
     <string-array name="payment_progress">
-        <item>Robbing bank&#8230;</item>
-        <item>Taking loans&#8230;</item>
-        <item>Electing Putin&#8230;</item>
-        <item>Watering lawn&#8230;</item>
-        <item>Catching bugs&#8230;</item>
+        <item>Грабим банк&#8230;</item>
+        <item>Берем в долг&#8230;</item>
+        <item>Голосуем за Путина&#8230;</item>
+        <item>Поливаем лужайку&#8230;</item>
+        <item>Ищем баги&#8230;</item>
     </string-array>
 
 

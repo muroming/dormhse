@@ -18,10 +18,10 @@ public class LoginActivity extends AppCompatActivity {
 
     public static final String IS_LOGGED = "LOGIN_STATUS";
 
-    @BindView(R.id.et_app_login)
+    @BindView(R.id.et_login_mail)
     public EditText mLoginEditText;
 
-    @BindView(R.id.et_app_password)
+    @BindView(R.id.et_login_password)
     public EditText mPasswordEditText;
 
     private SharedPreferences preferences;
@@ -41,14 +41,14 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    @OnClick(R.id.bn_app_sign_up)
+    @OnClick(R.id.btn_login_login)
     public void signUp() {
         //TODO: create sign up method
         Toast.makeText(getApplicationContext(), "Create sign up method", Toast.LENGTH_SHORT).show();
 
     }
 
-    @OnClick(R.id.bn_app_sign_in)
+    @OnClick(R.id.tv_login_create_account)
     public void signIn(){
         if(checkUser()){
             preferences.edit()
