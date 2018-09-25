@@ -1,17 +1,19 @@
 package com.dorm.muro.dormitory.MainFragments;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -78,6 +80,7 @@ public class PaymentFragment extends Fragment {
             "var b=document.getElementById(\"input-month\").value=%s;" +
             "var c=document.getElementById(\"input-year\").value=%s;" +
             "var d=document.getElementById(\"iTEXT\").value='%s';";
+    private final String RAW_CSS = "body {font-family: sans-serif;}";
 
     private SharedPreferences preferences;
     private String[] progressTitles;
@@ -109,9 +112,26 @@ public class PaymentFragment extends Fragment {
             }
         });
 
+        // Set JS interaction
         mPaymentWebView.getSettings().setJavaScriptEnabled(true);
         mPaymentWebView.addJavascriptInterface(this, "CallBack");
+        //Block image loading to load faster
+        mPaymentWebView.getSettings().setBlockNetworkImage(true);
+
         mPaymentWebView.setWebViewClient(new WebViewClient() {
+
+            //Intercept .css files to load faster
+            @Nullable
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+                String url = request.getUrl().toString();
+                if (url.contains(".css")) {
+                    return new WebResourceResponse("text/css", "UTF-8", getActivity().getResources().openRawResource(R.raw.raw_css));
+                } else {
+                    return super.shouldInterceptRequest(view, request);
+                }
+            }
+
             public void onPageFinished(WebView view, String url) {
                 if (url.equalsIgnoreCase(PAYMENT_URL)) {  //Still on the first page, input payment info
                     fillStartPageAndProceed(view);
@@ -149,6 +169,8 @@ public class PaymentFragment extends Fragment {
         return view;
     }
 
+
+    //fill all forms and proceed to confirm page
     private void fillStartPageAndProceed(WebView view) {
         if (preferences.contains(USER_FIO) && preferences.contains(CONTRACT_ID) && preferences.contains(MONTHLY_COST) && preferences.contains(MONTHS_FROM) && preferences.contains(MONTHS_TO)) {
             String fio = preferences.getString(USER_FIO, "");
@@ -167,6 +189,8 @@ public class PaymentFragment extends Fragment {
         }
     }
 
+
+    //process contract ID if it has backslash
     private String processContractId(String contractId) {
         StringBuilder res = new StringBuilder();
         for (int i = 0; i < contractId.length(); i++) {
@@ -191,7 +215,7 @@ public class PaymentFragment extends Fragment {
     }
 
     @JavascriptInterface
-    public void incrementStep(){
+    public void incrementStep() {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
