@@ -1,8 +1,10 @@
 package com.dorm.muro.dormitory;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -42,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private SharedPreferences preferences;
     private Intent mainActivityIntent;
+    private ProgressDialog registerProcessDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,19 +74,49 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.tv_login_create_account)
     public void proceedToRegisterFirstPage() {
-        mViewFlipper.showNext();
+        mViewFlipper.setDisplayedChild(1);
         mLoginHeader.setVisibility(View.VISIBLE);
+        mRegisterStage2.setBackgroundColor(0);
         mRegisterStage1.setBackgroundColor(getResources().getColor(R.color.register_stage));
+    }
+
+    @OnClick(R.id.btn_register_next)
+    public void proceedToRegisterSecondPage() {
+        mViewFlipper.setDisplayedChild(2);
+        mRegisterStage1.setBackgroundColor(0);
+        mRegisterStage2.setBackgroundColor(getResources().getColor(R.color.register_stage));
+    }
+
+    @OnClick(R.id.btn_register_finish)
+    public void finishRegistration() {
+        registerProcessDialog = new ProgressDialog(this);
+        registerProcessDialog.setMessage("Confirming registration");
+        registerProcessDialog.show();
+        new Handler().postDelayed(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        registerProcessDialog.dismiss();
+                    }
+                }, 2000
+        );
     }
 
     @Override
     public void onBackPressed() {
-        if (mViewFlipper.getDisplayedChild() == 0) {
-            finish();
-        } else {
-            mViewFlipper.showPrevious();
-            if (mViewFlipper.getDisplayedChild() == 0) {
+        int childId = mViewFlipper.getDisplayedChild();
+        switch (childId){
+            case 0:{
+                finish();
+            }
+            case 1:{
+                mViewFlipper.showPrevious();
                 mLoginHeader.setVisibility(View.INVISIBLE);
+                break;
+            }
+            case 2:{
+                proceedToRegisterFirstPage();
+                break;
             }
         }
     }

@@ -56,6 +56,8 @@
 
             <EditText
                 android:id="@+id/et_login_mail"
+                android:inputType="textEmailAddress"
+                android:hint="@string/login_email_hint"
                 android:layout_width="300dp"
                 android:layout_height="40dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -63,6 +65,8 @@
 
             <EditText
                 android:id="@+id/et_login_password"
+                android:inputType="textPassword"
+                android:hint="@string/login_pass_hint"
                 android:layout_width="300dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="20dp"
@@ -110,6 +114,8 @@
 
             <EditText
                 android:id="@+id/et_register_mail"
+                android:inputType="textEmailAddress"
+                android:hint="@string/login_email_hint"
                 android:layout_width="300dp"
                 android:layout_height="40dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -117,6 +123,8 @@
 
             <EditText
                 android:id="@+id/et_register_password"
+                android:inputType="textPassword"
+                android:hint="@string/login_pass_hint"
                 android:layout_width="300dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="20dp"
@@ -156,6 +164,7 @@
 
             <EditText
                 android:id="@+id/et_register_second_name"
+                android:hint="@string/register_second_name_hint"
                 android:layout_width="300dp"
                 android:layout_height="40dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -163,6 +172,7 @@
 
             <EditText
                 android:id="@+id/et_register_name"
+                android:hint="@string/register_name_hint"
                 android:layout_width="300dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="20dp"
@@ -172,6 +182,7 @@
 
             <EditText
                 android:id="@+id/et_register_contract_id"
+                android:hint="@string/settings_contract_hint"
                 android:layout_width="300dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="20dp"
@@ -180,7 +191,7 @@
                 app:layout_constraintTop_toBottomOf="@id/et_register_name" />
 
             <Button
-                android:id="@+id/bnt_register_finish"
+                android:id="@+id/btn_register_finish"
                 android:layout_width="300dp"
                 android:layout_height="60dp"
                 android:layout_marginTop="60dp"
