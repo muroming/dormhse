@@ -7,6 +7,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -42,6 +47,9 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.tv_login_register_stage2)
     TextView mRegisterStage2;
 
+    @BindView(R.id.tv_register_already_have)
+    TextView mAlreadyHaveAccount;
+
     private SharedPreferences preferences;
     private Intent mainActivityIntent;
     private ProgressDialog registerProcessDialog;
@@ -54,8 +62,31 @@ public class LoginActivity extends AppCompatActivity {
 
         preferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
         mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+        mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         mViewFlipper.setInAnimation(this, android.R.anim.slide_in_left);
         mViewFlipper.setOutAnimation(this, android.R.anim.slide_out_right);
+
+
+        //Building alreadyHave TextView Spannable text
+        String text = getString(R.string.register_already_have_account);
+        String keyword = getString(R.string.register_already_have_keyword);
+        SpannableString alreadyHave = new SpannableString(text);
+        int startIndex = text.indexOf(keyword);
+        int lastIndex = alreadyHave.length();
+
+        //If already have an account then proceed to the main page of the form
+        ClickableSpan keywordClick = new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                mViewFlipper.setDisplayedChild(0);
+                mLoginHeader.setVisibility(View.INVISIBLE);
+            }
+        };
+        alreadyHave.setSpan(keywordClick, startIndex, lastIndex, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        alreadyHave.setSpan(new ForegroundColorSpan(getColor(R.color.clickableText)), startIndex, lastIndex, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        mAlreadyHaveAccount.setText(alreadyHave);
+        mAlreadyHaveAccount.setMovementMethod(LinkMovementMethod.getInstance());
+
 
         if (preferences.getBoolean(IS_LOGGED, false)) {
             startActivity(mainActivityIntent);
@@ -77,14 +108,14 @@ public class LoginActivity extends AppCompatActivity {
         mViewFlipper.setDisplayedChild(1);
         mLoginHeader.setVisibility(View.VISIBLE);
         mRegisterStage2.setBackgroundColor(0);
-        mRegisterStage1.setBackgroundColor(getResources().getColor(R.color.register_stage));
+        mRegisterStage1.setBackgroundColor(getResources().getColor(R.color.registerStage));
     }
 
     @OnClick(R.id.btn_register_next)
     public void proceedToRegisterSecondPage() {
         mViewFlipper.setDisplayedChild(2);
         mRegisterStage1.setBackgroundColor(0);
-        mRegisterStage2.setBackgroundColor(getResources().getColor(R.color.register_stage));
+        mRegisterStage2.setBackgroundColor(getResources().getColor(R.color.registerStage));
     }
 
     @OnClick(R.id.btn_register_finish)
@@ -97,6 +128,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         registerProcessDialog.dismiss();
+                        signIn();
                     }
                 }, 2000
         );
@@ -105,16 +137,16 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         int childId = mViewFlipper.getDisplayedChild();
-        switch (childId){
-            case 0:{
+        switch (childId) {
+            case 0: {
                 finish();
             }
-            case 1:{
+            case 1: {
                 mViewFlipper.showPrevious();
                 mLoginHeader.setVisibility(View.INVISIBLE);
                 break;
             }
-            case 2:{
+            case 2: {
                 proceedToRegisterFirstPage();
                 break;
             }
@@ -124,6 +156,6 @@ public class LoginActivity extends AppCompatActivity {
     private boolean checkUser() {
         //TODO: create check user method
         Toast.makeText(getApplicationContext(), "create check user method", Toast.LENGTH_SHORT).show();
-        return mLoginEditText.getText().toString().equals("login") && mPasswordEditText.getText().toString().equals("pass");
+        return true;
     }
 }

@@ -25,15 +25,15 @@
 
         <TextView
             android:id="@+id/tv_login_register_stage1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:textSize="20sp"
             android:text="1" />
 
         <TextView
             android:id="@+id/tv_login_register_stage2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:textSize="20sp"
             android:layout_marginLeft="15dp"
             android:text="2" />
@@ -150,7 +150,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="@string/register_already_have_account"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

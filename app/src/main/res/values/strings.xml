@@ -45,6 +45,7 @@
     <string name="settings_card_date_hint">Введите дату карты</string>
     <string name="payment_user_not_found">Пользователь с указаными ФИО и договором не найден</string>
     <string name="register_already_have_account">Уже есть аккаунт? Войти</string>
+    <string name="register_already_have_keyword">Войти</string>
     <string name="register_continue">Далее</string>
     <string name="register_finish">Зарегистрироваться</string>
     <string-array name="payment_progress">

@@ -3,5 +3,6 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="register_stage">#fd883d</color>
+    <color name="registerStage">#fd883d</color>
+    <color name="clickableText">#FF5FB6B1</color>
 </resources>
