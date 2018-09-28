@@ -3,12 +3,14 @@ package com.dorm.muro.dormitory;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
@@ -81,9 +83,16 @@ public class LoginActivity extends AppCompatActivity {
                 mViewFlipper.setDisplayedChild(0);
                 mLoginHeader.setVisibility(View.INVISIBLE);
             }
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                ds.setUnderlineText(false);
+            }
         };
         alreadyHave.setSpan(keywordClick, startIndex, lastIndex, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         alreadyHave.setSpan(new ForegroundColorSpan(getColor(R.color.clickableText)), startIndex, lastIndex, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        alreadyHave.setSpan(Typeface.BOLD, startIndex, lastIndex, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
         mAlreadyHaveAccount.setText(alreadyHave);
         mAlreadyHaveAccount.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -132,6 +141,11 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 }, 2000
         );
+    }
+
+    @OnClick(R.id.tv_login_forgot_password)
+    public void showForgotPasswordForm(){
+        mViewFlipper.setDisplayedChild(3);
     }
 
     @Override

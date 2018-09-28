@@ -48,6 +48,12 @@
     <string name="register_already_have_keyword">Войти</string>
     <string name="register_continue">Далее</string>
     <string name="register_finish">Зарегистрироваться</string>
+    <string name="forgot_password_title">Введите вашу почту для восстановления пароля</string>
+    <string name="forgot_password_button">Восстановить пароль</string>
+    <string name="forgot_password_try_again">Ввести ещё раз</string>
+    <string name="forgot_password_back">Вернуться назад</string>
+    <string name="forgot_password_callback_fail">Упс! Аккаунта с такой почтой не существует</string>
+    <string name="forgot_password_callback_success">Отлично! Мы отправили ссылку для восстановления пароля на</string>
     <string-array name="payment_progress">
         <item>Грабим банк&#8230;</item>
         <item>Берем в долг&#8230;</item>
@@ -55,8 +61,4 @@
         <item>Поливаем лужайку&#8230;</item>
         <item>Ищем баги&#8230;</item>
     </string-array>
-
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
