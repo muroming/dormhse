@@ -15,11 +15,14 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
+
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,26 +34,19 @@ public class LoginActivity extends AppCompatActivity {
 
     public static final String IS_LOGGED = "LOGIN_STATUS";
 
-    @BindView(R.id.et_login_mail)
-    public EditText mLoginEditText;
-
-    @BindView(R.id.et_login_password)
-    public EditText mPasswordEditText;
-
-    @BindView(R.id.vf_login_flipper)
-    ViewFlipper mViewFlipper;
-
-    @BindView(R.id.ll_login_header)
-    LinearLayout mLoginHeader;
-
-    @BindView(R.id.tv_login_register_stage1)
-    TextView mRegisterStage1;
-
-    @BindView(R.id.tv_login_register_stage2)
-    TextView mRegisterStage2;
-
-    @BindView(R.id.tv_register_already_have)
-    TextView mAlreadyHaveAccount;
+    @BindView(R.id.et_login_mail) EditText mLoginEditText;
+    @BindView(R.id.et_login_password) EditText mPasswordEditText;
+    @BindView(R.id.vf_login_flipper) ViewFlipper mViewFlipper;
+    @BindView(R.id.ll_login_header) LinearLayout mLoginHeader;
+    @BindView(R.id.tv_login_register_stage1) TextView mRegisterStage1;
+    @BindView(R.id.tv_login_register_stage2) TextView mRegisterStage2;
+    @BindView(R.id.tv_register_already_have) TextView mAlreadyHaveAccount;
+    @BindView(R.id.tv_forgot_check_email_callback) TextView mCheckEmailCallback;
+    @BindView(R.id.et_forgot_mail) EditText mForgotMail;
+    @BindView(R.id.btn_forgot_button)  Button mForgotPasswordButton;
+    @BindView(R.id.tv_forgot_email_display) TextView mEmailDisplay;
+    @BindView(R.id.tv_forgot_title) TextView mForgotTitle;
+    @BindView(R.id.tv_forgot_unsuccessful_back) TextView mForgotBack;
 
     private SharedPreferences preferences;
     private Intent mainActivityIntent;
@@ -143,9 +139,91 @@ public class LoginActivity extends AppCompatActivity {
         );
     }
 
+    //TODO: Make check email query
+    public void forgotAction() {
+        registerProcessDialog = new ProgressDialog(this);
+        registerProcessDialog.setMessage("Checking email");
+        registerProcessDialog.show();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                registerProcessDialog.dismiss();
+
+                String mail = mForgotMail.getText().toString();
+
+                boolean testBoolean = new Random().nextBoolean();
+                if (testBoolean) {
+                    String text = getString(R.string.forgot_password_callback_success);
+                    SpannableString ss = new SpannableString(text);
+                    ss.setSpan(new ForegroundColorSpan(getColor(R.color.successGreen)), 0, 8, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                    mCheckEmailCallback.setText(ss);
+                } else {
+                    String text = getString(R.string.forgot_password_callback_fail);
+                    SpannableString ss = new SpannableString(text);
+                    ss.setSpan(new ForegroundColorSpan(getColor(R.color.failRed)), 0, 3, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                    mCheckEmailCallback.setText(ss);
+                }
+
+                mEmailDisplay.setText(mail);
+                showForgotEmailCallback(testBoolean);
+            }
+        }, 2000);
+    }
+
+    private void showForgotEmailCallback(boolean isSuccessful) {
+        mCheckEmailCallback.setVisibility(View.VISIBLE);
+        mEmailDisplay.setVisibility(View.VISIBLE);
+
+        mForgotMail.setVisibility(View.INVISIBLE);
+        mForgotTitle.setVisibility(View.INVISIBLE);
+
+        if (isSuccessful) {
+            mForgotPasswordButton.setText(getString(R.string.forgot_password_back));
+            mForgotPasswordButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mViewFlipper.setDisplayedChild(0);
+                }
+            });
+        } else {
+            mForgotBack.setVisibility(View.VISIBLE);
+            mForgotPasswordButton.setText(getString(R.string.forgot_password_try_again));
+            mForgotPasswordButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showForgotPasswordForm();
+                }
+            });
+        }
+    }
+
+    private void hideForgotEmailCallback() {
+        mCheckEmailCallback.setVisibility(View.INVISIBLE);
+        mEmailDisplay.setVisibility(View.INVISIBLE);
+        mForgotBack.setVisibility(View.INVISIBLE);
+        mForgotMail.setVisibility(View.VISIBLE);
+        mForgotTitle.setVisibility(View.VISIBLE);
+    }
+
     @OnClick(R.id.tv_login_forgot_password)
-    public void showForgotPasswordForm(){
+    public void showForgotPasswordForm() {
         mViewFlipper.setDisplayedChild(3);
+
+        hideForgotEmailCallback();
+        mForgotPasswordButton.setText(getString(R.string.forgot_password_button));
+
+        mForgotPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                forgotAction();
+            }
+        });
+    }
+
+    @OnClick(R.id.tv_forgot_unsuccessful_back)
+    public void goBackTextViewClick(){
+        mViewFlipper.setDisplayedChild(0);
     }
 
     @Override
@@ -162,6 +240,15 @@ public class LoginActivity extends AppCompatActivity {
             }
             case 2: {
                 proceedToRegisterFirstPage();
+                break;
+            }
+            case 3: {
+                if (mCheckEmailCallback.getVisibility() == View.VISIBLE) { //If callback is visible, return back to input eail
+                    hideForgotEmailCallback();
+                    showForgotPasswordForm();
+                } else { //Else proceed to first page
+                    mViewFlipper.setDisplayedChild(0);
+                }
                 break;
             }
         }
