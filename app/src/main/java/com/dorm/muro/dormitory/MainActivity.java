@@ -49,13 +49,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         preferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
         if (!preferences.getBoolean(IS_LOGGED, false)) {
-            Intent mainActivityIntent = new Intent(this, LoginActivity.class);
-            startActivity(mainActivityIntent);
+            startActivity(getTargetIntent(LoginActivity.class));
+            finish();
         }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
         if (savedInstanceState != null) {
             sectionTitle.setText(savedInstanceState.getString(APP_SECTION_TITLE));
         }
@@ -116,8 +117,8 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.menu_settings_item: {
-                Intent intent = new Intent(this, OptionsActivity.class);
-                startActivity(intent);
+                startActivity(getTargetIntent(OptionsActivity.class));
+                finish();
                 return true;
             }
             case R.id.menu_logout_item: {
@@ -129,6 +130,12 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private Intent getTargetIntent(Class targetClass){
+        Intent intent = new Intent(this, targetClass);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent;
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

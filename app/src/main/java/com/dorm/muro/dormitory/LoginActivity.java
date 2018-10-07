@@ -96,10 +96,12 @@ public class LoginActivity extends AppCompatActivity {
     public void signIn() {
         if (checkUser()) {
             Intent mainActivityIntent = new Intent(this, MainActivity.class);
+            mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             preferences.edit()
                     .putBoolean(IS_LOGGED, true)
                     .apply();
             startActivity(mainActivityIntent);
+            finish();
         }
     }
 
