@@ -18,7 +18,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        dialogTag = getArguments().getString("DIALOG_TAG");
+        dialogTag = getArguments().getString(MainActivity.DIALOG_TAG);
         Calendar c = Calendar.getInstance();
         int month = c.get(Calendar.MONTH);
         int year = c.get(Calendar.YEAR);

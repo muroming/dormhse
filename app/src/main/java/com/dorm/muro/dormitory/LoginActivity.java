@@ -34,6 +34,7 @@ import static com.dorm.muro.dormitory.MainActivity.SHARED_PREFERENCES;
 public class LoginActivity extends AppCompatActivity {
 
     public static final String IS_LOGGED = "LOGIN_STATUS";
+    private enum FlipDir {NEXT, PREV}
 
     @BindView(R.id.et_login_mail) EditText mLoginEditText;
     @BindView(R.id.et_login_password) EditText mPasswordEditText;
@@ -52,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
     private SharedPreferences preferences;
     private ProgressDialog pd;
     private Pattern pattern;
+    private FlipDir flipDir;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,8 +62,11 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         preferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
-        mViewFlipper.setInAnimation(this, android.R.anim.slide_in_left);
-        mViewFlipper.setOutAnimation(this, android.R.anim.slide_out_right);
+
+        //Setting flipping animations
+        mViewFlipper.setInAnimation(this, R.anim.slide_in_from_right);
+        mViewFlipper.setOutAnimation(this, R.anim.slide_out_to_left);
+        flipDir = FlipDir.NEXT;
 
 
         //Building alreadyHave TextView Spannable text
@@ -233,6 +238,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         int childId = mViewFlipper.getDisplayedChild();
+        changeFlipDirection();
         switch (childId) {
             case 0: {
                 finish();
@@ -253,6 +259,24 @@ public class LoginActivity extends AppCompatActivity {
                 } else { //Else proceed to first page
                     mViewFlipper.setDisplayedChild(0);
                 }
+                break;
+            }
+        }
+        changeFlipDirection();
+    }
+
+    private void changeFlipDirection(){
+        switch (flipDir){
+            case NEXT:{
+                mViewFlipper.setInAnimation(this, R.anim.slide_in_from_left);
+                mViewFlipper.setOutAnimation(this, R.anim.slide_out_to_right);
+                flipDir = FlipDir.PREV;
+                break;
+            }
+            case PREV:{
+                mViewFlipper.setInAnimation(this, R.anim.slide_in_from_right);
+                mViewFlipper.setOutAnimation(this, R.anim.slide_out_to_left);
+                flipDir = FlipDir.NEXT;
                 break;
             }
         }
