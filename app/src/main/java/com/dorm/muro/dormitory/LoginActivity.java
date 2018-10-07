@@ -90,19 +90,12 @@ public class LoginActivity extends AppCompatActivity {
 
         mAlreadyHaveAccount.setText(alreadyHave);
         mAlreadyHaveAccount.setMovementMethod(LinkMovementMethod.getInstance());
-
-
-        if (preferences.getBoolean(IS_LOGGED, false)) {
-            Intent mainActivityIntent = new Intent(this, MainActivity.class);
-            startActivity(mainActivityIntent);
-        }
     }
 
     @OnClick(R.id.btn_login_login)
     public void signIn() {
-        Intent mainActivityIntent = new Intent(this, MainActivity.class);
-
         if (checkUser()) {
+            Intent mainActivityIntent = new Intent(this, MainActivity.class);
             preferences.edit()
                     .putBoolean(IS_LOGGED, true)
                     .apply();

@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,6 +25,8 @@ import com.dorm.muro.dormitory.MainFragments.ShopsWorkingTimeFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.dorm.muro.dormitory.LoginActivity.IS_LOGGED;
+
 public class MainActivity extends AppCompatActivity {
 
     public static final String CHANNEL_ID = "DORMITORY_CHANNEL";
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private Fragment paymentFragment, scheduleFragment, workTimeFragment;
+    SharedPreferences preferences;
 
     @BindView(R.id.navigation)
     BottomNavigationView navigation;
@@ -43,6 +47,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        preferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
+        if (!preferences.getBoolean(IS_LOGGED, false)) {
+            Intent mainActivityIntent = new Intent(this, LoginActivity.class);
+            startActivity(mainActivityIntent);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -111,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
             case R.id.menu_logout_item: {
-                getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE).edit().remove(LoginActivity.IS_LOGGED).apply();
+                preferences.edit().remove(IS_LOGGED).apply();
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
                 return true;
