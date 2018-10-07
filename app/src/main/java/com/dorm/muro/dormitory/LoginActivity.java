@@ -23,6 +23,7 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import java.util.Random;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,8 +50,8 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.tv_forgot_unsuccessful_back) TextView mForgotBack;
 
     private SharedPreferences preferences;
-    private Intent mainActivityIntent;
-    private ProgressDialog registerProcessDialog;
+    private ProgressDialog pd;
+    private Pattern pattern;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,8 +60,6 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         preferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
-        mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
-        mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         mViewFlipper.setInAnimation(this, android.R.anim.slide_in_left);
         mViewFlipper.setOutAnimation(this, android.R.anim.slide_out_right);
 
@@ -94,12 +93,15 @@ public class LoginActivity extends AppCompatActivity {
 
 
         if (preferences.getBoolean(IS_LOGGED, false)) {
+            Intent mainActivityIntent = new Intent(this, MainActivity.class);
             startActivity(mainActivityIntent);
         }
     }
 
     @OnClick(R.id.btn_login_login)
     public void signIn() {
+        Intent mainActivityIntent = new Intent(this, MainActivity.class);
+
         if (checkUser()) {
             preferences.edit()
                     .putBoolean(IS_LOGGED, true)
@@ -125,14 +127,14 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_register_finish)
     public void finishRegistration() {
-        registerProcessDialog = new ProgressDialog(this);
-        registerProcessDialog.setMessage("Confirming registration");
-        registerProcessDialog.show();
+        pd = new ProgressDialog(this);
+        pd.setMessage("Confirming registration");
+        pd.show();
         new Handler().postDelayed(
                 new Runnable() {
                     @Override
                     public void run() {
-                        registerProcessDialog.dismiss();
+                        pd.dismiss();
                         signIn();
                     }
                 }, 2000
@@ -141,34 +143,41 @@ public class LoginActivity extends AppCompatActivity {
 
     //TODO: Make check email query
     public void forgotAction() {
-        registerProcessDialog = new ProgressDialog(this);
-        registerProcessDialog.setMessage("Checking email");
-        registerProcessDialog.show();
+        pattern = Pattern.compile("[a-z0-9A-Z]+@[a-z0-9A-Z]+\\.[a-zA-Z]{2,6}", Pattern.CASE_INSENSITIVE);
+        final String mail = mForgotMail.getText().toString();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                registerProcessDialog.dismiss();
+        if(pattern.matcher(mail).find()) {  // Check if email matches pattern. If true, proceed, else show warning
 
-                String mail = mForgotMail.getText().toString();
+            pd = new ProgressDialog(this);
+            pd.setMessage("Checking email");
+            pd.show();
 
-                boolean testBoolean = new Random().nextBoolean();
-                if (testBoolean) {
-                    String text = getString(R.string.forgot_password_callback_success);
-                    SpannableString ss = new SpannableString(text);
-                    ss.setSpan(new ForegroundColorSpan(getColor(R.color.successGreen)), 0, 8, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                    mCheckEmailCallback.setText(ss);
-                } else {
-                    String text = getString(R.string.forgot_password_callback_fail);
-                    SpannableString ss = new SpannableString(text);
-                    ss.setSpan(new ForegroundColorSpan(getColor(R.color.failRed)), 0, 3, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                    mCheckEmailCallback.setText(ss);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    pd.dismiss();
+
+                    boolean testBoolean = new Random().nextBoolean();
+                    if (testBoolean) {
+                        String text = getString(R.string.forgot_password_callback_success);
+                        SpannableString ss = new SpannableString(text);
+                        ss.setSpan(new ForegroundColorSpan(getColor(R.color.successGreen)), 0, 8, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                        mCheckEmailCallback.setText(ss);
+                    } else {
+                        String text = getString(R.string.forgot_password_callback_fail);
+                        SpannableString ss = new SpannableString(text);
+                        ss.setSpan(new ForegroundColorSpan(getColor(R.color.failRed)), 0, 3, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                        mCheckEmailCallback.setText(ss);
+                    }
+
+                    mEmailDisplay.setText(mail);
+                    showForgotEmailCallback(testBoolean);
                 }
-
-                mEmailDisplay.setText(mail);
-                showForgotEmailCallback(testBoolean);
-            }
-        }, 2000);
+            }, 2000);
+        } else {
+            mForgotMail.setBackgroundColor(getColor(R.color.redWarning));
+            Toast.makeText(this, "Wrong email", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void showForgotEmailCallback(boolean isSuccessful) {
