@@ -3,4 +3,5 @@
     <integer name="animation_slide_duration">400</integer>
     <integer name="animation_alpha_offset">150</integer>
     <integer name="animation_alpha_duration">250</integer>
+    <integer name="step_fade">200</integer>
 </resources>

@@ -17,6 +17,7 @@ import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,8 +41,8 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.et_login_password) EditText mPasswordEditText;
     @BindView(R.id.vf_login_flipper) ViewFlipper mViewFlipper;
     @BindView(R.id.ll_login_header) LinearLayout mLoginHeader;
-    @BindView(R.id.tv_login_register_stage1) TextView mRegisterStage1;
-    @BindView(R.id.tv_login_register_stage2) TextView mRegisterStage2;
+    @BindView(R.id.tv_login_register_stage1) ImageView mRegisterStage1;
+    @BindView(R.id.tv_login_register_stage2) ImageView mRegisterStage2;
     @BindView(R.id.tv_register_already_have) TextView mAlreadyHaveAccount;
     @BindView(R.id.tv_forgot_check_email_callback) TextView mCheckEmailCallback;
     @BindView(R.id.et_forgot_mail) EditText mForgotMail;
@@ -52,7 +53,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private SharedPreferences preferences;
     private ProgressDialog pd;
-    private Pattern pattern;
     private FlipDir flipDir;
 
     @Override
@@ -114,15 +114,15 @@ public class LoginActivity extends AppCompatActivity {
     public void proceedToRegisterFirstPage() {
         mViewFlipper.setDisplayedChild(1);
         mLoginHeader.setVisibility(View.VISIBLE);
-        mRegisterStage2.setBackgroundColor(0);
-        mRegisterStage1.setBackgroundColor(getResources().getColor(R.color.registerStage));
+        mRegisterStage2.setImageDrawable(getDrawable(R.drawable.ic_gray_step));
+        mRegisterStage1.setImageDrawable(getDrawable(R.drawable.ic_step_1));
     }
 
     @OnClick(R.id.btn_register_next)
     public void proceedToRegisterSecondPage() {
         mViewFlipper.setDisplayedChild(2);
-        mRegisterStage1.setBackgroundColor(0);
-        mRegisterStage2.setBackgroundColor(getResources().getColor(R.color.registerStage));
+        mRegisterStage2.setImageDrawable(getDrawable(R.drawable.ic_step_2));
+        mRegisterStage1.setImageDrawable(getDrawable(R.drawable.ic_gray_step));
     }
 
     @OnClick(R.id.btn_register_finish)
@@ -143,7 +143,7 @@ public class LoginActivity extends AppCompatActivity {
 
     //TODO: Make check email query
     public void forgotAction() {
-        pattern = Pattern.compile("[a-z0-9A-Z]+@[a-z0-9A-Z]+\\.[a-zA-Z]{2,6}", Pattern.CASE_INSENSITIVE);
+        Pattern pattern = Pattern.compile("[a-z0-9A-Z]+@[a-z0-9A-Z]+\\.[a-zA-Z]{2,6}", Pattern.CASE_INSENSITIVE);
         final String mail = mForgotMail.getText().toString();
 
         if(pattern.matcher(mail).find()) {  // Check if email matches pattern. If true, proceed, else show warning

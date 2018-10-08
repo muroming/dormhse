@@ -117,13 +117,13 @@ public class MainActivity extends AppCompatActivity {
         switch (id) {
             case R.id.menu_settings_item: {
                 startActivity(getTargetIntent(OptionsActivity.class));
-                finish();
                 return true;
             }
             case R.id.menu_logout_item: {
                 preferences.edit().remove(IS_LOGGED).apply();
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
+                finish();
                 return true;
             }
             default:
