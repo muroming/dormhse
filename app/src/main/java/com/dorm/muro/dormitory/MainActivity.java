@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, actionIntent, 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, MainActivity.CHANNEL_ID)
-                .setSmallIcon(R.drawable.settings_icon)
                 .setContentTitle(getString(R.string.notification_payment_title))
                 .setContentText(getString(R.string.notification_payment_context))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
