@@ -1,4 +1,4 @@
-package com.dorm.muro.dormitory;
+package com.dorm.muro.dormitory.presentation.options;
 
 import android.content.SharedPreferences;
 import android.support.v4.app.DialogFragment;
@@ -9,7 +9,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.dorm.muro.dormitory.MainFragments.PaymentFragment;
+import com.dorm.muro.dormitory.DatePickerFragment;
+import com.dorm.muro.dormitory.presentation.payment.PaymentFragment;
+import com.dorm.muro.dormitory.R;
+import com.dorm.muro.dormitory.presentation.main.MainActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

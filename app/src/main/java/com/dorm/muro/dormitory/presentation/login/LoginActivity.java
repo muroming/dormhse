@@ -1,4 +1,4 @@
-package com.dorm.muro.dormitory;
+package com.dorm.muro.dormitory.presentation.login;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -23,6 +23,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.arellomobile.mvp.MvpAppCompatActivity;
+import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.dorm.muro.dormitory.presentation.main.MainActivity;
+import com.dorm.muro.dormitory.R;
+
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -30,9 +35,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.dorm.muro.dormitory.MainActivity.SHARED_PREFERENCES;
+import static com.dorm.muro.dormitory.presentation.main.MainActivity.SHARED_PREFERENCES;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends MvpAppCompatActivity implements LoginView {
+
+    @InjectPresenter
+    LoginPresenter presenter;
 
     public static final String IS_LOGGED = "LOGIN_STATUS";
     private enum FlipDir {NEXT, PREV}
@@ -80,8 +88,7 @@ public class LoginActivity extends AppCompatActivity {
         ClickableSpan keywordClick = new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                mViewFlipper.setDisplayedChild(0);
-                mLoginHeader.setVisibility(View.INVISIBLE);
+                presenter.goToMainScreen();
             }
 
             @Override
@@ -98,116 +105,71 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.btn_login_login)
-    public void signIn() {
-        if (checkUser()) {
-            Intent mainActivityIntent = new Intent(this, MainActivity.class);
-            mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            preferences.edit()
-                    .putBoolean(IS_LOGGED, true)
-                    .apply();
-            startActivity(mainActivityIntent);
-            finish();
-        }
+    public void onLoginClicked(){
+        presenter.onSignInClicked(mLoginEditText.getText().toString(), mPasswordEditText.getText().toString());
     }
 
     @OnClick(R.id.tv_login_create_account)
-    public void proceedToRegisterFirstPage() {
-        mViewFlipper.setDisplayedChild(1);
-        mLoginHeader.setVisibility(View.VISIBLE);
-        mRegisterStage2.setImageDrawable(getDrawable(R.drawable.ic_gray_step));
-        mRegisterStage1.setImageDrawable(getDrawable(R.drawable.ic_step_1));
+    public void onCreateAccountClicked(){
+        presenter.showRegisterForm();
     }
 
     @OnClick(R.id.btn_register_next)
-    public void proceedToRegisterSecondPage() {
-        mViewFlipper.setDisplayedChild(2);
-        mRegisterStage2.setImageDrawable(getDrawable(R.drawable.ic_step_2));
-        mRegisterStage1.setImageDrawable(getDrawable(R.drawable.ic_gray_step));
+    public void onRegisterNextClicked(){
+        presenter.registerNextScreen();
     }
 
     @OnClick(R.id.btn_register_finish)
     public void finishRegistration() {
-        pd = new ProgressDialog(this);
-        pd.setMessage("Confirming registration");
-        pd.show();
-        new Handler().postDelayed(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        pd.dismiss();
-                        signIn();
-                    }
-                }, 2000
-        );
+        presenter.finishRegistration();
     }
 
     //TODO: Make check email query
     public void forgotAction() {
-        Pattern pattern = Pattern.compile("[a-z0-9A-Z]+@[a-z0-9A-Z]+\\.[a-zA-Z]{2,6}", Pattern.CASE_INSENSITIVE);
-        final String mail = mForgotMail.getText().toString();
-
-        if(pattern.matcher(mail).find()) {  // Check if email matches pattern. If true, proceed, else show warning
-
-            pd = new ProgressDialog(this);
-            pd.setMessage("Checking email");
-            pd.show();
-
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    pd.dismiss();
-
-                    boolean testBoolean = new Random().nextBoolean();
-                    if (testBoolean) {
-                        String text = getString(R.string.forgot_password_callback_success);
-                        SpannableString ss = new SpannableString(text);
-                        ss.setSpan(new ForegroundColorSpan(getColor(R.color.successGreen)), 0, 8, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                        mCheckEmailCallback.setText(ss);
-                    } else {
-                        String text = getString(R.string.forgot_password_callback_fail);
-                        SpannableString ss = new SpannableString(text);
-                        ss.setSpan(new ForegroundColorSpan(getColor(R.color.failRed)), 0, 3, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                        mCheckEmailCallback.setText(ss);
-                    }
-
-                    mEmailDisplay.setText(mail);
-                    showForgotEmailCallback(testBoolean);
-                }
-            }, 2000);
-        } else {
-            mForgotMail.setBackgroundColor(getColor(R.color.redWarning));
-            Toast.makeText(this, "Wrong email", Toast.LENGTH_SHORT).show();
-        }
+        presenter.forgotPasswordAction(mForgotMail.getText().toString());
     }
 
-    private void showForgotEmailCallback(boolean isSuccessful) {
+    public void showForgotEmailCallback(boolean isSuccessful, String mail) {
+        SpannableString ss;
+
+        if (isSuccessful) {
+            String text = getString(R.string.forgot_password_callback_success);
+            ss = new SpannableString(text);
+            ss.setSpan(new ForegroundColorSpan(getColor(R.color.successGreen)), 0, 8, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+            mForgotPasswordButton.setText(getString(R.string.forgot_password_back));
+            mForgotPasswordButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    presenter.goToMainScreen();
+                }
+            });
+        } else {
+            String text = getString(R.string.forgot_password_callback_fail);
+            ss = new SpannableString(text);
+            ss.setSpan(new ForegroundColorSpan(getColor(R.color.failRed)), 0, 3, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+
+            mForgotBack.setVisibility(View.VISIBLE);
+            mForgotPasswordButton.setText(getString(R.string.forgot_password_try_again));
+            mForgotPasswordButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    presenter.showForgotPasswordForm();
+                }
+            });
+        }
+
         mCheckEmailCallback.setVisibility(View.VISIBLE);
         mEmailDisplay.setVisibility(View.VISIBLE);
 
         mForgotMail.setVisibility(View.INVISIBLE);
         mForgotTitle.setVisibility(View.INVISIBLE);
 
-        if (isSuccessful) {
-            mForgotPasswordButton.setText(getString(R.string.forgot_password_back));
-            mForgotPasswordButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mViewFlipper.setDisplayedChild(0);
-                }
-            });
-        } else {
-            mForgotBack.setVisibility(View.VISIBLE);
-            mForgotPasswordButton.setText(getString(R.string.forgot_password_try_again));
-            mForgotPasswordButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showForgotPasswordForm();
-                }
-            });
-        }
+        mCheckEmailCallback.setText(ss);
+        mEmailDisplay.setText(mail);
     }
 
-    private void hideForgotEmailCallback() {
+    public void hideForgotEmailCallback() {
         mCheckEmailCallback.setVisibility(View.INVISIBLE);
         mEmailDisplay.setVisibility(View.INVISIBLE);
         mForgotBack.setVisibility(View.INVISIBLE);
@@ -216,23 +178,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.tv_login_forgot_password)
-    public void showForgotPasswordForm() {
-        mViewFlipper.setDisplayedChild(3);
-
-        hideForgotEmailCallback();
-        mForgotPasswordButton.setText(getString(R.string.forgot_password_button));
-
-        mForgotPasswordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                forgotAction();
-            }
-        });
+    public void onForgotPasswordClicked() {
+        presenter.showForgotPasswordForm();
     }
 
     @OnClick(R.id.tv_forgot_unsuccessful_back)
-    public void goBackTextViewClick(){
-        mViewFlipper.setDisplayedChild(0);
+    public void goBackTextViewClicked(){
+        presenter.goToMainScreen();
     }
 
     @Override
@@ -249,15 +201,15 @@ public class LoginActivity extends AppCompatActivity {
                 break;
             }
             case 2: {
-                proceedToRegisterFirstPage();
+                presenter.showRegisterForm();
                 break;
             }
             case 3: {
                 if (mCheckEmailCallback.getVisibility() == View.VISIBLE) { //If callback is visible, return back to input eail
                     hideForgotEmailCallback();
-                    showForgotPasswordForm();
+                    presenter.showForgotPasswordForm();
                 } else { //Else proceed to first page
-                    mViewFlipper.setDisplayedChild(0);
+                    presenter.goToMainScreen();
                 }
                 break;
             }
@@ -282,9 +234,77 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private boolean checkUser() {
-        //TODO: create check user method
-        Toast.makeText(getApplicationContext(), "create check user method", Toast.LENGTH_SHORT).show();
-        return true;
+
+    @Override
+    public void showProgressDialog(String msg) {
+        pd = new ProgressDialog(this);
+        pd.setMessage(msg);
+        pd.show();
+    }
+
+    @Override
+    public void proceedToFirstPage() {
+        mViewFlipper.setDisplayedChild(1);
+        mLoginHeader.setVisibility(View.VISIBLE);
+        mRegisterStage2.setImageDrawable(getDrawable(R.drawable.ic_gray_step));
+        mRegisterStage1.setImageDrawable(getDrawable(R.drawable.ic_step_1));
+    }
+
+    @Override
+    public void proceedToSecondPage() {
+        mViewFlipper.setDisplayedChild(2);
+        mRegisterStage2.setImageDrawable(getDrawable(R.drawable.ic_step_2));
+        mRegisterStage1.setImageDrawable(getDrawable(R.drawable.ic_gray_step));
+    }
+
+    @Override
+    public void showMainScreen() {
+        changeFlipDirection();
+        mLoginHeader.setVisibility(View.INVISIBLE);
+        mViewFlipper.setDisplayedChild(0);
+        changeFlipDirection();
+    }
+
+    @Override
+    public void hideProgressDialog() {
+        pd.dismiss();
+    }
+
+    @Override
+    public void registrationSuccess() {
+        MainActivity.start(this);
+        finish();
+    }
+
+    @Override
+    public void signIn() {
+        MainActivity.start(this);
+        finish();
+    }
+
+    @Override
+    public void showWrongLoginPass() {
+        Toast.makeText(this, getString(R.string.wrong_login_password), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showForgotSceen() {
+        mViewFlipper.setDisplayedChild(3);
+
+        hideForgotEmailCallback();
+        mForgotPasswordButton.setText(getString(R.string.forgot_password_button));
+
+        mForgotPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                forgotAction();
+            }
+        });
+    }
+
+    @Override
+    public void showWrongEmail() {
+        mForgotMail.setBackgroundColor(getColor(R.color.redWarning));
+        Toast.makeText(this, "Wrong email", Toast.LENGTH_SHORT).show();
     }
 }
