@@ -1,4 +1,4 @@
-package com.dorm.muro.dormitory.MainFragments;
+package com.dorm.muro.dormitory.presentation.firstfragment;
 
 
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package com.dorm.muro.dormitory.MainFragments;
+package com.dorm.muro.dormitory.presentation.payment;
 
 
 import android.content.Context;
@@ -20,7 +20,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dorm.muro.dormitory.MainActivity;
+import com.dorm.muro.dormitory.presentation.main.MainActivity;
 import com.dorm.muro.dormitory.R;
 
 import java.util.Random;

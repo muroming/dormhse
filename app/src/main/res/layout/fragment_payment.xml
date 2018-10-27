@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainFragments.PaymentFragment">
+    tools:context=".presentation.payment.PaymentFragment">
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/srl_payment_swipe_refresh"
         android:layout_width="match_parent"

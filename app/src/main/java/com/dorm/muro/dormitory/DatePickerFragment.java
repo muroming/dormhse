@@ -9,6 +9,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.widget.DatePicker;
 
+import com.dorm.muro.dormitory.presentation.main.MainActivity;
+
 import java.util.Calendar;
 
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
@@ -18,7 +20,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        dialogTag = getArguments().getString("DIALOG_TAG");
+        dialogTag = getArguments().getString(MainActivity.DIALOG_TAG);
         Calendar c = Calendar.getInstance();
         int month = c.get(Calendar.MONTH);
         int year = c.get(Calendar.YEAR);

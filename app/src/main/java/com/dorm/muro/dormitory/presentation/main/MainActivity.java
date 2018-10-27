@@ -1,9 +1,11 @@
-package com.dorm.muro.dormitory;
+package com.dorm.muro.dormitory.presentation.main;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,12 +19,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.dorm.muro.dormitory.MainFragments.PaymentFragment;
-import com.dorm.muro.dormitory.MainFragments.ScheduleFragment;
-import com.dorm.muro.dormitory.MainFragments.ShopsWorkingTimeFragment;
+import com.dorm.muro.dormitory.presentation.payment.PaymentFragment;
+import com.dorm.muro.dormitory.presentation.schedule.ScheduleFragment;
+import com.dorm.muro.dormitory.presentation.firstfragment.ShopsWorkingTimeFragment;
+import com.dorm.muro.dormitory.presentation.options.OptionsActivity;
+import com.dorm.muro.dormitory.R;
+import com.dorm.muro.dormitory.presentation.login.LoginActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.dorm.muro.dormitory.presentation.login.LoginActivity.IS_LOGGED;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,8 +39,14 @@ public class MainActivity extends AppCompatActivity {
     public static final String SHARED_PREFERENCES = "APP_DORMITORY_PREFS";
     public static final String DIALOG_TAG = "DIALOG_TAG";
 
+    public static void start(Context context){
+        Intent intent = new Intent(context, MainActivity.class);
+        context.startActivity(intent);
+    }
+
 
     private Fragment paymentFragment, scheduleFragment, workTimeFragment;
+    SharedPreferences preferences;
 
     @BindView(R.id.navigation)
     BottomNavigationView navigation;
@@ -43,9 +56,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        preferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
+        if (!preferences.getBoolean(IS_LOGGED, false)) {
+            startActivity(getTargetIntent(LoginActivity.class));
+            finish();
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
         if (savedInstanceState != null) {
             sectionTitle.setText(savedInstanceState.getString(APP_SECTION_TITLE));
         }
@@ -78,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, actionIntent, 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, MainActivity.CHANNEL_ID)
-                .setSmallIcon(R.drawable.settings_icon)
                 .setContentTitle(getString(R.string.notification_payment_title))
                 .setContentText(getString(R.string.notification_payment_context))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -106,19 +125,25 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.menu_settings_item: {
-                Intent intent = new Intent(this, OptionsActivity.class);
-                startActivity(intent);
+                startActivity(getTargetIntent(OptionsActivity.class));
                 return true;
             }
             case R.id.menu_logout_item: {
-                getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE).edit().remove(LoginActivity.IS_LOGGED).apply();
+                preferences.edit().remove(IS_LOGGED).apply();
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
+                finish();
                 return true;
             }
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private Intent getTargetIntent(Class targetClass){
+        Intent intent = new Intent(this, targetClass);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent;
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
