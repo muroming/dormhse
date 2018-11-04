@@ -97,11 +97,22 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
         preferences = getActivity().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
         progressTitles = getResources().getStringArray(R.array.payment_progress);
 
+<<<<<<< HEAD
         //Setup dialog
         setupDialog(inflater);
 
         //Setup user
         setupUserInfo(view);
+=======
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            mLoadingProgressBar.setVisibility(View.VISIBLE);
+            mPaymentWebView.setVisibility(View.INVISIBLE);
+            mPaymentProgressTitle.setVisibility(View.VISIBLE);
+            mPaymentProgressTitle.setText(progressTitles[new Random().nextInt(progressTitles.length)]);
+            mPaymentWebView.loadUrl(PAYMENT_URL);
+            mSwipeRefreshLayout.setRefreshing(false);
+        });
+>>>>>>> Added duty management
 
         // Set JS interaction
         mPaymentWebView.getSettings().setJavaScriptEnabled(true);
@@ -268,6 +279,10 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
 
     @JavascriptInterface
     public void incrementStep() {
+<<<<<<< HEAD
         presenter.onIncrementPaymentStep();
+=======
+        getActivity().runOnUiThread(() -> mPaymentProgressSteps.setText("[2 / 2]"));
+>>>>>>> Added duty management
     }
 }

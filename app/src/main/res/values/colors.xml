@@ -20,4 +20,21 @@
     <color name="room_background">#FFCEFDFB</color>
     <color name="room_text">#5db8b3</color>
     <color name="room_duty">#FF00D7CC</color>
+
+    <!-- Schedule calendar -->
+    <color name="first_room_selection_bg">#66ff2121</color>
+    <color name="first_room_duty">#FF2121</color>
+    <color name="first_room_selection_text">#C50000</color>
+
+    <color name="second_room_selection_bg">#6666FFFE</color>
+    <color name="second_room_duty">#00D8CB</color>
+    <color name="second_room_selection_text">#00A69A</color>
+
+    <color name="third_room_selection_bg">#66ffc93f</color>
+    <color name="third_room_duty">#FFC93F</color>
+    <color name="third_room_selection_text">#D09601</color>
+
+    <color name="forth_room_selection_bg">#66ff5600</color>
+    <color name="forth_room_duty">#FF5600</color>
+    <color name="forth_room_selection_text">#C24100</color>
 </resources>

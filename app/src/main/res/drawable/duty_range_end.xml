@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape android:shape="rectangle"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/first_room_selection_bg"/>
+    <size android:width="35dp"
+        android:height="35dp"/>
+    <corners
+        android:topRightRadius="18dp"
+        android:bottomRightRadius="18dp"/>
+</shape>

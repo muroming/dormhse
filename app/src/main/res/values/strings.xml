@@ -81,4 +81,5 @@
     <string name="forgot_password_callback_success">Отлично! Мы отправили ссылку для восстановления пароля на</string>
     <string name="schedule_room">Комната</string>
     <string name="schedule_room_comment">Комментарий</string>
+    <string name="schedule_all_rooms">все</string>
 </resources>

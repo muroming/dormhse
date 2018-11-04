@@ -14,11 +14,16 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
+<<<<<<< HEAD
                             <entry key="height" value="100" />
                             <entry key="outputName" value="ic_visa" />
                             <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="$USER_HOME$/Desktop/download.svg" />
                             <entry key="width" value="160" />
+=======
+                            <entry key="outputName" value="ic_vector" />
+                            <entry key="sourceFile" value="$USER_HOME$/Downloads/Vector.svg" />
+>>>>>>> Added duty management
                           </map>
                         </option>
                       </PersistentState>

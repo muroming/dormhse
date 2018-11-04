@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape android:shape="oval">
-            <size
-                android:width="40dp"
-                android:height="40dp"/>
-            <solid
-                android:color="@color/room_background"/>
-        </shape>
-    </item>
-</selector>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <size
+        android:width="44dp"
+        android:height="44dp" />
+    <solid android:color="@color/first_room_selection_bg" />
+</shape>

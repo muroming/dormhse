@@ -43,12 +43,9 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
     void finishRegistration() {
         getViewState().showProgressDialog("Confirming Registration");
         new Handler().postDelayed(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        getViewState().hideProgressDialog();
-                        getViewState().registrationSuccess();
-                    }
+                () -> {
+                    getViewState().hideProgressDialog();
+                    getViewState().signIn();
                 }, 2000
         );
     }
@@ -58,13 +55,10 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
 
         if (pattern.matcher(mail).find()) {  // Check if email matches pattern. If true, proceed, else show warning
             getViewState().showProgressDialog("Checking Email");
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    boolean test = new Random().nextBoolean();
-                    getViewState().hideProgressDialog();
-                    getViewState().showForgotEmailCallback(test, mail);
-                }
+            new Handler().postDelayed(() -> {
+                boolean test = new Random().nextBoolean();
+                getViewState().hideProgressDialog();
+                getViewState().showForgotEmailCallback(test, mail);
             }, 1000);
         } else {
             getViewState().showWrongEmail();

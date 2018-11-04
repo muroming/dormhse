@@ -265,13 +265,8 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
     }
 
     @Override
-    public void registrationSuccess() {
-        MainActivity.start(this);
-        finish();
-    }
-
-    @Override
     public void signIn() {
+        preferences.edit().putBoolean(IS_LOGGED, true).apply();
         MainActivity.start(this);
         finish();
     }
@@ -288,12 +283,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
         hideForgotEmailCallback();
         mForgotPasswordButton.setText(getString(R.string.forgot_password_button));
 
-        mForgotPasswordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                forgotAction();
-            }
-        });
+        mForgotPasswordButton.setOnClickListener(v -> forgotAction());
     }
 
     @Override
