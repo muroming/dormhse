@@ -1,6 +1,9 @@
 package com.dorm.muro.dormitory.presentation.schedule;
 
-import com.dorm.muro.dormitory.presentation.schedule.ScheduleFragment;
+import android.content.Context;
+import android.support.v4.content.ContextCompat;
+
+import com.dorm.muro.dormitory.R;
 
 import java.util.Date;
 
@@ -9,7 +12,7 @@ public class ScheduleCell {
     private Date date;
     private ROOM_NUM roomNum;
 
-    public ScheduleCell(ScheduleFragment.CELL_STATE state, Date date, ROOM_NUM roomNum) {
+    ScheduleCell(ScheduleFragment.CELL_STATE state, Date date, ROOM_NUM roomNum) {
         this.state = state;
         this.date = date;
         this.roomNum = roomNum;
@@ -41,7 +44,7 @@ public class ScheduleCell {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof ScheduleFragment)) {
+        if (!(obj instanceof ScheduleCell)) {
             return false;
         }
         try {

@@ -22,7 +22,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -53,8 +52,8 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
 
     public enum CELL_STATE {START, MEDIUM, END, NONE}
 
-    // current displayed month
-    private Calendar currentDate = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+    //Grid adapter
+    private CalendarAdapter gridAdapter;
 
     // internal components
     @BindView(R.id.iv_schedule_prev_month)
@@ -68,13 +67,6 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
 
     @BindView(R.id.gv_schedule_grid)
     GridView grid;
-
-    //Grid adapter
-    private CalendarAdapter gridAdapter;
-
-    // Calendar State
-    private ScheduleCell rangeStartDate;
-    private ROOM_NUM currentRoom;
 
 
     @BindViews({R.id.tv_schedule_room_1, R.id.tv_schedule_room_2, R.id.tv_schedule_room_3, R.id.tv_schedule_room_4})
@@ -104,10 +96,6 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
         grid.setAdapter(gridAdapter);
         presenter.onRoomClicked(ROOM_NUM.FIRST);
 
-        //as default set calender month to current
-        Calendar c = (Calendar) currentDate.clone();
-        updateCalendar(c.get(Calendar.MONTH));
-
         addListeners();
 
         currentSelectedRoom = 0;
@@ -116,13 +104,11 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
 
     private void addListeners() {
         btnNext.setOnClickListener(v -> {
-            currentDate.add(Calendar.MONTH, 1);
-            updateCalendar(currentDate.get(Calendar.MONTH));
+            presenter.onShowNextMonth();
         });
 
         btnPrev.setOnClickListener(v -> {
-            currentDate.add(Calendar.MONTH, -1);
-            updateCalendar(currentDate.get(Calendar.MONTH));
+            presenter.onShowPrevMonth();
         });
     }
 
@@ -166,14 +152,14 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
 
         }
 
-        setCurrentRoom(roomNum);
         currentSelectedRoom = roomNum.get();
         mRoomCommentary.setText("Set commentary for room" + mRoom.getText().toString());
     }
 
-    private void updateCalendar(int month) {
+    @Override
+    public void updateCalendar(int month) {
         ArrayList<ScheduleCell> cells = new ArrayList<>();
-        Calendar calendar = (Calendar) currentDate.clone();
+        Calendar calendar = Calendar.getInstance();
 
         calendar.set(Calendar.MONTH, month);
 
@@ -208,26 +194,12 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
     }
 
     @Override
-    public void setCurrentRoom(ROOM_NUM currentRoom) {
-        this.currentRoom = currentRoom;
+    public void onDateClicked(ScheduleCell date) {
+        presenter.onDateClicked(date);
     }
 
     @Override
-    public void onDateClicked(ScheduleCell date) {
-        date.setRoomNum(currentRoom);
-        if (rangeStartDate != null) {
-            if (!rangeStartDate.equals(date)) {
-                date.setState(CELL_STATE.END);
-                addDuty(rangeStartDate.getDate(), date.getDate(), currentRoom);
-            } else {
-                date.setState(CELL_STATE.NONE);
-                gridAdapter.updateDate(date, currentRoom);
-            }
-            rangeStartDate = null;
-        } else {
-            rangeStartDate = date;
-            date.setState(CELL_STATE.START);
-            gridAdapter.updateDate(date, currentRoom);
-        }
+    public void updateDate(ScheduleCell cell, ROOM_NUM roomNum) {
+        gridAdapter.updateDate(cell, roomNum);
     }
 }

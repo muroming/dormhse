@@ -30,6 +30,8 @@ public class CalendarAdapter extends ArrayAdapter<ScheduleCell> {
     private WeakReference<Context> context;
     private ScheduleFragmentView callback;
 
+    private boolean isCurrentDaySet;
+
     CalendarAdapter(Context context, ScheduleFragmentView callback) {
         super(context, R.layout.schedule_calendar_day);
         this.context = new WeakReference<>(context);
@@ -95,7 +97,6 @@ public class CalendarAdapter extends ArrayAdapter<ScheduleCell> {
         Calendar c = Calendar.getInstance();
         c.setTime(date.getDate());
 
-        Date today = new Date();
 
 
         // inflate item if it does not exist yet
@@ -108,10 +109,14 @@ public class CalendarAdapter extends ArrayAdapter<ScheduleCell> {
         text.setText(String.valueOf(c.get(Calendar.DAY_OF_MONTH)));
 
         // Set current day background
-        if (DateTimeComparator.getDateOnlyInstance().compare(c.getTime(), today) == 0) {
-            text.setBackground(context.get().getDrawable(R.drawable.current_date_selector));
-        } else {
-            text.setBackgroundResource(0);
+        if (!isCurrentDaySet) {
+            Date today = new Date();
+            if (DateTimeComparator.getDateOnlyInstance().compare(c.getTime(), today) == 0) {
+                text.setBackground(context.get().getDrawable(R.drawable.current_date_selector));
+                isCurrentDaySet = true;
+            } else {
+                text.setBackgroundResource(0);
+            }
         }
 
         //if month equals to current month then set text color to black
@@ -155,22 +160,38 @@ public class CalendarAdapter extends ArrayAdapter<ScheduleCell> {
 
             case MEDIUM: {
                 view.setBackgroundColor(color);
+                break;
+            }
+            case NONE:{
+                view.setBackgroundResource(0);
             }
         }
 
-        Drawable background = view.getBackground();
-        if (background instanceof ShapeDrawable) {
-            ((ShapeDrawable) background).getPaint().setColor(color);
-        } else if (background instanceof GradientDrawable) {
-            ((GradientDrawable) background).setColor(color);
-        } else if (background instanceof ColorDrawable) {
-            ((ColorDrawable) background).setColor(color);
+        // If start or end then set
+        if (date.getState() != ScheduleFragment.CELL_STATE.NONE && date.getState() != ScheduleFragment.CELL_STATE.MEDIUM) {
+            Drawable background = view.getBackground();
+            if (background instanceof ShapeDrawable) {
+                ((ShapeDrawable) background).getPaint().setColor(color);
+            } else if (background instanceof GradientDrawable) {
+                ((GradientDrawable) background).setColor(color);
+            } else if (background instanceof ColorDrawable) {
+                ((ColorDrawable) background).setColor(color);
+            }
         }
 
 
         // Set view on click listener
-        view.setOnClickListener(v -> callback.onDateClicked(date));
+        view.setOnClickListener(v -> {
+            if(c.get(Calendar.MONTH) == currentMonth)
+                callback.onDateClicked(date);
+        });
 
         return view;
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+        isCurrentDaySet = false;
     }
 }

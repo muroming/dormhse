@@ -9,5 +9,7 @@ interface ScheduleFragmentView extends MvpView {
 
     void onDateClicked(ScheduleCell date);
 
-    void setCurrentRoom(ROOM_NUM roomNum);
+    void updateDate(ScheduleCell cell, ROOM_NUM roomNum);
+
+    void updateCalendar(int month);
 }
