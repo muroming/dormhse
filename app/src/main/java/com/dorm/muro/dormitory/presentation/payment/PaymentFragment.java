@@ -6,8 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.arellomobile.mvp.MvpAppCompatFragment;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.dorm.muro.dormitory.presentation.main.MainActivity;
 import com.dorm.muro.dormitory.R;
 
@@ -27,24 +28,16 @@ import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
-public class PaymentFragment extends Fragment {
+public class PaymentFragment extends MvpAppCompatFragment implements PaymentView{
 
-    @BindView(R.id.wv_payment_webview)
+    @BindView(R.id.wv_payment)
     WebView mPaymentWebView;
 
-    @BindView(R.id.pb_payment_loading_progress)
-    ProgressBar mLoadingProgressBar;
-
-    @BindView(R.id.srl_payment_swipe_refresh)
-    SwipeRefreshLayout mSwipeRefreshLayout;
-
-    @BindView(R.id.tv_payment_progress_title)
-    TextView mPaymentProgressTitle;
-
-    @BindView(R.id.tv_payment_progress_steps)
-    TextView mPaymentProgressSteps;
+    @InjectPresenter
+    PaymentPresenter presenter;
 
     public static final String USER_FIO = "USER_FIO";
     public static final String CONTRACT_ID = "CONTRACT_ID";
@@ -80,10 +73,12 @@ public class PaymentFragment extends Fragment {
             "var b=document.getElementById(\"input-month\").value=%s;" +
             "var c=document.getElementById(\"input-year\").value=%s;" +
             "var d=document.getElementById(\"iTEXT\").value='%s';";
-    private final String RAW_CSS = "body {font-family: sans-serif;}";
 
     private SharedPreferences preferences;
     private String[] progressTitles;
+    private AlertDialog paymentDialog;
+    private ProgressBar progressBar;
+    private TextView progressPhrase;
 
     public PaymentFragment() {
         // Required empty public constructor
@@ -91,35 +86,36 @@ public class PaymentFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_payment, container, false);
         ButterKnife.bind(this, view);
         preferences = getActivity().getSharedPreferences(MainActivity.SHARED_PREFERENCES, Context.MODE_PRIVATE);
         progressTitles = getResources().getStringArray(R.array.payment_progress);
-        mPaymentProgressTitle.setText(progressTitles[new Random().nextInt(progressTitles.length)]);
 
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mLoadingProgressBar.setVisibility(View.VISIBLE);
-                mPaymentWebView.setVisibility(View.INVISIBLE);
-                mPaymentProgressTitle.setVisibility(View.VISIBLE);
-                mPaymentProgressTitle.setText(progressTitles[new Random().nextInt(progressTitles.length)]);
-                mPaymentWebView.loadUrl(PAYMENT_URL);
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        });
+        //Setup dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        View v = inflater.inflate(R.layout.payment_progress_dialog, null);
+        progressPhrase = v.findViewById(R.id.progress_phrase);
+        progressBar = v.findViewById(R.id.progress);
+
+        builder
+                .setTitle(getResources().getString(R.string.payment_title))
+                .setView(v)
+                .setNegativeButton(getResources().getString(R.string.cancel), (dialog, id) -> presenter.onStopPayClicked());
+
+        paymentDialog = builder.create();
 
         // Set JS interaction
         mPaymentWebView.getSettings().setJavaScriptEnabled(true);
         mPaymentWebView.addJavascriptInterface(this, "CallBack");
+
         //Block image loading to load faster
         mPaymentWebView.getSettings().setBlockNetworkImage(true);
 
+        //Set paying logic
         mPaymentWebView.setWebViewClient(new WebViewClient() {
-
             //Intercept .css files to load faster
             @Nullable
             @Override
@@ -138,9 +134,6 @@ public class PaymentFragment extends Fragment {
                 } else {
                     if (url.contains("checkout")) {  //Skip final page reviewing payment info
                         mPaymentWebView.setVisibility(View.VISIBLE);
-                        mLoadingProgressBar.setVisibility(View.INVISIBLE);
-                        mPaymentProgressTitle.setVisibility(View.INVISIBLE);
-                        mPaymentProgressSteps.setVisibility(View.INVISIBLE);
                     } else {  //Input card info and confirm payment
                         if (preferences.contains(CARDHOLDER_NAME) && preferences.contains(CARD_NUMBER) && preferences.contains(CARD_YEAR) && preferences.contains(CARD_MONTH)) {
                             String cardholderName = preferences.getString(CARDHOLDER_NAME, "");
@@ -150,20 +143,15 @@ public class PaymentFragment extends Fragment {
                             String query = String.format(ENTER_CARD_AND_CONFIRM_INFO, cardNumber, cardMonth, cardYear, cardholderName);
                             view.evaluateJavascript(query, null);
                         } else {
-                            Toast.makeText(getContext(), getString(R.string.no_payment_credits_set), Toast.LENGTH_LONG).show();
+                            presenter.onPayerDataNotSetError();
                         }
                     }
                 }
             }
-
         });
 
-        if (savedInstanceState == null) {
-            mPaymentWebView.loadUrl(PAYMENT_URL);
-        } else {
+        if (savedInstanceState != null) {
             mPaymentWebView.restoreState(savedInstanceState);
-            mPaymentProgressSteps.setVisibility(View.INVISIBLE);
-            mPaymentProgressTitle.setVisibility(View.INVISIBLE);
         }
 
         return view;
@@ -204,23 +192,56 @@ public class PaymentFragment extends Fragment {
         return res.toString();
     }
 
+
+
+    @OnClick(R.id.btn_pay_button)
+    public void onPayButtonClicked(){
+        presenter.onPayButtonClicked();
+    }
+
+    @Override
+    public void startPayment() {
+        mPaymentWebView.loadUrl(PAYMENT_URL);
+    }
+
+    @Override
+    public void showPaymentProgressDialog() {
+        progressPhrase.setText(progressTitles[new Random().nextInt(progressTitles.length)]);
+        progressBar.setProgress(50, true);
+    }
+
+    @Override
+    public void hidePaymentProgressDialog() {
+        paymentDialog.dismiss();
+    }
+
+    @Override
+    public void stopPayment() {
+        mPaymentWebView.stopLoading();
+    }
+
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         mPaymentWebView.saveState(outState);
     }
 
+    @Override
+    public void incrementPaymentStep() {
+        progressBar.setProgress(100, true);
+    }
+
+    @Override
+    public void showErrorToast(int stringResource) {
+        Toast.makeText(getContext(), getResources().getString(stringResource), Toast.LENGTH_SHORT).show();
+    }
+
     @JavascriptInterface
     public void handleErrorMsg() {
-        Toast.makeText(getContext(), getString(R.string.payment_user_not_found), Toast.LENGTH_LONG).show();
+        presenter.onPayerWrongDataError();
     }
 
     @JavascriptInterface
     public void incrementStep() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mPaymentProgressSteps.setText("[2 / 2]");
-            }
-        });
+        presenter.onIncrementPaymentStep();
     }
 }
