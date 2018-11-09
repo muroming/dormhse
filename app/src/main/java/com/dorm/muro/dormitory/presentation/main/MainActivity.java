@@ -6,14 +6,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
+import com.arellomobile.mvp.MvpAppCompatActivity;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.dorm.muro.dormitory.presentation.payment.PaymentFragment;
 import com.dorm.muro.dormitory.presentation.schedule.ScheduleFragment;
 import com.dorm.muro.dormitory.presentation.firstfragment.ShopsWorkingTimeFragment;
@@ -28,27 +27,25 @@ import butterknife.ButterKnife;
 
 import static com.dorm.muro.dormitory.presentation.login.LoginActivity.IS_LOGGED;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends MvpAppCompatActivity implements MainActivityView {
 
     public static final String CHANNEL_ID = "DORMITORY_CHANNEL";
     public static final String APP_SECTION_TITLE = "SECTION_TITLE";
     public static final String SHARED_PREFERENCES = "APP_DORMITORY_PREFS";
     public static final String DIALOG_TAG = "DIALOG_TAG";
 
-    public static void start(Context context){
+    public static void start(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
     }
 
+    @InjectPresenter
+    MainActivityPresenter presenter;
 
-    private Fragment paymentFragment, scheduleFragment, workTimeFragment;
     SharedPreferences preferences;
 
     @BindView(R.id.navigation)
     BottomNavigationView navigation;
-
-    @BindView(R.id.tv_app_section_title)
-    TextView sectionTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,16 +61,20 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("FB", FirebaseInstanceId.getInstance().getToken());
 
-        if (savedInstanceState != null) {
-            sectionTitle.setText(savedInstanceState.getString(APP_SECTION_TITLE));
-        }
-
-
-        paymentFragment = new PaymentFragment();
-        scheduleFragment = new ScheduleFragment();
-        workTimeFragment = new ShopsWorkingTimeFragment();
-
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.navigation_nearby:
+                    presenter.showNearbyPlaces();
+                    return true;
+                case R.id.navigation_schedule:
+                    presenter.showScheduleFragment();
+                    return true;
+                case R.id.navigation_payment:
+                    presenter.showPaymentFragment();
+                    return true;
+            }
+            return false;
+        });
     }
 
     @Override
@@ -81,17 +82,10 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         String fragmentToOpen = getIntent().getStringExtra(PaymentFCM.TARGET_FRAGMENT);
 
-        if(fragmentToOpen != null && fragmentToOpen.equals(PaymentFragment.class.getSimpleName())) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fl_main_fragment_container, paymentFragment)
-                    .commit();
+        if (fragmentToOpen != null && fragmentToOpen.equals(PaymentFragment.class.getSimpleName())) {
+            presenter.showPaymentFragment();
+            navigation.setSelectedItemId(R.id.navigation_payment);
         }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(APP_SECTION_TITLE, sectionTitle.getText().toString());
     }
 
     @Override
@@ -120,10 +114,32 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private Intent getTargetIntent(Class targetClass){
+    private Intent getTargetIntent(Class targetClass) {
         Intent intent = new Intent(this, targetClass);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
+    }
+
+    @Override
+    public void showNearbyPlaces() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fl_main_fragment_container, new ShopsWorkingTimeFragment())
+                .commit();
+    }
+
+    @Override
+    public void showScheduleFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fl_main_fragment_container, new ScheduleFragment())
+                .commit();
+    }
+
+    @Override
+    public void showPaymentFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fl_main_fragment_container, new PaymentFragment())
+                .commit();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -131,23 +147,15 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
             switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    sectionTitle.setText("Nearby Places");
-                    fragmentTransaction.replace(R.id.fl_main_fragment_container, workTimeFragment);
-                    fragmentTransaction.commit();
+                case R.id.navigation_nearby:
+                    presenter.showNearbyPlaces();
                     return true;
-                case R.id.navigation_dashboard:
-                    sectionTitle.setText("Cleaning Schedule");
-                    fragmentTransaction.replace(R.id.fl_main_fragment_container, scheduleFragment);
-                    fragmentTransaction.commit();
+                case R.id.navigation_schedule:
+                    presenter.showScheduleFragment();
                     return true;
-                case R.id.navigation_notifications:
-                    sectionTitle.setText("Payment");
-                    fragmentTransaction.replace(R.id.fl_main_fragment_container, paymentFragment);
-                    fragmentTransaction.commit();
+                case R.id.navigation_payment:
+                    presenter.showPaymentFragment();
                     return true;
             }
             return false;
