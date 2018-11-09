@@ -1,58 +1,51 @@
 package com.dorm.muro.dormitory.presentation.main;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
+import com.arellomobile.mvp.MvpAppCompatActivity;
+import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.dorm.muro.dormitory.presentation.payment.PaymentFragment;
 import com.dorm.muro.dormitory.presentation.schedule.ScheduleFragment;
 import com.dorm.muro.dormitory.presentation.firstfragment.ShopsWorkingTimeFragment;
 import com.dorm.muro.dormitory.presentation.options.OptionsActivity;
 import com.dorm.muro.dormitory.R;
 import com.dorm.muro.dormitory.presentation.login.LoginActivity;
+import com.dorm.muro.dormitory.service.PaymentFCM;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.dorm.muro.dormitory.presentation.login.LoginActivity.IS_LOGGED;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends MvpAppCompatActivity implements MainActivityView {
 
     public static final String CHANNEL_ID = "DORMITORY_CHANNEL";
-    public static final int NOTIFICATION_ID = 1;
     public static final String APP_SECTION_TITLE = "SECTION_TITLE";
     public static final String SHARED_PREFERENCES = "APP_DORMITORY_PREFS";
     public static final String DIALOG_TAG = "DIALOG_TAG";
 
-    public static void start(Context context){
+    public static void start(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
     }
 
+    @InjectPresenter
+    MainActivityPresenter presenter;
 
-    private Fragment paymentFragment, scheduleFragment, workTimeFragment;
     SharedPreferences preferences;
 
     @BindView(R.id.navigation)
     BottomNavigationView navigation;
-
-    @BindView(R.id.tv_app_section_title)
-    TextView sectionTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,52 +59,33 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        if (savedInstanceState != null) {
-            sectionTitle.setText(savedInstanceState.getString(APP_SECTION_TITLE));
-        }
+        Log.d("FB", FirebaseInstanceId.getInstance().getToken());
 
-        createNotificationChannel();
-
-        paymentFragment = new PaymentFragment();
-        scheduleFragment = new ScheduleFragment();
-        workTimeFragment = new ShopsWorkingTimeFragment();
-
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-    }
-
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.notification_channel_name);
-            String description = getString(R.string.notification_channel_description);
-
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setDescription(description);
-
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
-        }
-    }
-
-    void createPaymentNotification() {
-        Intent actionIntent = new Intent(this, MainActivity.class);
-        //ToDo: add extras to intent to open this fragment
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, actionIntent, 0);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, MainActivity.CHANNEL_ID)
-                .setContentTitle(getString(R.string.notification_payment_title))
-                .setContentText(getString(R.string.notification_payment_context))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
-
-        NotificationManagerCompat compat = NotificationManagerCompat.from(this);
-        compat.notify(NOTIFICATION_ID, builder.build());
+        navigation.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.navigation_nearby:
+                    presenter.showNearbyPlaces();
+                    return true;
+                case R.id.navigation_schedule:
+                    presenter.showScheduleFragment();
+                    return true;
+                case R.id.navigation_payment:
+                    presenter.showPaymentFragment();
+                    return true;
+            }
+            return false;
+        });
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(APP_SECTION_TITLE, sectionTitle.getText().toString());
+    protected void onStart() {
+        super.onStart();
+        String fragmentToOpen = getIntent().getStringExtra(PaymentFCM.TARGET_FRAGMENT);
+
+        if (fragmentToOpen != null && fragmentToOpen.equals(PaymentFragment.class.getSimpleName())) {
+            presenter.showPaymentFragment();
+            navigation.setSelectedItemId(R.id.navigation_payment);
+        }
     }
 
     @Override
@@ -140,10 +114,32 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private Intent getTargetIntent(Class targetClass){
+    private Intent getTargetIntent(Class targetClass) {
         Intent intent = new Intent(this, targetClass);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
+    }
+
+    @Override
+    public void showNearbyPlaces() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fl_main_fragment_container, new ShopsWorkingTimeFragment())
+                .commit();
+    }
+
+    @Override
+    public void showScheduleFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fl_main_fragment_container, new ScheduleFragment())
+                .commit();
+    }
+
+    @Override
+    public void showPaymentFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fl_main_fragment_container, new PaymentFragment())
+                .commit();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -151,23 +147,15 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
             switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    sectionTitle.setText("Nearby Places");
-                    fragmentTransaction.replace(R.id.fl_main_fragment_container, workTimeFragment);
-                    fragmentTransaction.commit();
+                case R.id.navigation_nearby:
+                    presenter.showNearbyPlaces();
                     return true;
-                case R.id.navigation_dashboard:
-                    sectionTitle.setText("Cleaning Schedule");
-                    fragmentTransaction.replace(R.id.fl_main_fragment_container, scheduleFragment);
-                    fragmentTransaction.commit();
+                case R.id.navigation_schedule:
+                    presenter.showScheduleFragment();
                     return true;
-                case R.id.navigation_notifications:
-                    sectionTitle.setText("Payment");
-                    fragmentTransaction.replace(R.id.fl_main_fragment_container, paymentFragment);
-                    fragmentTransaction.commit();
+                case R.id.navigation_payment:
+                    presenter.showPaymentFragment();
                     return true;
             }
             return false;

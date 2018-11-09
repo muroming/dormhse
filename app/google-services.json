@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "676975068043",
+    "firebase_url": "https://dormhse.firebaseio.com",
+    "project_id": "dormhse",
+    "storage_bucket": "dormhse.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:676975068043:android:b572d3d43d81ee82",
+        "android_client_info": {
+          "package_name": "com.dorm.muro.dormitory"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "676975068043-8ujfmr3l6gj6h91u18dfqnvcp2va9hhu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dorm.muro.dormitory",
+            "certificate_hash": "d335cd6f239fff025e491b3d3abc0cb5b40e920e"
+          }
+        },
+        {
+          "client_id": "676975068043-29oa3lomvtbkt88ljut2ga71trk8fo4k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoeVQ1t7Y23HBcHSlKM779TVLRuzzCgb8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "676975068043-29oa3lomvtbkt88ljut2ga71trk8fo4k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

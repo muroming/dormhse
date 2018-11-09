@@ -216,11 +216,6 @@ public class PaymentFragment extends Fragment {
 
     @JavascriptInterface
     public void incrementStep() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mPaymentProgressSteps.setText("[2 / 2]");
-            }
-        });
+        getActivity().runOnUiThread(() -> mPaymentProgressSteps.setText("[2 / 2]"));
     }
 }
