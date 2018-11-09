@@ -15,6 +15,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +32,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class PaymentFragment extends MvpAppCompatFragment implements PaymentView{
+public class PaymentFragment extends MvpAppCompatFragment implements PaymentView {
 
     @BindView(R.id.wv_payment)
     WebView mPaymentWebView;
@@ -95,17 +96,10 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
         progressTitles = getResources().getStringArray(R.array.payment_progress);
 
         //Setup dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        View v = inflater.inflate(R.layout.payment_progress_dialog, null);
-        progressPhrase = v.findViewById(R.id.progress_phrase);
-        progressBar = v.findViewById(R.id.progress);
+        setupDialog(inflater);
 
-        builder
-                .setTitle(getResources().getString(R.string.payment_title))
-                .setView(v)
-                .setNegativeButton(getResources().getString(R.string.cancel), (dialog, id) -> presenter.onStopPayClicked());
-
-        paymentDialog = builder.create();
+        //Setup user
+        setupUserInfo(view);
 
         // Set JS interaction
         mPaymentWebView.getSettings().setJavaScriptEnabled(true);
@@ -157,6 +151,37 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
         return view;
     }
 
+    private void setupDialog(LayoutInflater inflater) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        View v = inflater.inflate(R.layout.payment_progress_dialog, null);
+        progressPhrase = v.findViewById(R.id.progress_phrase);
+        progressBar = v.findViewById(R.id.progress);
+
+        builder
+                .setTitle(getResources().getString(R.string.payment_title))
+                .setView(v)
+                .setNegativeButton(getResources().getString(R.string.cancel), (dialog, id) -> presenter.onStopPayClicked());
+
+        paymentDialog = builder.create();
+    }
+
+    private void setupUserInfo(View view) {
+        String notSet = getResources().getString(R.string.payment_not_set);
+        ((TextView) view.findViewById(R.id.tv_payment_fio)).setText(preferences.getString(USER_FIO, notSet));
+        ((TextView) view.findViewById(R.id.tv_payment_contract)).setText(preferences.getString(CONTRACT_ID, notSet));
+
+        String from = preferences.getString(MONTHS_FROM, null), to = preferences.getString(MONTHS_TO, null);
+        if(from != null && to != null) {
+            int yearsTo = Integer.parseInt(to.split("/")[0]), monthsTo = Integer.parseInt(to.split("/")[1]);
+            int yearsFrom = Integer.parseInt(from.split("/")[0]), monthsFrom = Integer.parseInt(from.split("/")[1]);
+
+            int totalMonths = (yearsTo - yearsFrom) * 12 + monthsTo - monthsFrom;
+            ((Button) view.findViewById(R.id.btn_payment_range)).setText(getResources().getString(R.string.payment_range, totalMonths, to));
+        } else {
+            ((Button) view.findViewById(R.id.btn_payment_range)).setText(notSet);
+        }
+    }
+
 
     //fill all forms and proceed to confirm page
     private void fillStartPageAndProceed(WebView view) {
@@ -193,9 +218,8 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
     }
 
 
-
     @OnClick(R.id.btn_pay_button)
-    public void onPayButtonClicked(){
+    public void onPayButtonClicked() {
         presenter.onPayButtonClicked();
     }
 

@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.dorm.muro.dormitory"
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -23,28 +23,38 @@ android {
     }
 }
 
+ext {
+    support_lib_version = '28.0.0'
+    butterknife_version = '8.8.1'
+    dagger_version = '2.13'
+    moxy_version = '1.5.5'
+    jodatime_version = '2.10.1'
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     //App level dependencies
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support:design:28.0.0'
-    implementation 'com.android.support:support-v4:28.0.0'
+    implementation "com.android.support:appcompat-v7:$support_lib_version"
+    implementation "com.android.support:design:$support_lib_version"
+    implementation "com.android.support:support-v4:$support_lib_version"
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation 'com.android.support:cardview-v7:28.0.0'
-
+    implementation "com.android.support:cardview-v7:$support_lib_version"
 
     //Butterknife
-    implementation 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation "com.jakewharton:butterknife:$butterknife_version"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife_version"
 
     //Dagger
-    implementation  'com.google.dagger:dagger:2.13'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.13'
+    implementation "com.google.dagger:dagger:$dagger_version"
+    annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
 
     //Moxy
-    implementation 'com.arello-mobile:moxy-app-compat:1.5.5'
-    implementation 'com.arello-mobile:moxy-android:1.5.5'
-    annotationProcessor 'com.arello-mobile:moxy-compiler:1.5.5'
+    implementation "com.arello-mobile:moxy-app-compat:$moxy_version"
+    implementation "com.arello-mobile:moxy-android:$moxy_version"
+    annotationProcessor "com.arello-mobile:moxy-compiler:$moxy_version"
+
+    //JodaTime
+    implementation "joda-time:joda-time:$jodatime_version"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
