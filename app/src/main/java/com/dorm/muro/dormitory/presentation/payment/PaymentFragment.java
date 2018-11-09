@@ -31,6 +31,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.dorm.muro.dormitory.Constants.*;
+
 
 public class PaymentFragment extends MvpAppCompatFragment implements PaymentView {
 
@@ -92,7 +94,7 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_payment, container, false);
         ButterKnife.bind(this, view);
-        preferences = getActivity().getSharedPreferences(MainActivity.SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        preferences = getActivity().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
         progressTitles = getResources().getStringArray(R.array.payment_progress);
 
         //Setup dialog

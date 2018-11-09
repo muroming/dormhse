@@ -21,11 +21,19 @@
 
     <string name="settings">Настройки</string>
     <string name="settings_personal_data">Личные данные</string>
+    <string name="settings_password_title">Изменить пароль</string>
+    <string name="settings_new_password">Новый пароль</string>
+    <string name="settings_confirm_password">Подтвердите пароль</string>
+    <string name="settings_wrong_password">Неверный текущий пароль</string>
     <string name="settings_mail">Почта</string>
+    <string name="settings_mail_title">Изменить почту</string>
+    <string name="settings_new_mail">Новая почта</string>
     <string name="settings_notifications">Оповещения</string>
     <string name="settings_exit_account">Выйти из аккаунта</string>
     <string name="settings_fio_hint">Введите ФИО</string>
     <string name="settings_contract">Номер договора</string>
+    <string name="settings_contract_title">Изменить номер договора</string>
+    <string name="settings_new_contract">Новый номер договора</string>
     <string name="settings_contract_hint">Введите номер договора</string>
     <string name="settings_cost_per_month">Цена за месяц:</string>
     <string name="settings_cost_per_month_hint">Введите цену за месяц</string>
