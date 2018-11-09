@@ -1,20 +1,15 @@
 package com.dorm.muro.dormitory.presentation.main;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -25,6 +20,8 @@ import com.dorm.muro.dormitory.presentation.firstfragment.ShopsWorkingTimeFragme
 import com.dorm.muro.dormitory.presentation.options.OptionsActivity;
 import com.dorm.muro.dormitory.R;
 import com.dorm.muro.dormitory.presentation.login.LoginActivity;
+import com.dorm.muro.dormitory.service.PaymentFCM;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,7 +31,6 @@ import static com.dorm.muro.dormitory.presentation.login.LoginActivity.IS_LOGGED
 public class MainActivity extends AppCompatActivity {
 
     public static final String CHANNEL_ID = "DORMITORY_CHANNEL";
-    public static final int NOTIFICATION_ID = 1;
     public static final String APP_SECTION_TITLE = "SECTION_TITLE";
     public static final String SHARED_PREFERENCES = "APP_DORMITORY_PREFS";
     public static final String DIALOG_TAG = "DIALOG_TAG";
@@ -66,11 +62,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        Log.d("FB", FirebaseInstanceId.getInstance().getToken());
+
         if (savedInstanceState != null) {
             sectionTitle.setText(savedInstanceState.getString(APP_SECTION_TITLE));
         }
 
-        createNotificationChannel();
 
         paymentFragment = new PaymentFragment();
         scheduleFragment = new ScheduleFragment();
@@ -79,33 +76,16 @@ public class MainActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.notification_channel_name);
-            String description = getString(R.string.notification_channel_description);
+    @Override
+    protected void onStart() {
+        super.onStart();
+        String fragmentToOpen = getIntent().getStringExtra(PaymentFCM.TARGET_FRAGMENT);
 
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setDescription(description);
-
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
+        if(fragmentToOpen != null && fragmentToOpen.equals(PaymentFragment.class.getSimpleName())) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fl_main_fragment_container, paymentFragment)
+                    .commit();
         }
-    }
-
-    void createPaymentNotification() {
-        Intent actionIntent = new Intent(this, MainActivity.class);
-        //ToDo: add extras to intent to open this fragment
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, actionIntent, 0);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, MainActivity.CHANNEL_ID)
-                .setContentTitle(getString(R.string.notification_payment_title))
-                .setContentText(getString(R.string.notification_payment_context))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
-
-        NotificationManagerCompat compat = NotificationManagerCompat.from(this);
-        compat.notify(NOTIFICATION_ID, builder.build());
     }
 
     @Override
