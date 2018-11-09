@@ -1,155 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".presentation.options.OptionsActivity">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/settings_header"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/settings"
-        android:layout_marginTop="10dp"
-        android:textSize="25sp"/>
-
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_below="@+id/settings_header"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="30dp">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/settings_fio"
-                android:textSize="20sp"/>
-            <EditText
-                android:id="@+id/et_settings_fio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:maxLines="1"
-                android:inputType="text"
-                android:hint="@string/settings_fio_hint"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/settings_contract"
-                android:textSize="20sp"/>
-            <EditText
-                android:id="@+id/et_settings_contract"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:maxLines="1"
-                android:inputType="text"
-                android:hint="@string/settings_contract_hint"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/settings_cost_per_month"
-                android:textSize="20sp"/>
-            <EditText
-                android:id="@+id/et_settings_cost_per_month"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:inputType="numberDecimal"
-                android:hint="@string/settings_cost_per_month_hint"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/settings_card_number"
-                android:textSize="20sp"/>
-            <EditText
-                android:id="@+id/et_settings_card_number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:inputType="text"
-                android:hint="@string/settings_card_number_hint"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/settings_cardholder_name"
-                android:textSize="20sp"/>
-            <EditText
-                android:id="@+id/et_settings_cardholder_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:inputType="textCapCharacters"
-                android:hint="@string/settings_cardholder_name_hint"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/settings_card_date"
-                android:textSize="20sp"/>
-            <EditText
-                android:id="@+id/et_settings_card_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:inputType="date"
-                android:hint="@string/settings_card_date_hint"/>
-        </LinearLayout>
+        android:layout_height="wrap_content">
+
         <TextView
+            android:id="@+id/mail_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="40dp"
-            android:text="@string/settings_months_to_pay_for"
-            android:textSize="20sp"/>
-        <LinearLayout
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="18dp"
+            android:text="@string/settings_mail"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/mail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mail_title"
+            tools:text="test@gmail.com" />
+
+        <View
+            android:id="@+id/sep1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="From:"/>
-            <Button
-                android:id="@+id/bn_settings_select_date_from"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="@string/select"/>
-            <TextView
-                android:layout_marginLeft="30dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="To:"/>
-            <Button
-                android:id="@+id/bn_settings_select_date_to"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="@string/select"/>
-        </LinearLayout>
-    </LinearLayout>
-</RelativeLayout>
+            android:layout_height="1dp"
+            android:layout_marginTop="18dp"
+            android:background="@color/separatorColor"
+            app:layout_constraintTop_toBottomOf="@id/mail" />
+
+        <TextView
+            android:id="@+id/change_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="18dp"
+            android:text="@string/settings_change_password"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sep1" />
+
+        <View
+            android:id="@+id/sep2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="18dp"
+            android:background="@color/separatorColor"
+            app:layout_constraintTop_toBottomOf="@id/change_password" />
+
+        <TextView
+            android:id="@+id/contract_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="18dp"
+            android:text="@string/settings_contract"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sep2" />
+
+        <TextView
+            android:id="@+id/contract"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/contract_title"
+            tools:text="123456789ABC" />
+
+        <View
+            android:id="@+id/sep3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="18dp"
+            android:background="@color/separatorColor"
+            app:layout_constraintTop_toBottomOf="@id/contract" />
+
+
+        <TextView
+            android:id="@+id/personal_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="18dp"
+            android:text="@string/settings_personal_data"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sep3" />
+
+        <TextView
+            android:id="@+id/fio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/personal_data"
+            tools:text="Имя фамилия" />
+
+        <TextView
+            android:id="@+id/card_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center_vertical"
+            android:drawableEnd="@drawable/ic_visa"
+            android:drawablePadding="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fio"
+            tools:text="• • • • 1234" />
+
+        <View
+            android:id="@+id/sep4"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="18dp"
+            android:background="@color/separatorColor"
+            app:layout_constraintTop_toBottomOf="@id/card_data" />
+
+        <TextView
+            android:id="@+id/notifications"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="18dp"
+            android:text="@string/settings_notifications"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sep4" />
+
+        <View
+            android:id="@+id/sep5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="18dp"
+            android:background="@color/separatorColor"
+            app:layout_constraintTop_toBottomOf="@id/notifications" />
+
+        <TextView
+            android:id="@+id/exit_account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="18dp"
+            android:text="@string/settings_exit_account"
+            android:textColor="@color/dangerousAction"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sep5" />
+
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>

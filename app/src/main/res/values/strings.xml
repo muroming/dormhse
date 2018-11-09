@@ -18,8 +18,12 @@
     <string name="notification_channel_description">This channel is used for Dormitory app notifications</string>
     <string name="notification_payment_title">Time to PAY >:c</string>
     <string name="notification_payment_context">Long boring context that no one will ever read</string>
+
     <string name="settings">Настройки</string>
-    <string name="settings_fio">Ф.И.О.</string>
+    <string name="settings_personal_data">Личные данные</string>
+    <string name="settings_mail">Почта</string>
+    <string name="settings_notifications">Оповещения</string>
+    <string name="settings_exit_account">Выйти из аккаунта</string>
     <string name="settings_fio_hint">Введите ФИО</string>
     <string name="settings_contract">Номер договора</string>
     <string name="settings_contract_hint">Введите номер договора</string>
@@ -28,6 +32,7 @@
     <string name="settings_months_to_pay_for">Оплата за месяца:</string>
     <string name="settings_months_select">Выбрать</string>
     <string name="settings_date_picker_title">Выберите первую и последнюю даты оплаты</string>
+    <string name="settings_change_password">Смените пароль</string>
     <string name="select">Подтвердить</string>
     <string name="cancel">Отменить</string>
     <string name="settings_date_picker_invalid_dates">Введены неверные даты</string>
@@ -42,6 +47,7 @@
     <string name="settings_card_date_hint">Введите дату карты</string>
 
     <string name="payment_title">Оплата проживания</string>
+    <string name="payment_fio">Ф.И.О.</string>
     <string name="payment_user_not_found">Пользователь с указаными ФИО и договором не найден</string>
     <string name="payment_pay_action">Оплатить</string>
     <string name="payment_range">%i месяцев, до %s</string>

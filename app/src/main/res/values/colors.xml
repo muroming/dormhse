@@ -8,7 +8,7 @@
     <color name="appStaticInterface">#FF00D6C9</color>
     <color name="successGreen">#FF00A84D</color>
     <color name="failRed">#FFCB0000</color>
-    <color name="redWarning">#a6ff1313</color>
+    <color name="dangerousAction">#C30000</color>
     <color name="lightCyan">#66FFFE</color>
     <color name="black">#000</color>
     <color name="white">#fff</color>
