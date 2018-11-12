@@ -13,7 +13,6 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.dorm.muro.dormitory.presentation.payment.PaymentFragment;
 import com.dorm.muro.dormitory.presentation.schedule.ScheduleFragment;
 import com.dorm.muro.dormitory.presentation.firstfragment.ShopsWorkingTimeFragment;
-import com.dorm.muro.dormitory.presentation.options.OptionsActivity;
 import com.dorm.muro.dormitory.R;
 import com.dorm.muro.dormitory.presentation.login.LoginActivity;
 import com.dorm.muro.dormitory.service.PaymentFCM;
@@ -21,13 +20,12 @@ import com.dorm.muro.dormitory.service.PaymentFCM;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.dorm.muro.dormitory.presentation.login.LoginActivity.IS_LOGGED;
+import static com.dorm.muro.dormitory.Constants.*;
 
 public class MainActivity extends MvpAppCompatActivity implements MainActivityView {
 
     public static final String CHANNEL_ID = "DORMITORY_CHANNEL";
     public static final String APP_SECTION_TITLE = "SECTION_TITLE";
-    public static final String SHARED_PREFERENCES = "APP_DORMITORY_PREFS";
     public static final String DIALOG_TAG = "DIALOG_TAG";
 
     public static void start(Context context) {

@@ -1,45 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.payment.PaymentFragment">
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/srl_payment_swipe_refresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    android:background="@color/appStaticInterface">
 
-        <WebView
-            android:id="@+id/wv_payment_webview"
+    <Button
+        android:id="@+id/btn_payment_range"
+        android:layout_width="328dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/payment_button_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="start|center_vertical"
+        android:drawableStart="@drawable/ic_schedule"
+        android:drawablePadding="16dp"
+        android:padding="16dp"
+        android:textAllCaps="false"
+        tools:text="1 месяц, до 16.09.18" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cv_background"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/payment_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_payment_range">
+
+
+        <TextView
+            android:id="@+id/tv_payment_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:elevation="12dp"
+            android:text="@string/payment_title"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/sep1"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:orientation="vertical"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center">
-        <ProgressBar
-            android:id="@+id/pb_payment_loading_progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+            android:layout_height="1dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/separatorColor"
+            android:elevation="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_payment_title" />
+
         <TextView
-            android:id="@+id/tv_payment_progress_title"
+            android:id="@+id/fio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="center"
-            android:textSize="20sp"
-            android:text="Progress"/>
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="36dp"
+            android:elevation="12dp"
+            android:text="@string/payment_fio"
+            android:textColor="@color/secondaryText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sep1" />
+
         <TextView
-            android:id="@+id/tv_payment_progress_steps"
+            android:id="@+id/tv_payment_fio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textSize="15sp"
-            android:text="[1 / 2]"
-            android:layout_gravity="center"/>
-    </LinearLayout>
-</FrameLayout>
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="5dp"
+            android:elevation="12dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fio"
+            tools:text="Типун Никита Антонович" />
+
+        <TextView
+            android:id="@+id/contract"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="30dp"
+            android:elevation="12dp"
+            android:text="@string/settings_contract"
+            android:textColor="@color/secondaryText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_payment_fio" />
+
+        <TextView
+            android:id="@+id/tv_payment_contract"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="5dp"
+            android:elevation="12dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/contract"
+            tools:text="Типун Никита Антонович" />
+
+        <Button
+            android:id="@+id/btn_pay_button"
+            android:layout_width="136dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/payment_button_confirm_background"
+            android:text="@string/payment_pay_action"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_payment_contract" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <WebView
+        android:id="@+id/wv_payment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="invisible" />
+</android.support.constraint.ConstraintLayout>

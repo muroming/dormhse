@@ -2,11 +2,9 @@
     <string name="app_name">Dormitory</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
     <string name="login">Войти</string>
     <string name="logout">Выйти</string>
+    <string name="login_contract_hint">Введите номер договора</string>
     <string name="login_email_hint">Введите Email</string>
     <string name="login_pass_hint">Введите пароль</string>
     <string name="register_name_hint">Введите имя</string>
@@ -21,40 +19,43 @@
     <string name="notification_channel_description">This channel is used for Dormitory app notifications</string>
     <string name="notification_payment_title">Time to PAY >:c</string>
     <string name="notification_payment_context">Long boring context that no one will ever read</string>
-    <string name="no_payment_credits_set">Некоторые платежные данные не заданы</string>
+
     <string name="settings">Настройки</string>
-    <string name="settings_fio">ФИО:</string>
-    <string name="settings_fio_hint">Введите ФИО</string>
-    <string name="settings_contract">Номер договора:</string>
-    <string name="settings_contract_hint">Введите номер договора</string>
+    <string name="settings_personal_data">Личные данные</string>
+    <string name="settings_password_title">Изменить пароль</string>
+    <string name="settings_new_password">Новый пароль</string>
+    <string name="settings_confirm_password">Подтвердите пароль</string>
+    <string name="settings_wrong_password">Неверный текущий пароль</string>
+    <string name="settings_mail">Почта</string>
+    <string name="settings_mail_title">Изменить почту</string>
+    <string name="settings_new_mail">Новая почта</string>
+    <string name="settings_notifications">Оповещения</string>
+    <string name="settings_exit_account">Выйти из аккаунта</string>
+    <string name="settings_contract">Номер договора</string>
+    <string name="settings_contract_title">Изменить номер договора</string>
+    <string name="settings_new_contract">Новый номер договора</string>
     <string name="settings_cost_per_month">Цена за месяц:</string>
-    <string name="settings_cost_per_month_hint">Введите цену за месяц</string>
     <string name="settings_months_to_pay_for">Оплата за месяца:</string>
     <string name="settings_months_select">Выбрать</string>
     <string name="settings_date_picker_title">Выберите первую и последнюю даты оплаты</string>
+    <string name="settings_change_password">Смените пароль</string>
     <string name="select">Подтвердить</string>
     <string name="cancel">Отменить</string>
     <string name="settings_date_picker_invalid_dates">Введены неверные даты</string>
     <string name="save">Сохранить</string>
-    <string name="months_hint">Месяца</string>
+    <string name="settings_change_personal_title">Изменить личные данные</string>
     <string name="settings_card_number">Номер карты</string>
-    <string name="settings_card_number_hint">Введите номер карты</string>
     <string name="settings_cardholder_name">Имя владельца</string>
-    <string name="settings_cardholder_name_hint">Введите имя владельца</string>
     <string name="settings_card_date">Дата карты</string>
     <string name="settings_card_date_format">%s/%s</string>
-    <string name="settings_card_date_hint">Введите дату карты</string>
+
+    <string name="payment_title">Оплата проживания</string>
+    <string name="payment_fio">Ф.И.О.</string>
     <string name="payment_user_not_found">Пользователь с указаными ФИО и договором не найден</string>
-    <string name="register_already_have_account">Уже есть аккаунт? Войти</string>
-    <string name="register_already_have_keyword">Войти</string>
-    <string name="register_continue">Далее</string>
-    <string name="register_finish">Зарегистрироваться</string>
-    <string name="forgot_password_title">Введите вашу почту для восстановления пароля</string>
-    <string name="forgot_password_button">Восстановить пароль</string>
-    <string name="forgot_password_try_again">Ввести ещё раз</string>
-    <string name="forgot_password_back">Вернуться ко входу</string>
-    <string name="forgot_password_callback_fail">Упс! Аккаунта с такой почтой не существует</string>
-    <string name="forgot_password_callback_success">Отлично! Мы отправили ссылку для восстановления пароля на</string>
+    <string name="payment_pay_action">Оплатить</string>
+    <string name="payment_range">%i месяцев, до %s</string>
+    <string name="payment_not_set">Не установлено</string>
+    <string name="no_payment_credits_set">Некоторые платежные данные не заданы</string>
     <string-array name="payment_progress">
         <item>Грабим банк&#8230;</item>
         <item>Берем в долг&#8230;</item>
@@ -62,4 +63,18 @@
         <item>Поливаем лужайку&#8230;</item>
         <item>Ищем баги&#8230;</item>
     </string-array>
+
+    <string name="register_already_have_account">Уже есть аккаунт? Войти</string>
+    <string name="register_already_have_keyword">Войти</string>
+    <string name="register_continue">Далее</string>
+    <string name="register_finish">Зарегистрироваться</string>
+
+    <string name="forgot_password_title">Введите вашу почту для восстановления пароля</string>
+    <string name="forgot_password_button">Восстановить пароль</string>
+    <string name="forgot_password_try_again">Ввести ещё раз</string>
+    <string name="forgot_password_back">Вернуться ко входу</string>
+    <string name="forgot_password_callback_fail">Упс! Аккаунта с такой почтой не существует</string>
+    <string name="forgot_password_callback_success">Отлично! Мы отправили ссылку для восстановления пароля на</string>
+
+
 </resources>

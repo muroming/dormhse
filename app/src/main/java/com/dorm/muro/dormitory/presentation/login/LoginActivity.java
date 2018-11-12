@@ -1,13 +1,10 @@
 package com.dorm.muro.dormitory.presentation.login;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -28,21 +25,18 @@ import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.dorm.muro.dormitory.presentation.main.MainActivity;
 import com.dorm.muro.dormitory.R;
 
-import java.util.Random;
-import java.util.regex.Pattern;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.dorm.muro.dormitory.presentation.main.MainActivity.SHARED_PREFERENCES;
+import static com.dorm.muro.dormitory.Constants.SHARED_PREFERENCES;
+
 
 public class LoginActivity extends MvpAppCompatActivity implements LoginView {
 
     @InjectPresenter
     LoginPresenter presenter;
 
-    public static final String IS_LOGGED = "LOGIN_STATUS";
     private enum FlipDir {NEXT, PREV}
 
     @BindView(R.id.et_login_mail) EditText mLoginEditText;
@@ -304,7 +298,6 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
 
     @Override
     public void showWrongEmail() {
-        mForgotMail.setBackgroundColor(getColor(R.color.redWarning));
         Toast.makeText(this, "Wrong email", Toast.LENGTH_SHORT).show();
     }
 }

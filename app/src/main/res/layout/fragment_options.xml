@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/mail_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="18dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="18dp"
+                android:text="@string/settings_mail"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/mail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="5dp"
+                android:text="test@gmail.com" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/sep1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/separatorColor"
+            app:layout_constraintTop_toBottomOf="@id/mail_title" />
+
+        <TextView
+            android:id="@+id/change_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:paddingBottom="18dp"
+            android:paddingTop="18dp"
+            android:text="@string/settings_change_password"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sep1" />
+
+        <View
+            android:id="@+id/sep2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/separatorColor"
+            app:layout_constraintTop_toBottomOf="@id/change_password" />
+
+        <LinearLayout
+            android:id="@+id/contract_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="18dp"
+            app:layout_constraintTop_toBottomOf="@id/sep2">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="18dp"
+                android:text="@string/settings_contract"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/contract"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="5dp"
+                android:text="123456789ABC" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/sep3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/separatorColor"
+            app:layout_constraintTop_toBottomOf="@id/contract_title" />
+
+
+        <LinearLayout
+            android:id="@+id/personal_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="18dp"
+            app:layout_constraintTop_toBottomOf="@id/sep3">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="18dp"
+                android:text="@string/settings_personal_data"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/fio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="5dp"
+                android:text="Имя фамилия" />
+
+            <TextView
+                android:id="@+id/card_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="5dp"
+                android:drawableEnd="@drawable/ic_visa"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical"
+                android:text="• • • • 1234" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/sep4"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="18dp"
+            android:background="@color/separatorColor"
+            app:layout_constraintTop_toBottomOf="@id/personal_data" />
+
+        <TextView
+            android:id="@+id/notifications"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:paddingBottom="18dp"
+            android:paddingTop="18dp"
+            android:text="@string/settings_notifications"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sep4" />
+        
+        <Switch
+            android:id="@+id/notification_switch"
+            android:layout_width="45dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sep4"
+            app:layout_constraintBottom_toTopOf="@id/sep5"/>
+
+        <View
+            android:id="@+id/sep5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/separatorColor"
+            app:layout_constraintTop_toBottomOf="@id/notifications" />
+
+        <TextView
+            android:id="@+id/exit_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:paddingBottom="18dp"
+            android:paddingTop="18dp"
+            android:text="@string/settings_exit_account"
+            android:textColor="@color/dangerousAction"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sep5" />
+
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>
