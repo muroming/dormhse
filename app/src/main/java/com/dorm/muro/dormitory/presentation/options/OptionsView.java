@@ -6,6 +6,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 public interface OptionsView extends MvpView {
     void showChangeDialog(int h1, int h2, int title, int type);
+    void showPersonalDialog(int h1, int h2, int h3, int title);
     void closeDialog();
     void showErrorToast(int stringRes);
 

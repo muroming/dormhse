@@ -6,9 +6,6 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.dorm.muro.dormitory.R;
 
-import static com.dorm.muro.dormitory.Constants.*;
-
-
 //import static com.dorm.muro.dormitory.presentation.login.LoginActivity.IS_LOGGED;
 
 @InjectViewState
@@ -51,6 +48,15 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
     void onChangePasswordClicked() {
         getViewState().showChangeDialog(R.string.settings_new_password, R.string.settings_confirm_password,
                 R.string.settings_password_title, PASSWORD);
+    }
+
+    void onChangePersonalDataClicked() {
+        getViewState().showPersonalDialog(R.string.settings_cardholder_name, R.string.settings_card_date,
+                R.string.settings_confirm_password, R.string.settings_change_personal_title);
+    }
+
+    void onPersonlChange(String name, String cardNum, String password) {
+        //Todo implement logic
     }
 
     void onChangeMailClicked() {
