@@ -4,10 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -20,7 +17,6 @@ import com.dorm.muro.dormitory.presentation.options.OptionsActivity;
 import com.dorm.muro.dormitory.R;
 import com.dorm.muro.dormitory.presentation.login.LoginActivity;
 import com.dorm.muro.dormitory.service.PaymentFCM;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,8 +55,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        Log.d("FB", FirebaseInstanceId.getInstance().getToken());
-
         navigation.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_nearby:
@@ -71,6 +65,9 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
                     return true;
                 case R.id.navigation_payment:
                     presenter.showPaymentFragment();
+                    return true;
+                case R.id.navigation_settings:
+                    presenter.showSettingsFragment();
                     return true;
             }
             return false;
@@ -98,10 +95,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.menu_settings_item: {
-                startActivity(getTargetIntent(OptionsActivity.class));
-                return true;
-            }
             case R.id.menu_logout_item: {
                 preferences.edit().remove(IS_LOGGED).apply();
                 Intent intent = new Intent(this, LoginActivity.class);
@@ -142,24 +135,8 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
                 .commit();
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_nearby:
-                    presenter.showNearbyPlaces();
-                    return true;
-                case R.id.navigation_schedule:
-                    presenter.showScheduleFragment();
-                    return true;
-                case R.id.navigation_payment:
-                    presenter.showPaymentFragment();
-                    return true;
-            }
-            return false;
-        }
-    };
-
+    @Override
+    public void showSettingsFragment() {
+        //TODO add fragment
+    }
 }

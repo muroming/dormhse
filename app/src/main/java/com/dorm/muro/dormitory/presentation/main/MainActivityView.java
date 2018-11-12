@@ -6,4 +6,5 @@ public interface MainActivityView extends MvpView {
     void showNearbyPlaces();
     void showScheduleFragment();
     void showPaymentFragment();
+    void showSettingsFragment();
 }

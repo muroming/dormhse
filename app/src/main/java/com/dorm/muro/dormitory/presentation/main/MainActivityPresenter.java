@@ -16,4 +16,8 @@ public class MainActivityPresenter extends MvpPresenter<MainActivityView> {
     void showPaymentFragment() {
         getViewState().showPaymentFragment();
     }
+
+    void showSettingsFragment() {
+        getViewState().showSettingsFragment();
+    }
 }
