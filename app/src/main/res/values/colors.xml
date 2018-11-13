@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#fff</color>
+    <color name="colorPrimaryDark">#9e9e9e</color>
     <color name="colorAccent">#FF4081</color>
     <color name="registerStage">#fd883d</color>
     <color name="clickableText">#FF5FB6B1</color>
     <color name="appStaticInterface">#FF00D6C9</color>
+    <color name="navbarIconColor">#005651</color>
     <color name="successGreen">#FF00A84D</color>
     <color name="failRed">#FFCB0000</color>
     <color name="dangerousAction">#C30000</color>

@@ -5,17 +5,26 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.dorm.muro.dormitory.presentation.options.OptionsFragment;
 import com.dorm.muro.dormitory.presentation.payment.PaymentFragment;
 import com.dorm.muro.dormitory.presentation.schedule.ScheduleFragment;
 import com.dorm.muro.dormitory.presentation.firstfragment.ShopsWorkingTimeFragment;
 import com.dorm.muro.dormitory.R;
 import com.dorm.muro.dormitory.presentation.login.LoginActivity;
 import com.dorm.muro.dormitory.service.PaymentFCM;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -112,29 +121,13 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
     }
 
     @Override
-    public void showNearbyPlaces() {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fl_main_fragment_container, new ShopsWorkingTimeFragment())
-                .commit();
-    }
-
-    @Override
-    public void showScheduleFragment() {
+    public void showFragment(Fragment fragment, int titleRes) {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fl_main_fragment_container, new ScheduleFragment())
+                .replace(R.id.fl_main_fragment_container, fragment)
                 .commit();
-    }
 
-    @Override
-    public void showPaymentFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fl_main_fragment_container, new PaymentFragment())
-                .commit();
-    }
-
-    @Override
-    public void showSettingsFragment() {
-        //TODO add fragment
+        SpannableString string = new SpannableString(getString(titleRes));
+        string.setSpan(new ForegroundColorSpan(getColor(R.color.black)), 0, string.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        setTitle(string);
     }
 }
