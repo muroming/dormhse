@@ -73,6 +73,56 @@ public class CalendarAdapter extends ArrayAdapter<ScheduleCell> {
         notifyDataSetChanged();
     }
 
+    public void updateStartDuty(Date prevStart, Date newStart) {
+        if (newStart.getTime() < prevStart.getTime()) {  // If clicked behind start add new cells
+            for (int i = 0; i < days.size(); i++) {
+                ScheduleCell cell = days.get(i);
+                if (cell.getDate().getTime() > newStart.getTime()) {
+                    cell.setState(ScheduleFragment.CELL_STATE.MEDIUM);
+                    if (cell.getDate().equals(prevStart)) {
+                        break;
+                    }
+                }
+            }
+        } else {  // Clicked after start remove
+            for (int i = 0; i < days.size(); i++) {
+                ScheduleCell cell = days.get(i);
+                if (cell.getDate().getTime() >= prevStart.getTime()) {
+                    if (cell.getDate().equals(newStart)) {
+                        break;
+                    }
+                    cell.setState(ScheduleFragment.CELL_STATE.NONE);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    public void updateEndDuty(Date prevEnd, Date newEnd) {
+        if (newEnd.getTime() > prevEnd.getTime()) {  // If clicked after end add new cells
+            for (int i = 0; i < days.size(); i++) {
+                ScheduleCell cell = days.get(i);
+                if (cell.getDate().getTime() >= prevEnd.getTime()) {
+                    if (cell.getDate().equals(newEnd)) {
+                        break;
+                    }
+                    cell.setState(ScheduleFragment.CELL_STATE.MEDIUM);
+                }
+            }
+        } else {  // Clicked before start remove
+            for (int i = 0; i < days.size(); i++) {
+                ScheduleCell cell = days.get(i);
+                if (cell.getDate().getTime() > newEnd.getTime()) {
+                    cell.setState(ScheduleFragment.CELL_STATE.NONE);
+                    if (cell.getDate().equals(prevEnd)) {
+                        break;
+                    }
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
+
     public void updateDate(ScheduleCell cell, ROOM_NUM roomNum) {
         for (ScheduleCell c : days) {
             if (c.equals(cell)) {
@@ -96,7 +146,6 @@ public class CalendarAdapter extends ArrayAdapter<ScheduleCell> {
         ScheduleCell date = days.get(position);
         Calendar c = Calendar.getInstance();
         c.setTime(date.getDate());
-
 
 
         // inflate item if it does not exist yet
@@ -162,7 +211,7 @@ public class CalendarAdapter extends ArrayAdapter<ScheduleCell> {
                 view.setBackgroundColor(color);
                 break;
             }
-            case NONE:{
+            case NONE: {
                 view.setBackgroundResource(0);
             }
         }
@@ -182,7 +231,7 @@ public class CalendarAdapter extends ArrayAdapter<ScheduleCell> {
 
         // Set view on click listener
         view.setOnClickListener(v -> {
-            if(c.get(Calendar.MONTH) == currentMonth)
+            if (c.get(Calendar.MONTH) == currentMonth)
                 callback.onDateClicked(date);
         });
 

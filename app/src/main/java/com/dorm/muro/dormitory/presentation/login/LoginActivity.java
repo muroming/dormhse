@@ -29,6 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.dorm.muro.dormitory.Constants.IS_LOGGED;
 import static com.dorm.muro.dormitory.Constants.SHARED_PREFERENCES;
 
 

@@ -4,9 +4,13 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
@@ -16,6 +20,7 @@ import android.widget.TextView;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.dorm.muro.dormitory.R;
+import com.dorm.muro.dormitory.presentation.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -76,6 +81,8 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
     TextView mRoomCommentary;
 
     private int currentSelectedRoom;
+    private int[] menuIds;
+    private Integer upButton;
 
     @InjectPresenter
     ScheduleFragmentPresenter presenter;
@@ -84,6 +91,11 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -183,14 +195,19 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
         txtDate.setText(calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()));
     }
 
-
-    public void addDuty(Date start, Date end, ROOM_NUM roomNum) {
-        gridAdapter.setDateRangeDuty(start, end, roomNum);
+    @Override
+    public void showDutyRange(ScheduleCell start, ScheduleCell end, ROOM_NUM roomNum) {
+        gridAdapter.setDateRangeDuty(start.getDate(), end.getDate(), roomNum);
     }
 
     @Override
-    public void showDutyRange(ScheduleCell start, ScheduleCell end, ROOM_NUM roomNum) {
-        addDuty(start.getDate(), end.getDate(), roomNum);
+    public void updateStart(ScheduleCell newStart, ScheduleCell prevStart) {
+        gridAdapter.updateStartDuty(prevStart.getDate(), newStart.getDate());
+    }
+
+    @Override
+    public void updateEnd(ScheduleCell newEnd, ScheduleCell prevEnd) {
+        gridAdapter.updateEndDuty(prevEnd.getDate(), newEnd.getDate());
     }
 
     @Override
@@ -201,5 +218,60 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
     @Override
     public void updateDate(ScheduleCell cell, ROOM_NUM roomNum) {
         gridAdapter.updateDate(cell, roomNum);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_add: {
+                presenter.startAddingDuty();
+                return true;
+            }
+            case R.id.menu_apply: {
+                presenter.applyRange();
+                return true;
+            }
+            case android.R.id.home: {
+                presenter.onUpButtonPressed();
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);
+        if (menuIds != null) {
+            for (int id : menuIds) {
+                menu.findItem(id).setVisible(true);
+            }
+        }
+        if (upButton != null) {
+            ((MainActivity) getActivity()).setUpButton(upButton);
+        } else {
+            ((MainActivity) getActivity()).hideUpButton();
+        }
+    }
+
+    @Override
+    public void setTitle(int titleId) {
+        ((MainActivity) getActivity()).showTitle(titleId);
+    }
+
+    @Override
+    public void setOptions(@Nullable Integer upButton, int... ids) {
+        this.upButton = upButton;
+        this.menuIds = ids;
+        getActivity().invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        ((MainActivity) getActivity()).hideUpButton();
     }
 }

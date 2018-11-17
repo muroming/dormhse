@@ -82,4 +82,5 @@
     <string name="schedule_room">Комната</string>
     <string name="schedule_room_comment">Комментарий</string>
     <string name="schedule_all_rooms">все</string>
+    <string name="schedule_add_duty">Добавить</string>
 </resources>
