@@ -123,15 +123,61 @@ public class CalendarAdapter extends ArrayAdapter<ScheduleCell> {
         notifyDataSetChanged();
     }
 
-    public void updateDate(ScheduleCell cell, ROOM_NUM roomNum) {
+    public void updateDate(ScheduleCell cell) {
         for (ScheduleCell c : days) {
             if (c.equals(cell)) {
-                c.setState(cell.getState());
-                c.setRoomNum(roomNum);
+                cell.setState(cell.getState());
+                cell.setRoomNum(cell.getRoomNum());
                 break;
             }
         }
         notifyDataSetChanged();
+    }
+
+    public void deleteRange(ScheduleCell start, ScheduleCell end) {
+        boolean flag = false;
+        for (int i = 0; i < days.size(); i++) {
+            ScheduleCell cell = days.get(i);
+            if (flag) {
+                cell.setState(ScheduleFragment.CELL_STATE.NONE);
+            }
+            if (cell.equals(start)) {
+                cell.setState(ScheduleFragment.CELL_STATE.NONE);
+                flag = true;
+            }
+            if (cell.equals(end)) {
+                cell.setState(ScheduleFragment.CELL_STATE.NONE);
+                break;
+            }
+        }
+
+        notifyDataSetChanged();
+    }
+
+    public ScheduleCell getRangeStart(ScheduleCell dateClicked) {
+        ScheduleCell rangeStart = null;
+        for (int i = 0; i < days.size(); i++) {
+            ScheduleCell cell = days.get(i);
+            if (cell.getState() == ScheduleFragment.CELL_STATE.START)
+                rangeStart = cell;
+
+            if (cell == dateClicked) {
+                break;
+            }
+        }
+        return rangeStart;
+    }
+
+    public ScheduleCell getRangeEnd(ScheduleCell dateClicked) {
+        ScheduleCell rangeEnd = null;
+        for (int i = 0; i < days.size(); i++) {
+            ScheduleCell cell = days.get(i);
+            if (cell.getState() == ScheduleFragment.CELL_STATE.END && cell.getDate().getTime() >= dateClicked.getDate().getTime()) {
+                rangeEnd = cell;
+                break;
+            }
+        }
+        return rangeEnd;
     }
 
     @Override
@@ -176,48 +222,15 @@ public class CalendarAdapter extends ArrayAdapter<ScheduleCell> {
         }
 
         // Set color of duty range
-        int color = -1;
-        switch (date.getRoomNum()) {
-            case FIRST: {
-                color = ContextCompat.getColor(context.get(), R.color.first_room_duty);
-                break;
-            }
-            case SECOND: {
-                color = ContextCompat.getColor(context.get(), R.color.second_room_duty);
-                break;
-            }
-            case THIRD: {
-                color = ContextCompat.getColor(context.get(), R.color.third_room_duty);
-                break;
-            }
-            case FORTH: {
-                color = ContextCompat.getColor(context.get(), R.color.forth_room_duty);
-                break;
-            }
-        }
+        int color = date.getColor() != 0 ? ContextCompat.getColor(context.get(), date.getColor()) : 0;
 
-        switch (date.getState()) {
-            case START: {
-                view.setBackgroundResource(R.drawable.duty_range_start);
-                break;
-            }
+        // Set background
+        if (date.getState() != ScheduleFragment.CELL_STATE.MEDIUM)
+            view.setBackgroundResource(date.getDrawable());
+        else
+            view.setBackgroundColor(color);
 
-            case END: {
-                view.setBackgroundResource(R.drawable.duty_range_end);
-                break;
-            }
-
-            case MEDIUM: {
-                view.setBackgroundColor(color);
-                break;
-            }
-            case NONE: {
-                view.setBackgroundResource(0);
-            }
-        }
-
-        // If start or end then set
-        if (date.getState() != ScheduleFragment.CELL_STATE.NONE && date.getState() != ScheduleFragment.CELL_STATE.MEDIUM) {
+        if (date.getState() != ScheduleFragment.CELL_STATE.NONE) {
             Drawable background = view.getBackground();
             if (background instanceof ShapeDrawable) {
                 ((ShapeDrawable) background).getPaint().setColor(color);
@@ -228,11 +241,14 @@ public class CalendarAdapter extends ArrayAdapter<ScheduleCell> {
             }
         }
 
-
         // Set view on click listener
         view.setOnClickListener(v -> {
             if (c.get(Calendar.MONTH) == currentMonth)
-                callback.onDateClicked(date);
+                if (date.getState() == ScheduleFragment.CELL_STATE.NONE) {  //Clicked on empty cell
+                    callback.onDateClicked(date, null, null);
+                } else {
+                    callback.onDateClicked(date, getRangeStart(date), getRangeEnd(date));
+                }
         });
 
         return view;

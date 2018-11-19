@@ -20,7 +20,7 @@
         android:id="@+id/navigation"
         android:backgroundTint="@color/appStaticInterface"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/navigation_height"
         android:layout_alignParentBottom="true"
         android:background="?android:attr/windowBackground"
         app:itemIconTint="@color/navbarIconColor"

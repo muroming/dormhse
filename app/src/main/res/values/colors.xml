@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#fff</color>
     <color name="colorPrimaryDark">#9e9e9e</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#66FFFE</color>
     <color name="registerStage">#fd883d</color>
     <color name="clickableText">#FF5FB6B1</color>
     <color name="appStaticInterface">#FF00D6C9</color>
@@ -37,4 +37,10 @@
     <color name="forth_room_selection_bg">#66ff5600</color>
     <color name="forth_room_duty">#FF5600</color>
     <color name="forth_room_selection_text">#C24100</color>
+
+    <!-- Intersection colors -->
+    <color name="first_room_intersect">#BA1313</color>
+    <color name="second_room_intersect">#01948C</color>
+    <color name="third_room_intersect">#C79000</color>
+    <color name="forth_room_intersect">#AD3B02</color>
 </resources>

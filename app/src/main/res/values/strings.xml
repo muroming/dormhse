@@ -83,4 +83,6 @@
     <string name="schedule_room_comment">Комментарий</string>
     <string name="schedule_all_rooms">все</string>
     <string name="schedule_add_duty">Добавить</string>
+    <string name="schedule_edit_duty">Редактировать</string>
+    <string name="schedule_duty_deleted">Дежурство удалено</string>
 </resources>

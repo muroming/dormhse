@@ -5,6 +5,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,7 +26,6 @@ import com.dorm.muro.dormitory.presentation.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -184,7 +185,7 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
 
         // fill cells
         while (cells.size() < DAYS_COUNT) {
-            cells.add(new ScheduleCell(CELL_STATE.NONE, calendar.getTime(), ROOM_NUM.FIRST));
+            cells.add(new ScheduleCell(calendar.getTime()));
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
 
@@ -211,13 +212,13 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
     }
 
     @Override
-    public void onDateClicked(ScheduleCell date) {
-        presenter.onDateClicked(date);
+    public void onDateClicked(ScheduleCell date, @Nullable ScheduleCell start, @Nullable ScheduleCell end) {
+        presenter.onDateClicked(date, start, end);
     }
 
     @Override
     public void updateDate(ScheduleCell cell, ROOM_NUM roomNum) {
-        gridAdapter.updateDate(cell, roomNum);
+        gridAdapter.updateDate(cell);
     }
 
     @Override
@@ -231,15 +232,17 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
                 presenter.applyRange();
                 return true;
             }
+            case R.id.menu_delete: {
+                presenter.deleteRange();
+                return true;
+            }
             case android.R.id.home: {
-                presenter.onUpButtonPressed();
+                presenter.onEditStop();
                 return true;
             }
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 
 
     @Override
@@ -273,5 +276,40 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
     public void onStop() {
         super.onStop();
         ((MainActivity) getActivity()).hideUpButton();
+    }
+
+    @Override
+    public void deleteRange(ScheduleCell start, ScheduleCell end) {
+        gridAdapter.deleteRange(start, end);
+    }
+
+    public ScheduleCell getRangeStart(ScheduleCell dateClicked) {
+        return gridAdapter.getRangeStart(dateClicked);
+    }
+
+    public ScheduleCell getRangeEnd(ScheduleCell dateClicked) {
+        return gridAdapter.getRangeEnd(dateClicked);
+    }
+
+    @Override
+    public void showRangeDeleteSnackbar(ScheduleCell start, ScheduleCell end) {
+        Snackbar bar = Snackbar.make(getView(), getString(R.string.schedule_duty_deleted), Snackbar.LENGTH_SHORT);
+        ((FrameLayout.LayoutParams) bar.getView().getLayoutParams()).setMargins(
+                getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin),
+                0,
+                getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin),
+                getResources().getDimensionPixelSize(R.dimen.activity_vertical_margin) + getResources().getDimensionPixelSize(R.dimen.navigation_height)
+        );
+
+        bar.setAction(R.string.cancel, v -> {
+            presenter.addRange(start, end);
+        });
+
+        bar.show();
+    }
+
+    @Override
+    public void updateCalendar() {
+        gridAdapter.notifyDataSetChanged();
     }
 }

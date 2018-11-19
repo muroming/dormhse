@@ -8,4 +8,5 @@
     <dimen name="settings_edit_text_width">250dp</dimen>
     <dimen name="settings_edit_text_height">50dp</dimen>
     <dimen name="settings_edit_text_margins">15dp</dimen>
+    <dimen name="navigation_height">56dp</dimen>
 </resources>

@@ -9,7 +9,7 @@ interface ScheduleFragmentView extends MvpView {
 
     void setRoomSelected(ROOM_NUM roomNum);
 
-    void onDateClicked(ScheduleCell date);
+    void onDateClicked(ScheduleCell date, @Nullable ScheduleCell start, @Nullable ScheduleCell end);
 
     void updateDate(ScheduleCell cell, ROOM_NUM roomNum);
 
@@ -22,4 +22,10 @@ interface ScheduleFragmentView extends MvpView {
     void setOptions(@Nullable Integer upButton, int... menuId);
 
     void setTitle(int titleId);
+
+    void deleteRange(ScheduleCell start, ScheduleCell end);
+
+    void showRangeDeleteSnackbar(ScheduleCell start, ScheduleCell end);
+
+    void updateCalendar();
 }

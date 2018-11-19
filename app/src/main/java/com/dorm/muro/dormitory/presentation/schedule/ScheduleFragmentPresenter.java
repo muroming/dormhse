@@ -47,29 +47,32 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
         getViewState().updateCalendar(currentDate.get(Calendar.MONTH));
     }
 
-    public void onDateClicked(ScheduleCell date) {
+    public void onDateClicked(ScheduleCell date, @Nullable ScheduleCell start, @Nullable ScheduleCell end) {
         if (isEditing) { // If clicked while adding a duty
-            date.setRoomNum(currentRoom);
             if (rangeStartDate != null) {  // If first date is selected
                 if (!rangeStartDate.equals(date)) { // If we selected different from first date
                     if (rangeEndDate != null) { // If end date is selected
                         if (!rangeEndDate.equals(date)) { // And different from end date update range bounds
                             showSelectedRange(date);
-                        } else {  // Else unselect end date
-                            unselectDate(date);
-                            rangeEndDate = null;
                         }
                     } else {  // Else set date as end
                         showSelectedRange(date);
                     }
-                } else { // Else unselect first date
-                    unselectDate(date);
-                    rangeStartDate = null;
                 }
             } else { // Else set date as first
                 rangeStartDate = date;
                 date.setState(ScheduleFragment.CELL_STATE.START);
+                date.setRoomNum(currentRoom);
                 getViewState().updateDate(date, currentRoom);
+            }
+        } else {
+            if (date.getState() != ScheduleFragment.CELL_STATE.NONE) {  //Clicked on date
+                isEditing = true;
+                currentRoom = date.getRoomNum();
+                rangeStartDate = start;
+                rangeEndDate = end;
+                getViewState().setTitle(R.string.schedule_edit_duty);
+                getViewState().setOptions(R.drawable.ic_close, R.id.menu_delete, R.id.menu_apply);
             }
         }
     }
@@ -101,15 +104,24 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
         }
     }
 
-    private void unselectDate(ScheduleCell date) {
-        date.setState(ScheduleFragment.CELL_STATE.NONE);
-        getViewState().updateDate(date, currentRoom);
+    public void applyRange() {
+        stopEditing();
     }
 
-    public void applyRange() {
+    public void addRange(ScheduleCell start, ScheduleCell end) {
+        getViewState().showDutyRange(start, end, start.getRoomNum());
+    }
+
+    public void deleteRange() {
+        getViewState().deleteRange(rangeStartDate, rangeEndDate);
+        getViewState().showRangeDeleteSnackbar(rangeStartDate, rangeEndDate);
+        stopEditing();
+    }
+
+    private void stopEditing() {
         isEditing = false;
-        rangeEndDate = null;
         rangeStartDate = null;
+        rangeEndDate = null;
         getViewState().setOptions(null, R.id.menu_add);
         getViewState().setTitle(R.string.fragment_schedule_title);
     }
@@ -120,10 +132,20 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
         getViewState().setTitle(R.string.schedule_add_duty);
     }
 
-    public void onUpButtonPressed() {
+    public void onEditStop() {
         if (isEditing) {
             isEditing = false;
             getViewState().setOptions(null, R.id.menu_add);
+            if (rangeStartDate != null) {
+                if (rangeEndDate == null) {
+                    rangeStartDate.setState(ScheduleFragment.CELL_STATE.NONE);
+                    getViewState().updateDate(rangeStartDate, currentRoom);
+                } else {
+                    getViewState().deleteRange(rangeStartDate, rangeEndDate);
+                }
+            }
+            rangeStartDate = null;
+            rangeEndDate = null;
             getViewState().setTitle(R.string.fragment_schedule_title);
         }
     }
