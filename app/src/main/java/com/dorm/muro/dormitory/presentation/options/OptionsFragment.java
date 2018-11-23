@@ -1,5 +1,6 @@
 package com.dorm.muro.dormitory.presentation.options;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
@@ -21,6 +23,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.dorm.muro.dormitory.Constants.SHARED_PREFERENCES;
+
 public class OptionsFragment extends MvpAppCompatFragment implements OptionsView {
 
     @InjectPresenter
@@ -31,11 +35,23 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
     @BindView(R.id.notification_switch)
     Switch mSwitch;
 
+    @BindView(R.id.mail)
+    TextView mail;
+
+    @BindView(R.id.contract)
+    TextView contract;
+
+    @BindView(R.id.fio)
+    TextView fio;
+
+    @BindView(R.id.card_data)
+    TextView cardData;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_options, container, false);
         ButterKnife.bind(this, v);
-
+        presenter.setPreferences(getActivity().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE));
         return v;
     }
 
@@ -65,7 +81,7 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
     }
 
     @OnClick(R.id.personal_data)
-    void onPersonalDataClicked(View v){
+    void onPersonalDataClicked(View v) {
         presenter.onChangePersonalDataClicked();
     }
 
@@ -89,8 +105,8 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
         builder.setTitle(getString(title))
                 .setView(layout)
                 .setNegativeButton(getString(R.string.cancel), (d, w) -> presenter.onDialogCancel())
-                .setPositiveButton(getString(R.string.save), (d, w) -> presenter.onChangeInfo(et1.getText().toString(),
-                        et2.getText().toString(), type));
+                .setPositiveButton(getString(R.string.save), (d, w) -> presenter.onChangeInfo(type,
+                        et2.getText().toString(), et1.getText().toString()));
 
         dialog = builder.create();
         dialog.show();
@@ -123,7 +139,7 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
         builder.setTitle(getString(title))
                 .setView(layout)
                 .setNegativeButton(getString(R.string.cancel), (d, w) -> presenter.onDialogCancel())
-                .setPositiveButton(getString(R.string.save), (d, w) -> presenter.onPersonlChange(et1.getText().toString(),
+                .setPositiveButton(getString(R.string.save), (d, w) -> presenter.onPersonalChange(et1.getText().toString(),
                         et2.getText().toString(), confirm.getText().toString()));
 
         dialog = builder.create();
@@ -146,5 +162,31 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
     @Override
     public void setNotificationSwitch(boolean isEnabled) {
         mSwitch.setChecked(isEnabled);
+    }
+
+    @Override
+    public void setInfo(String email, String contractId, String name, int cardNum) {
+        if (email.isEmpty()) {
+            mail.setText(R.string.payment_not_set);
+        } else {
+            mail.setText(email);
+        }
+
+        if (contractId.isEmpty()) {
+            contract.setText(R.string.payment_not_set);
+        } else {
+            contract.setText(contractId);
+        }
+
+        if (name.isEmpty()) {
+            fio.setText(R.string.payment_not_set);
+        } else {
+            fio.setText(name);
+        }
+        if (cardNum == -1) {
+            cardData.setText(R.string.payment_not_set);
+        } else {
+            cardData.setText(getString(R.string.payment_card_tmp, cardNum));
+        }
     }
 }

@@ -57,7 +57,10 @@
     <string name="payment_fio">Ф.И.О.</string>
     <string name="payment_user_not_found">Пользователь с указаными ФИО и договором не найден</string>
     <string name="payment_pay_action">Оплатить</string>
-    <string name="payment_range">%i месяцев, до %s</string>
+    <string name="payment_price_title">Стоимость</string>
+    <string name="payment_range">%d месяцев, до %s</string>
+    <string name="payment_price_tmp">%d рублей %d копеек</string>
+    <string name="payment_card_tmp">• • • • %d</string>
     <string name="payment_not_set">Не установлено</string>
     <string name="no_payment_credits_set">Некоторые платежные данные не заданы</string>
     <string-array name="payment_progress">

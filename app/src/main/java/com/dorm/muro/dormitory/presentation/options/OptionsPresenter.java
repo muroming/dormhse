@@ -6,6 +6,8 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.dorm.muro.dormitory.R;
 
+import static com.dorm.muro.dormitory.Constants.*;
+
 //import static com.dorm.muro.dormitory.presentation.login.LoginActivity.IS_LOGGED;
 
 @InjectViewState
@@ -16,28 +18,41 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
 
     //TODO inject preferences
     private SharedPreferences preferences;
-    //TODO remove this
-    private boolean notificationsEnabled = true;
+    private String mail, fio, contract;
+    private int cardNum;
 
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        //Todo remove this
-        getViewState().setNotificationSwitch(notificationsEnabled);
+        getViewState().setNotificationSwitch(preferences.getBoolean(NOTIFICATIONS, true));
     }
 
     void setPreferences(SharedPreferences preferences) {
+        //todo remove this like wtf????
+        mail = preferences.getString(USER_EMAIL, "");
+        fio = preferences.getString(USER_FIO, "");
+        contract = preferences.getString(CONTRACT_ID, "");
+
+        String s = preferences.getString(CARD_NUMBER, "");
+        if(s.isEmpty()){
+            cardNum = -1;
+        } else {
+            cardNum = Integer.parseInt(s.split(" ")[0]);
+        }
+        getViewState().setInfo(mail, contract, fio, cardNum);
+
         this.preferences = preferences;
     }
 
     void onExitClicked() {
-//        preferences.edit().remove(IS_LOGGED).apply();
+        preferences.edit().remove(IS_LOGGED).apply();
         getViewState().proceedToLoginScreen();
     }
 
     void onSwitchNotifications(){
+        boolean notificationsEnabled = preferences.getBoolean(NOTIFICATIONS, true);
         notificationsEnabled = !notificationsEnabled;
-//        preferences.edit().putBoolean(NOTIFICATIONS, notificationsEnabled).apply();
+        preferences.edit().putBoolean(NOTIFICATIONS, notificationsEnabled).apply();
         getViewState().setNotificationSwitch(notificationsEnabled);
     }
 
@@ -51,12 +66,14 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
     }
 
     void onChangePersonalDataClicked() {
-        getViewState().showPersonalDialog(R.string.settings_cardholder_name, R.string.settings_card_date,
+        getViewState().showPersonalDialog(R.string.settings_cardholder_name, R.string.settings_card_number,
                 R.string.settings_confirm_password, R.string.settings_change_personal_title);
     }
 
-    void onPersonlChange(String name, String cardNum, String password) {
+    void onPersonalChange(String name, String cardNum, String password) {
         //Todo implement logic
+        preferences.edit().putString(USER_FIO, name).apply();
+        preferences.edit().putString(CARD_NUMBER, cardNum).apply();
     }
 
     void onChangeMailClicked() {
@@ -69,20 +86,22 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
                 R.string.settings_contract_title, CONTRACT);
     }
 
-    public void onChangeInfo(String oldInfo, String newInfo, int code) {
+    void onChangeInfo(int code, String pass, String... newInfo) {
         switch (code) {
             case PASSWORD: {
-
+                preferences.edit().putString(USER_PASSWORD, newInfo[0]).apply();
                 break;
             }
             case EMAIL: {
-
+                preferences.edit().putString(USER_EMAIL, newInfo[0]).apply();
                 break;
             }
             case CONTRACT: {
-
+                preferences.edit().putString(CONTRACT_ID, newInfo[0]).apply();
+                preferences.edit().putFloat(MONTHLY_COST, 830.30F).apply();
                 break;
             }
         }
+        getViewState().setInfo(mail, contract, fio, cardNum);
     }
 }

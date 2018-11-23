@@ -1,5 +1,6 @@
 package com.dorm.muro.dormitory.presentation.login;
 
+import android.content.SharedPreferences;
 import android.os.Handler;
 
 import com.arellomobile.mvp.InjectViewState;
@@ -8,10 +9,17 @@ import com.arellomobile.mvp.MvpPresenter;
 import java.util.Random;
 import java.util.regex.Pattern;
 
+import static com.dorm.muro.dormitory.Constants.IS_LOGGED;
+
 @InjectViewState
 public class LoginPresenter extends MvpPresenter<LoginView> {
+
+    //todo inject
+    private SharedPreferences preferences;
+
     void onSignInClicked(String login, String password) {
         if (checkUser(login, password)) {
+            preferences.edit().putBoolean(IS_LOGGED, true).apply();
             getViewState().signIn();
         } else {
             getViewState().showWrongLoginPass();
@@ -21,6 +29,10 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
     private boolean checkUser(String login, String password) {
         //TODO: create check user method
         return login.equals("l") && password.equals("p");
+    }
+
+    public void setPreferences(SharedPreferences preferences) {
+        this.preferences = preferences;
     }
 
     void registerNextScreen() {
