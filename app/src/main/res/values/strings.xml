@@ -52,7 +52,7 @@
     <string name="settings_card_number">Номер карты</string>
     <string name="settings_cardholder_name">Имя владельца</string>
     <string name="settings_card_date">Дата карты</string>
-    <string name="settings_card_date_format">%s/%s</string>
+    <string name="settings_card_date_format">%s.%s</string>
     <string name="settings_wrong_pass">Неверный пароль</string>
 
     <string name="payment_title">Оплата проживания</string>
@@ -60,7 +60,9 @@
     <string name="payment_user_not_found">Пользователь с указаными ФИО и договором не найден</string>
     <string name="payment_pay_action">Оплатить</string>
     <string name="payment_price_title">Стоимость</string>
-    <string name="payment_range">%d месяцев, до %s</string>
+    <string name="payment_range_other">%d месяцев, до %s</string>
+    <string name="payment_range_one">%d месяц, до %s</string>
+    <string name="payment_range_two_three">%d месяца, до %s</string>
     <string name="payment_price_tmp">%d рублей %d копеек</string>
     <string name="payment_card_tmp">• • • • %d</string>
     <string name="payment_not_set">Не установлено</string>

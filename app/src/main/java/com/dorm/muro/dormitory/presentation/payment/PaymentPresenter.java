@@ -38,12 +38,29 @@ public class PaymentPresenter extends MvpPresenter<PaymentView> {
         int totalMonths;
         if (from != null && to != null) {
             totalMonths = calcMonths(from, to);
-            getViewState().showRange(R.string.payment_range, totalMonths, to);
+            int rangeRes;
+            switch (totalMonths % 10) {
+                case 1: {
+                    rangeRes = R.string.payment_range_one;
+                    break;
+                }
+                case 3: {
+                }
+                case 2: {
+                    rangeRes = R.string.payment_range_two_three;
+                    break;
+                }
+                default: {
+                    rangeRes = R.string.payment_range_other;
+                }
+            }
+            getViewState().showRange(rangeRes, totalMonths, to.split(DATE_SPLITTER)[0].length() == 1 ? "0" + to : to);
             if (pricePerMonth != -1) {
                 float price = totalMonths * pricePerMonth;
                 int rub = (int) price;
+
                 getViewState().showPrice(R.string.payment_price_tmp, true,
-                        rub, (int)((price - rub) * 100));
+                        rub, (int) ((price - rub) * 100));
             } else {
                 getViewState().showPrice(R.string.payment_not_set, false);
             }
@@ -56,7 +73,7 @@ public class PaymentPresenter extends MvpPresenter<PaymentView> {
         getViewState().showContract(R.string.payment_not_set, contract);
     }
 
-    void loadCardInfo () {
+    void loadCardInfo() {
         if (preferences.contains(CARDHOLDER_NAME) && preferences.contains(CARD_NUMBER) && preferences.contains(CARD_YEAR) && preferences.contains(CARD_MONTH)) {
             String cardholderName = preferences.getString(CARDHOLDER_NAME, "");
             String cardNumber = preferences.getString(CARD_NUMBER, "");
@@ -85,16 +102,16 @@ public class PaymentPresenter extends MvpPresenter<PaymentView> {
 
     void onDateSelected(int year, int month) {
         Calendar c = Calendar.getInstance();
-        String from = c.get(Calendar.MONTH) + DATE_SEPARATOR + c.get(Calendar.YEAR) % 100,
-                to = month + DATE_SEPARATOR + year % 100;
+        String from = c.get(Calendar.MONTH) + 1 + DATE_SEPARATOR + c.get(Calendar.YEAR) % 100,
+                to = month + 1 + DATE_SEPARATOR + year % 100;
         preferences.edit().putString(MONTHS_FROM, from).apply();
         preferences.edit().putString(MONTHS_TO, to).apply();
         loadInfo();
     }
 
     private int calcMonths(String from, String to) {
-        int yearsTo = Integer.parseInt(to.split(DATE_SEPARATOR)[0]), monthsTo = Integer.parseInt(to.split(DATE_SEPARATOR)[1]);
-        int yearsFrom = Integer.parseInt(from.split(DATE_SEPARATOR)[0]), monthsFrom = Integer.parseInt(from.split(DATE_SEPARATOR)[1]);
+        int yearsTo = Integer.parseInt(to.split(DATE_SPLITTER)[1]), monthsTo = Integer.parseInt(to.split(DATE_SPLITTER)[0]);
+        int yearsFrom = Integer.parseInt(from.split(DATE_SPLITTER)[1]), monthsFrom = Integer.parseInt(from.split(DATE_SPLITTER)[0]);
 
         return (yearsTo - yearsFrom) * 12 + monthsTo - monthsFrom;
     }

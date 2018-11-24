@@ -15,7 +15,8 @@ public class Constants {
     public static final String CARDHOLDER_NAME = "CARDHOLDER_NAME";
     public static final String CARD_YEAR = "CARD_YEAR";
     public static final String CARD_MONTH = "CARD_MONTH";
-    public static final String DATE_SEPARATOR = "/";
+    public static final String DATE_SEPARATOR = ".";
+    public static final String DATE_SPLITTER = "\\.";
     public static final String PAYMENT_URL = "https://pay.hse.ru/moscow/prg";
     public static final String FIRST_QUERY = "(function(){\n" +
             "var check = document.getElementById('amount');\n" +
