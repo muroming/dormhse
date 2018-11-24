@@ -167,34 +167,46 @@
             app:layout_constraintTop_toBottomOf="@id/price" />
 
         <android.support.constraint.Group
-            android:visibility="invisible"
             android:id="@+id/progressGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:constraint_referenced_ids="tv_payment_phrase, pb_payment"/>
+            android:visibility="invisible"
+            app:constraint_referenced_ids="tv_payment_phrase, pb_payment, btn_payment_cancel" />
 
         <TextView
             android:id="@+id/tv_payment_phrase"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sep1"
-            app:layout_constraintBottom_toTopOf="@id/pb_payment"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintVertical_bias="0.35"
             android:layout_marginBottom="16dp"
-            tools:text="Test payment phrase"/>
+            android:textSize="20sp"
+            app:layout_constraintBottom_toTopOf="@id/pb_payment"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sep1"
+            app:layout_constraintVertical_bias="0.35"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="Test payment phrase" />
 
         <ProgressBar
             android:id="@+id/pb_payment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_payment_phrase"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_payment_phrase" />
+
+        <Button
+            android:id="@+id/btn_payment_cancel"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/payment_button_confirm_background"
+            android:text="@string/cancel"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pb_payment" />
 
     </android.support.constraint.ConstraintLayout>
 

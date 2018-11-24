@@ -152,6 +152,7 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
 
     @Override
     public void showProgressGroup() {
+        mProgressGroup.setVisibility(View.GONE);
         mProgressGroup.setVisibility(View.VISIBLE);
 
         progressPhrase.setText(progressTitles[new Random().nextInt(progressTitles.length)]);
@@ -174,16 +175,19 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
 
     @Override
     public void hideProgressGroup() {
+        mProgressGroup.setVisibility(View.GONE);
         mProgressGroup.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void hidePaymentGroup() {
+        mPaymentGroup.setVisibility(View.GONE);
         mPaymentGroup.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void showPaymentGroup() {
+        mPaymentGroup.setVisibility(View.GONE);
         mPaymentGroup.setVisibility(View.VISIBLE);
     }
 
@@ -226,6 +230,11 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
             mPaymentContract.setText(stringRes);
         else
             mPaymentContract.setText(contract);
+    }
+
+    @OnClick(R.id.btn_payment_cancel)
+    public void onStopClicked(View v) {
+        presenter.onStopPayClicked();
     }
 
     @OnClick(R.id.btn_pay_button)
