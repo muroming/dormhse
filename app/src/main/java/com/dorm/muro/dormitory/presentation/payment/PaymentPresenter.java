@@ -23,7 +23,7 @@ public class PaymentPresenter extends MvpPresenter<PaymentView> {
     void onPayButtonClicked() {
         getViewState().hidePaymentGroup();
         getViewState().showProgressGroup();
-        startLoadFirstStep();
+        getViewState().startPayment();
     }
 
     void onStopPayClicked() {
@@ -99,7 +99,7 @@ public class PaymentPresenter extends MvpPresenter<PaymentView> {
         return (yearsTo - yearsFrom) * 12 + monthsTo - monthsFrom;
     }
 
-    private void startLoadFirstStep() {
+    void startLoadFirstStep() {
         if (preferences.contains(USER_FIO) && preferences.contains(CONTRACT_ID) && preferences.contains(MONTHLY_COST) && preferences.contains(MONTHS_FROM) && preferences.contains(MONTHS_TO)) {
             String fio = preferences.getString(USER_FIO, "");
             String contractId = preferences.getString(CONTRACT_ID, "");

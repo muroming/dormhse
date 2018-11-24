@@ -1,6 +1,7 @@
 package com.dorm.muro.dormitory.presentation.options;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -113,7 +114,7 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
     }
 
     @Override
-    public void showPersonalDialog(int h1, int h2, int h3, int title) {
+    public void showBigChangeDialog(int h1, int h2, int h3, int title, int code) {
         String hint1 = getString(h1), hint2 = getString(h2), hint3 = getString(h3);
         ConstraintLayout layout = (ConstraintLayout) LayoutInflater.from(getContext()).inflate(R.layout.settings_change_dialog, null);
         EditText et1 = layout.findViewById(R.id.et1), et2 = layout.findViewById(R.id.et2);
@@ -139,10 +140,12 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
         builder.setTitle(getString(title))
                 .setView(layout)
                 .setNegativeButton(getString(R.string.cancel), (d, w) -> presenter.onDialogCancel())
-                .setPositiveButton(getString(R.string.save), (d, w) -> presenter.onPersonalChange(et1.getText().toString(),
-                        et2.getText().toString(), confirm.getText().toString()));
+                .setPositiveButton(getString(R.string.save), null);
 
         dialog = builder.create();
+        dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE)
+                .setOnClickListener(v -> presenter.onChangeInfo(code, confirm.getText().toString(),
+                        et1.getText().toString(), et2.getText().toString())));
         dialog.show();
     }
 

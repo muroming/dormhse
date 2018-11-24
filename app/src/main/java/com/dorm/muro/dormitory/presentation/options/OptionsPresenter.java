@@ -8,13 +8,13 @@ import com.dorm.muro.dormitory.R;
 
 import static com.dorm.muro.dormitory.Constants.*;
 
-//import static com.dorm.muro.dormitory.presentation.login.LoginActivity.IS_LOGGED;
 
 @InjectViewState
 public class OptionsPresenter extends MvpPresenter<OptionsView> {
     private static final int PASSWORD = 0;
     private static final int EMAIL = 1;
     private static final int CONTRACT = 3;
+    private static final int PERSONAL = 4;
 
     //TODO inject preferences
     private SharedPreferences preferences;
@@ -66,14 +66,8 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
     }
 
     void onChangePersonalDataClicked() {
-        getViewState().showPersonalDialog(R.string.settings_cardholder_name, R.string.settings_card_number,
-                R.string.settings_confirm_password, R.string.settings_change_personal_title);
-    }
-
-    void onPersonalChange(String name, String cardNum, String password) {
-        //Todo implement logic
-        preferences.edit().putString(USER_FIO, name).apply();
-        preferences.edit().putString(CARD_NUMBER, cardNum).apply();
+        getViewState().showBigChangeDialog(R.string.settings_cardholder_name, R.string.settings_card_number,
+                R.string.settings_confirm_password, R.string.settings_change_personal_title, PERSONAL);
     }
 
     void onChangeMailClicked() {
@@ -82,26 +76,36 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
     }
 
     void onChangeContractClicked() {
-        getViewState().showChangeDialog(R.string.settings_new_contract, R.string.settings_confirm_password,
+        getViewState().showBigChangeDialog(R.string.settings_new_contract, R.string.settings_change_cost, R.string.settings_confirm_password,
                 R.string.settings_contract_title, CONTRACT);
     }
 
     void onChangeInfo(int code, String pass, String... newInfo) {
-        switch (code) {
-            case PASSWORD: {
-                preferences.edit().putString(USER_PASSWORD, newInfo[0]).apply();
-                break;
+        if (pass.equals(preferences.getString(USER_PASSWORD, null))) {
+            switch (code) {
+                case PASSWORD: {
+                    preferences.edit().putString(USER_PASSWORD, newInfo[0]).apply();
+                    break;
+                }
+                case EMAIL: {
+                    preferences.edit().putString(USER_EMAIL, newInfo[0]).apply();
+                    break;
+                }
+                case CONTRACT: {
+                    preferences.edit().putString(CONTRACT_ID, newInfo[0]).apply();
+                    preferences.edit().putFloat(MONTHLY_COST, 830.30F).apply();
+                    break;
+                }
+                case PERSONAL :{
+                    preferences.edit().putString(USER_FIO, newInfo[0]).apply();
+                    preferences.edit().putString(CARD_NUMBER, newInfo[1]).apply();
+                    break;
+                }
             }
-            case EMAIL: {
-                preferences.edit().putString(USER_EMAIL, newInfo[0]).apply();
-                break;
-            }
-            case CONTRACT: {
-                preferences.edit().putString(CONTRACT_ID, newInfo[0]).apply();
-                preferences.edit().putFloat(MONTHLY_COST, 830.30F).apply();
-                break;
-            }
+            getViewState().setInfo(mail, contract, fio, cardNum);
+            getViewState().closeDialog();
+        } else {
+            getViewState().showErrorToast(R.string.settings_wrong_pass);
         }
-        getViewState().setInfo(mail, contract, fio, cardNum);
     }
 }

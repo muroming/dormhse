@@ -39,6 +39,7 @@
     <string name="settings_contract_title">Изменить номер договора</string>
     <string name="settings_new_contract">Новый номер договора</string>
     <string name="settings_cost_per_month">Цена за месяц:</string>
+    <string name="settings_change_cost">Изменить цену за месяц</string>
     <string name="settings_months_to_pay_for">Оплата за месяца:</string>
     <string name="settings_months_select">Выбрать</string>
     <string name="settings_date_picker_title">Выберите первую и последнюю даты оплаты</string>
@@ -52,6 +53,7 @@
     <string name="settings_cardholder_name">Имя владельца</string>
     <string name="settings_card_date">Дата карты</string>
     <string name="settings_card_date_format">%s/%s</string>
+    <string name="settings_wrong_pass">Неверный пароль</string>
 
     <string name="payment_title">Оплата проживания</string>
     <string name="payment_fio">Ф.И.О.</string>

@@ -17,7 +17,6 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -109,10 +108,14 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
             }
 
             public void onPageFinished(WebView view, String url) {
-                if (url.contains("checkout")) {  //Skip final page reviewing payment info
-                    mPaymentWebView.evaluateJavascript(SKIP_CHECKOUT, null);
-                } else {  //Input card info and confirm payment
-                    presenter.loadCardInfo();
+                if (url.equals(PAYMENT_URL)) {
+                    presenter.startLoadFirstStep();
+                } else {
+                    if (url.contains("checkout")) {  //Skip final page reviewing payment info
+                        mPaymentWebView.evaluateJavascript(SKIP_CHECKOUT, null);
+                    } else {  //Input card info and confirm payment
+                        presenter.loadCardInfo();
+                    }
                 }
 
             }
