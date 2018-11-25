@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#fff</color>
     <color name="colorPrimaryDark">#9e9e9e</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#64b5f6</color>
     <color name="registerStage">#fd883d</color>
     <color name="clickableText">#FF5FB6B1</color>
     <color name="appStaticInterface">#FF00D6C9</color>

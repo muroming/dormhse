@@ -1,12 +1,13 @@
 package com.dorm.muro.dormitory.presentation.options;
 
 import com.arellomobile.mvp.MvpView;
+import com.arellomobile.mvp.viewstate.strategy.AddToEndSingleStrategy;
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 public interface OptionsView extends MvpView {
     void showChangeDialog(int h1, int h2, int title, int type);
-    void showPersonalDialog(int h1, int h2, int h3, int title);
+    void showBigChangeDialog(int h1, int h2, int h3, int title, int code);
     void closeDialog();
     void showErrorToast(int stringRes);
 
@@ -15,4 +16,7 @@ public interface OptionsView extends MvpView {
 
     @StateStrategyType(SkipStrategy.class)
     void setNotificationSwitch(boolean isEnabled);
+
+    @StateStrategyType(AddToEndSingleStrategy.class)
+    void setInfo(String mail, String contractId, String fio, int cardNum);  //todo add card drawable
 }

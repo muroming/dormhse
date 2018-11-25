@@ -53,7 +53,6 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
     @BindView(R.id.tv_forgot_title) TextView mForgotTitle;
     @BindView(R.id.tv_forgot_unsuccessful_back) TextView mForgotBack;
 
-    private SharedPreferences preferences;
     private ProgressDialog pd;
     private FlipDir flipDir;
 
@@ -63,7 +62,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
         setContentView(R.layout.login_activity);
         ButterKnife.bind(this);
 
-        preferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
+        presenter.setPreferences(getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE));
 
         //Setting flipping animations
         mViewFlipper.setInAnimation(this, R.anim.slide_in_from_right);
