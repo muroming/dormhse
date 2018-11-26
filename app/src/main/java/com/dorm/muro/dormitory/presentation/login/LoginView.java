@@ -14,8 +14,6 @@ public interface LoginView extends MvpView{
     @StateStrategyType(SkipStrategy.class)
     void showWrongEmail();
 
-    void registrationSuccess();
-
     @StateStrategyType(AddToEndSingleStrategy.class)
     void showMainScreen();
 

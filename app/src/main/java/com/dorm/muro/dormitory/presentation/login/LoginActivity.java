@@ -29,6 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.dorm.muro.dormitory.Constants.IS_LOGGED;
 import static com.dorm.muro.dormitory.Constants.SHARED_PREFERENCES;
 
 
@@ -55,6 +56,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
 
     private ProgressDialog pd;
     private FlipDir flipDir;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,7 +64,8 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
         setContentView(R.layout.login_activity);
         ButterKnife.bind(this);
 
-        presenter.setPreferences(getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE));
+        preferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
+        presenter.setPreferences(preferences);
 
         //Setting flipping animations
         mViewFlipper.setInAnimation(this, R.anim.slide_in_from_right);
@@ -264,13 +267,8 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
     }
 
     @Override
-    public void registrationSuccess() {
-        MainActivity.start(this);
-        finish();
-    }
-
-    @Override
     public void signIn() {
+        preferences.edit().putBoolean(IS_LOGGED, true).apply();
         MainActivity.start(this);
         finish();
     }
@@ -287,12 +285,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
         hideForgotEmailCallback();
         mForgotPasswordButton.setText(getString(R.string.forgot_password_button));
 
-        mForgotPasswordButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                forgotAction();
-            }
-        });
+        mForgotPasswordButton.setOnClickListener(v -> forgotAction());
     }
 
     @Override
