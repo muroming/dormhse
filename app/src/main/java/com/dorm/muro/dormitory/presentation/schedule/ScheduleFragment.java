@@ -203,12 +203,12 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
 
     @Override
     public void updateStart(ScheduleCell newStart, ScheduleCell prevStart) {
-        gridAdapter.updateStartDuty(prevStart.getDate(), newStart.getDate());
+        gridAdapter.updateStartDuty(prevStart.getDate(), newStart.getDate(), newStart.getRoomNum());
     }
 
     @Override
     public void updateEnd(ScheduleCell newEnd, ScheduleCell prevEnd) {
-        gridAdapter.updateEndDuty(prevEnd.getDate(), newEnd.getDate());
+        gridAdapter.updateEndDuty(prevEnd.getDate(), newEnd.getDate(), newEnd.getRoomNum());
     }
 
     @Override

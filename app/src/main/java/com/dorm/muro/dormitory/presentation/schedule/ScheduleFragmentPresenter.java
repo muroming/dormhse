@@ -21,7 +21,7 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
     // current displayed month
     private Calendar currentDate = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 
-    private boolean isEditing = false;
+    private boolean isEditing = false, isAdding = false;
 
     @Override
     protected void onFirstViewAttach() {
@@ -30,24 +30,24 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
         getViewState().setOptions(null, R.id.menu_add);
     }
 
-    public void onRoomClicked(ROOM_NUM roomNum) {
+    void onRoomClicked(ROOM_NUM roomNum) {
         if (!isEditing) {
             getViewState().setRoomSelected(roomNum);
             currentRoom = roomNum;
         }
     }
 
-    public void onShowNextMonth() {
+    void onShowNextMonth() {
         currentDate.add(Calendar.MONTH, 1);
         getViewState().updateCalendar(currentDate.get(Calendar.MONTH));
     }
 
-    public void onShowPrevMonth() {
+    void onShowPrevMonth() {
         currentDate.add(Calendar.MONTH, -1);
         getViewState().updateCalendar(currentDate.get(Calendar.MONTH));
     }
 
-    public void onDateClicked(ScheduleCell date, @Nullable ScheduleCell start, @Nullable ScheduleCell end) {
+    void onDateClicked(ScheduleCell date, @Nullable ScheduleCell start, @Nullable ScheduleCell end) {
         if (isEditing) { // If clicked while adding a duty
             if (rangeStartDate != null) {  // If first date is selected
                 if (!rangeStartDate.equals(date)) { // If we selected different from first date
@@ -77,7 +77,7 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
         }
     }
 
-    private void showSelectedRange(@Nullable ScheduleCell date) {
+    private void showSelectedRange(ScheduleCell date) {
         if (rangeEndDate == null) {  // Create range
             rangeEndDate = date;
             if (rangeStartDate.getDate().getTime() < rangeEndDate.getDate().getTime()) { // Manage date order
@@ -92,6 +92,8 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
             long startDelta = Math.abs(date.getDate().getTime() - rangeStartDate.getDate().getTime()),
                     endDelta = Math.abs(date.getDate().getTime() - rangeEndDate.getDate().getTime());
 
+            date.setRoomNum(currentRoom);
+
             if (endDelta < startDelta) { // Update end date
                 date.setState(ScheduleFragment.CELL_STATE.END);
                 getViewState().updateEnd(date, rangeEndDate);
@@ -104,15 +106,15 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
         }
     }
 
-    public void applyRange() {
+    void applyRange() {
         stopEditing();
     }
 
-    public void addRange(ScheduleCell start, ScheduleCell end) {
+    void addRange(ScheduleCell start, ScheduleCell end) {
         getViewState().showDutyRange(start, end, start.getRoomNum());
     }
 
-    public void deleteRange() {
+    void deleteRange() {
         getViewState().deleteRange(rangeStartDate, rangeEndDate);
         getViewState().showRangeDeleteSnackbar(rangeStartDate, rangeEndDate);
         stopEditing();
@@ -120,22 +122,22 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
 
     private void stopEditing() {
         isEditing = false;
+        isAdding = false;
         rangeStartDate = null;
         rangeEndDate = null;
         getViewState().setOptions(null, R.id.menu_add);
         getViewState().setTitle(R.string.fragment_schedule_title);
     }
 
-    public void startAddingDuty() {
+    void startAddingDuty() {
         isEditing = true;
+        isAdding = true;
         getViewState().setOptions(R.drawable.ic_close, R.id.menu_apply);
         getViewState().setTitle(R.string.schedule_add_duty);
     }
 
-    public void onEditStop() {
-        if (isEditing) {
-            isEditing = false;
-            getViewState().setOptions(null, R.id.menu_add);
+    void onEditStop() {
+        if (isAdding) {
             if (rangeStartDate != null) {
                 if (rangeEndDate == null) {
                     rangeStartDate.setState(ScheduleFragment.CELL_STATE.NONE);
@@ -144,9 +146,7 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
                     getViewState().deleteRange(rangeStartDate, rangeEndDate);
                 }
             }
-            rangeStartDate = null;
-            rangeEndDate = null;
-            getViewState().setTitle(R.string.fragment_schedule_title);
         }
+        stopEditing();
     }
 }

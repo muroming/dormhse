@@ -40,16 +40,16 @@ public class CalendarAdapter extends ArrayAdapter<ScheduleCell> {
         inflater = LayoutInflater.from(context);
     }
 
-    public void setDays(ArrayList<ScheduleCell> days) {
+    void setDays(ArrayList<ScheduleCell> days) {
         this.days = days;
         notifyDataSetChanged();
     }
 
-    public void setCurrentMonth(int currentMonth) {
+    void setCurrentMonth(int currentMonth) {
         this.currentMonth = currentMonth;
     }
 
-    public void setDateRangeDuty(Date startDate, Date endDate, ROOM_NUM roomNum) {
+    void setDateRangeDuty(Date startDate, Date endDate, ROOM_NUM roomNum) {
         int startInd = -1;
         for (int i = 0; i < days.size(); i++) {
             ScheduleCell cell = days.get(i);
@@ -73,12 +73,13 @@ public class CalendarAdapter extends ArrayAdapter<ScheduleCell> {
         notifyDataSetChanged();
     }
 
-    public void updateStartDuty(Date prevStart, Date newStart) {
+    void updateStartDuty(Date prevStart, Date newStart, ROOM_NUM roomNum) {
         if (newStart.getTime() < prevStart.getTime()) {  // If clicked behind start add new cells
             for (int i = 0; i < days.size(); i++) {
                 ScheduleCell cell = days.get(i);
                 if (cell.getDate().getTime() > newStart.getTime()) {
                     cell.setState(ScheduleFragment.CELL_STATE.MEDIUM);
+                    cell.setRoomNum(roomNum);
                     if (cell.getDate().equals(prevStart)) {
                         break;
                     }
@@ -98,7 +99,7 @@ public class CalendarAdapter extends ArrayAdapter<ScheduleCell> {
         notifyDataSetChanged();
     }
 
-    public void updateEndDuty(Date prevEnd, Date newEnd) {
+    void updateEndDuty(Date prevEnd, Date newEnd, ROOM_NUM roomNum) {
         if (newEnd.getTime() > prevEnd.getTime()) {  // If clicked after end add new cells
             for (int i = 0; i < days.size(); i++) {
                 ScheduleCell cell = days.get(i);
@@ -107,6 +108,7 @@ public class CalendarAdapter extends ArrayAdapter<ScheduleCell> {
                         break;
                     }
                     cell.setState(ScheduleFragment.CELL_STATE.MEDIUM);
+                    cell.setRoomNum(roomNum);
                 }
             }
         } else {  // Clicked before start remove
@@ -123,7 +125,7 @@ public class CalendarAdapter extends ArrayAdapter<ScheduleCell> {
         notifyDataSetChanged();
     }
 
-    public void updateDate(ScheduleCell cell) {
+    void updateDate(ScheduleCell cell) {
         for (ScheduleCell c : days) {
             if (c.equals(cell)) {
                 cell.setState(cell.getState());
@@ -134,7 +136,7 @@ public class CalendarAdapter extends ArrayAdapter<ScheduleCell> {
         notifyDataSetChanged();
     }
 
-    public void deleteRange(ScheduleCell start, ScheduleCell end) {
+    void deleteRange(ScheduleCell start, ScheduleCell end) {
         boolean flag = false;
         for (int i = 0; i < days.size(); i++) {
             ScheduleCell cell = days.get(i);
@@ -154,7 +156,7 @@ public class CalendarAdapter extends ArrayAdapter<ScheduleCell> {
         notifyDataSetChanged();
     }
 
-    public ScheduleCell getRangeStart(ScheduleCell dateClicked) {
+    ScheduleCell getRangeStart(ScheduleCell dateClicked) {
         ScheduleCell rangeStart = null;
         for (int i = 0; i < days.size(); i++) {
             ScheduleCell cell = days.get(i);
@@ -168,7 +170,7 @@ public class CalendarAdapter extends ArrayAdapter<ScheduleCell> {
         return rangeStart;
     }
 
-    public ScheduleCell getRangeEnd(ScheduleCell dateClicked) {
+    ScheduleCell getRangeEnd(ScheduleCell dateClicked) {
         ScheduleCell rangeEnd = null;
         for (int i = 0; i < days.size(); i++) {
             ScheduleCell cell = days.get(i);
