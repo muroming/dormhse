@@ -49,6 +49,9 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
 
     void onDateClicked(ScheduleCell date, @Nullable ScheduleCell start, @Nullable ScheduleCell end) {
         if (isEditing) { // If clicked while adding a duty
+            if(date.getRoomNum() != currentRoom && date.getState() != ScheduleFragment.CELL_STATE.NONE){
+                return;
+            }
             if (rangeStartDate != null) {  // If first date is selected
                 if (!rangeStartDate.equals(date)) { // If we selected different from first date
                     if (rangeEndDate != null) { // If end date is selected
