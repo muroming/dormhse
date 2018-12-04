@@ -3,7 +3,7 @@ package com.dorm.muro.dormitory.presentation.main;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.dorm.muro.dormitory.R;
-import com.dorm.muro.dormitory.presentation.firstfragment.ShopsWorkingTimeFragment;
+import com.dorm.muro.dormitory.presentation.todo.TodoFragment;
 import com.dorm.muro.dormitory.presentation.options.OptionsFragment;
 import com.dorm.muro.dormitory.presentation.payment.PaymentFragment;
 import com.dorm.muro.dormitory.presentation.schedule.ScheduleFragment;
@@ -11,7 +11,7 @@ import com.dorm.muro.dormitory.presentation.schedule.ScheduleFragment;
 @InjectViewState
 public class MainActivityPresenter extends MvpPresenter<MainActivityView> {
     void showNearbyPlaces() {
-        getViewState().showFragment(new ShopsWorkingTimeFragment(), R.string.fragment_none_title);
+        getViewState().showFragment(new TodoFragment(), R.string.fragment_none_title);
     }
 
     void showScheduleFragment() {
