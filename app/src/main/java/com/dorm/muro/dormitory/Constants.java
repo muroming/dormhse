@@ -43,4 +43,5 @@ public class Constants {
             "var b=document.getElementById(\"input-month\").value=%s;" +
             "var c=document.getElementById(\"input-year\").value=%s;" +
             "var d=document.getElementById(\"iTEXT\").value='%s';";
+    public static final int TODO_MAX_CHARACTERS = 80;
 }

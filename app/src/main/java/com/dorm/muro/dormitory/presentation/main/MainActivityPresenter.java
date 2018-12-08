@@ -10,7 +10,7 @@ import com.dorm.muro.dormitory.presentation.schedule.ScheduleFragment;
 
 @InjectViewState
 public class MainActivityPresenter extends MvpPresenter<MainActivityView> {
-    void showNearbyPlaces() {
+    void showTodoFragment() {
         getViewState().showFragment(new TodoFragment(), R.string.fragment_none_title);
     }
 

@@ -53,10 +53,12 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        presenter.showTodoFragment();
+
         navigation.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_nearby:
-                    presenter.showNearbyPlaces();
+                    presenter.showTodoFragment();
                     return true;
                 case R.id.navigation_schedule:
                     presenter.showScheduleFragment();
