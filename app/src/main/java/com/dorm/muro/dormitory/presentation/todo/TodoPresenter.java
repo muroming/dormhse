@@ -11,8 +11,8 @@ import java.util.List;
 public class TodoPresenter extends MvpPresenter<TodoView> {
     void loadTodos() {//todo make this w/ dagger
         List<TodoItem> items = new ArrayList<TodoItem>(3);
-        items.add(new TodoItem("title1", "commentary1", new Date()));
-        items.add(new TodoItem("title2", "commentary2", new Date()));
+        items.add(new TodoItem("title1", "commentary1", new Date(100)));
+        items.add(new TodoItem("title2", "commentary2", new Date(200000000)));
         items.add(new TodoItem("title3", "reallylongcommentaryreallylongcommentaryreallylongcommen" +
                 "taryreallylongcommentaryreallylongcommentaryreallylongcomme", new Date()));
         getViewState().setItems(items);
@@ -20,5 +20,15 @@ public class TodoPresenter extends MvpPresenter<TodoView> {
 
     void todoClicked(TodoItem item) {
         getViewState().showTodoDialog(item);
+    }
+
+    void pinTodo(TodoItem item) {
+        if(item.isPinned()) {
+            item.setPinned(false);
+            getViewState().unpinItem(item);
+        } else {
+            item.setPinned(true);
+            getViewState().pinItem(item);
+        }
     }
 }

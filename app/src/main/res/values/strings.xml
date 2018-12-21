@@ -3,7 +3,7 @@
     <string name="fragment_payment_title">Оплата</string>
     <string name="fragment_schedule_title">График уборки</string>
     <string name="fragment_options_title">Настройки</string>
-    <string name="fragment_none_title">Надо менять фичу :c</string>
+    <string name="fragment_todo_title">Список дел</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="login">Войти</string>

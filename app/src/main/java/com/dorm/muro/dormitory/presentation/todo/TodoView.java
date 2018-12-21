@@ -7,4 +7,6 @@ import java.util.List;
 public interface TodoView extends MvpView {
     void setItems(List<TodoItem> items);
     void showTodoDialog(TodoItem item);
+    void pinItem(TodoItem item);
+    void unpinItem(TodoItem item);
 }

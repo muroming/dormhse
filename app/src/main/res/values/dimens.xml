@@ -12,4 +12,5 @@
     <dimen name="todo_checkbox_size">50dp</dimen>
     <dimen name="todo_title_size">16sp</dimen>
     <dimen name="todo_start_padding">20dp</dimen>
+    <dimen name="todo_bottom_padding">10dp</dimen>
 </resources>

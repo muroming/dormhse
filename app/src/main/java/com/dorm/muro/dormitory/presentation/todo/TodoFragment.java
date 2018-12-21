@@ -5,12 +5,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
@@ -20,7 +20,7 @@ import com.dorm.muro.dormitory.R;
 
 import java.util.List;
 
-public class TodoFragment extends MvpAppCompatFragment implements TodoView, TodoAdapter.OnTodoClciked {
+public class TodoFragment extends MvpAppCompatFragment implements TodoView, TodoAdapter.OnTodoClicked {
 
     @InjectPresenter
     TodoPresenter presenter;
@@ -46,6 +46,7 @@ public class TodoFragment extends MvpAppCompatFragment implements TodoView, Todo
         RecyclerView rv = v.findViewById(R.id.rv_todo_list);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(adapter);
+        adapter.setListener(this);
 
         presenter.loadTodos();
         return v;
@@ -59,11 +60,27 @@ public class TodoFragment extends MvpAppCompatFragment implements TodoView, Todo
 
     @Override
     public void showTodoDialog(TodoItem item) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+//todo        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        Toast.makeText(getContext(), "CLICKED", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void OnClick(TodoItem item) {
+    public void onClick(TodoItem item) {
         presenter.todoClicked(item);
+    }
+
+    @Override
+    public void onLongClick(TodoItem item) {
+        presenter.pinTodo(item);
+    }
+
+    @Override
+    public void pinItem(TodoItem item) {
+        adapter.pinItem(item);
+    }
+
+    @Override
+    public void unpinItem(TodoItem item) {
+        adapter.unpinItem(item);
     }
 }
