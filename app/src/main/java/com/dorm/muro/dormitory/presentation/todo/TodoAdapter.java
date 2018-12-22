@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -112,7 +111,7 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
         private TextView commentary;
         private TextView deadline;
         private ImageView pin;
-        private View view;
+        public View foregroundView, backgroundView;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -121,7 +120,8 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
             commentary = itemView.findViewById(R.id.tv_todo_commentary);
             deadline = itemView.findViewById(R.id.tv_todo_deadline);
             pin = itemView.findViewById(R.id.iv_todo_pin);
-            this.view = itemView;
+            foregroundView = itemView.findViewById(R.id.cl_todo_foreground);
+            backgroundView = itemView.findViewById(R.id.rl_todo_background);
         }
 
         void bind(TodoItem item) {
@@ -137,8 +137,8 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
             }
             deadline.setText(item.getDeadlineString(dateFormat));
             pin.setVisibility(item.isPinned() ? View.VISIBLE : View.INVISIBLE);
-            view.setOnClickListener(v -> listener.onClick(item));
-            view.setOnLongClickListener(v -> {
+            foregroundView.setOnClickListener(v -> listener.onClick(item));
+            foregroundView.setOnLongClickListener(v -> {
                 listener.onLongClick(item);
                 return true;
             });

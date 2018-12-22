@@ -39,4 +39,5 @@
     <color name="forth_room_selection_text">#C24100</color>
 
     <color name="todo_deadline">#C41B00</color>
+    <color name="todo_done_bg">#00c853</color>
 </resources>

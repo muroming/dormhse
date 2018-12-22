@@ -5,11 +5,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 
@@ -20,12 +23,13 @@ import com.dorm.muro.dormitory.R;
 
 import java.util.List;
 
-public class TodoFragment extends MvpAppCompatFragment implements TodoView, TodoAdapter.OnTodoClicked {
+public class TodoFragment extends MvpAppCompatFragment implements TodoView, TodoAdapter.OnTodoClicked, TodoItemTouchHelper.TodoItemTouchHelperListener {
 
     @InjectPresenter
     TodoPresenter presenter;
 
     private TodoAdapter adapter;
+    private ItemTouchHelper.SimpleCallback recyclerSlideCallback;
 
     @Override
     public void onAttach(Context context) {
@@ -47,6 +51,9 @@ public class TodoFragment extends MvpAppCompatFragment implements TodoView, Todo
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(adapter);
         adapter.setListener(this);
+        rv.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayout.VERTICAL));
+        ItemTouchHelper.SimpleCallback itemTouchCallback = new TodoItemTouchHelper(0, ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchCallback).attachToRecyclerView(rv);
 
         presenter.loadTodos();
         return v;
@@ -82,5 +89,10 @@ public class TodoFragment extends MvpAppCompatFragment implements TodoView, Todo
     @Override
     public void unpinItem(TodoItem item) {
         adapter.unpinItem(item);
+    }
+
+    @Override
+    public void onSwipe(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        //todo
     }
 }
