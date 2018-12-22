@@ -105,6 +105,20 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
         return items.size();
     }
 
+    TodoItem getTodoItem(int position){
+        return items.get(position);
+    }
+
+    void removeItem(int position){
+        items.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    void insertItem(TodoItem item, int position) {
+        items.add(position, item);
+        notifyItemInserted(position);
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
         private CheckBox checkBox;
         private TextView title;

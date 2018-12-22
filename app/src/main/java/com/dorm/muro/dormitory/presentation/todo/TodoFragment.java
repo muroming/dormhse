@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -29,7 +31,9 @@ public class TodoFragment extends MvpAppCompatFragment implements TodoView, Todo
     TodoPresenter presenter;
 
     private TodoAdapter adapter;
+    private FrameLayout rootLayout;
     private ItemTouchHelper.SimpleCallback recyclerSlideCallback;
+    private TodoItem lastDeleted;
 
     @Override
     public void onAttach(Context context) {
@@ -47,6 +51,8 @@ public class TodoFragment extends MvpAppCompatFragment implements TodoView, Todo
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_todo_list, container, false);
+        rootLayout = v.findViewById(R.id.fl_todo_root);
+
         RecyclerView rv = v.findViewById(R.id.rv_todo_list);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(adapter);
@@ -92,7 +98,23 @@ public class TodoFragment extends MvpAppCompatFragment implements TodoView, Todo
     }
 
     @Override
+    public void removeItemAt(int position) {
+        adapter.removeItem(position);
+    }
+
+    @Override
+    public void returnItem(TodoItem item, int position) {
+        adapter.insertItem(item, position);
+    }
+
+    @Override
     public void onSwipe(RecyclerView.ViewHolder viewHolder, int direction, int position) {
-        //todo
+        lastDeleted = adapter.getTodoItem(position);
+        presenter.finishTodo(position);
+        Snackbar snackbar = Snackbar.make(rootLayout, R.string.todo_done, Snackbar.LENGTH_SHORT);
+        snackbar.setAction(R.string.cancel,  v -> {
+           presenter.returnTodo(lastDeleted, position);
+        });
+        snackbar.show();
     }
 }

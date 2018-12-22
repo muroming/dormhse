@@ -22,6 +22,14 @@ public class TodoPresenter extends MvpPresenter<TodoView> {
         getViewState().showTodoDialog(item);
     }
 
+    void finishTodo(int position) {
+        getViewState().removeItemAt(position);
+    }
+
+    void returnTodo(TodoItem item, int position) {
+        getViewState().returnItem(item, position);
+    }
+
     void pinTodo(TodoItem item) {
         if(item.isPinned()) {
             item.setPinned(false);
