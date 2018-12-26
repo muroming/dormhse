@@ -6,7 +6,7 @@ import java.util.Date;
 public class TodoItem {
     private String title, commentary;
     private Date deadline;
-    private boolean isChecked, isPinned;
+    private boolean isPinned;
 
     TodoItem(String title, String commentary, Date deadline) {
         this.title = title;
@@ -36,14 +36,6 @@ public class TodoItem {
 
     public void setDeadline(Date deadline) {
         this.deadline = deadline;
-    }
-
-    public boolean isChecked() {
-        return isChecked;
-    }
-
-    public void setChecked(boolean checked) {
-        isChecked = checked;
     }
 
     public boolean isPinned() {

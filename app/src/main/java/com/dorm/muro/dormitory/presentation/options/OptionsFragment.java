@@ -1,15 +1,12 @@
 package com.dorm.muro.dormitory.presentation.options;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -172,24 +169,24 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
     @Override
     public void setInfo(String email, String contractId, String name, int cardNum) {
         if (email.isEmpty()) {
-            mail.setText(R.string.payment_not_set);
+            mail.setText(R.string.field_not_set);
         } else {
             mail.setText(email);
         }
 
         if (contractId.isEmpty()) {
-            contract.setText(R.string.payment_not_set);
+            contract.setText(R.string.field_not_set);
         } else {
             contract.setText(contractId);
         }
 
         if (name.isEmpty()) {
-            fio.setText(R.string.payment_not_set);
+            fio.setText(R.string.field_not_set);
         } else {
             fio.setText(name);
         }
         if (cardNum == -1) {
-            cardData.setText(R.string.payment_not_set);
+            cardData.setText(R.string.field_not_set);
         } else {
             cardData.setText(getString(R.string.payment_card_tmp, cardNum));
         }

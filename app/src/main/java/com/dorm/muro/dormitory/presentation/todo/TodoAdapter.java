@@ -120,7 +120,6 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        private CheckBox checkBox;
         private TextView title;
         private TextView commentary;
         private TextView deadline;
@@ -129,7 +128,6 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
-            checkBox = itemView.findViewById(R.id.cb_todo_check);
             title = itemView.findViewById(R.id.tv_todo_title);
             commentary = itemView.findViewById(R.id.tv_todo_commentary);
             deadline = itemView.findViewById(R.id.tv_todo_deadline);
@@ -139,10 +137,6 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
         }
 
         void bind(TodoItem item) {
-            checkBox.setChecked(item.isChecked());
-            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                item.setChecked(isChecked);
-            });
             title.setText(item.getTitle());
             if (item.getCommentary().length() > TODO_MAX_CHARACTERS) {
                 commentary.setText(item.getCommentary().substring(0, TODO_MAX_CHARACTERS / 2) + "...");

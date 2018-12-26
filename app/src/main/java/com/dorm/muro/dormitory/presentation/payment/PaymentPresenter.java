@@ -62,15 +62,15 @@ public class PaymentPresenter extends MvpPresenter<PaymentView> {
                 getViewState().showPrice(R.string.payment_price_tmp, true,
                         rub, (int) ((price - rub) * 100));
             } else {
-                getViewState().showPrice(R.string.payment_not_set, false);
+                getViewState().showPrice(R.string.field_not_set, false);
             }
         } else {
-            getViewState().showRange(R.string.payment_not_set);
+            getViewState().showRange(R.string.field_not_set);
         }
 
         String fio = preferences.getString(USER_FIO, null), contract = preferences.getString(CONTRACT_ID, null);
-        getViewState().showFio(R.string.payment_not_set, fio);
-        getViewState().showContract(R.string.payment_not_set, contract);
+        getViewState().showFio(R.string.field_not_set, fio);
+        getViewState().showContract(R.string.field_not_set, contract);
     }
 
     void loadCardInfo() {

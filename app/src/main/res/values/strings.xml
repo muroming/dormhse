@@ -65,7 +65,7 @@
     <string name="payment_range_two_three">%d месяца, до %s</string>
     <string name="payment_price_tmp">%d рублей %d копеек</string>
     <string name="payment_card_tmp">• • • • %d</string>
-    <string name="payment_not_set">Не установлено</string>
+    <string name="field_not_set">Не установлено</string>
     <string name="no_payment_credits_set">Некоторые платежные данные не заданы</string>
     <string-array name="payment_progress">
         <item>Грабим банк&#8230;</item>
@@ -94,4 +94,14 @@
     <string name="schedule_duty_deleted">Дежурство удалено</string>
 
     <string name="todo_done">Выполнено</string>
+    <string name="todo_create_todo_title">Название</string>
+    <string name="todo_create_todo_time">Крайний срок</string>
+    <string-array name="todo_titles">
+        <item>Покормить кота</item>
+        <item>Полить цветы</item>
+        <item>Забрать ребенка из детдома</item> <!-- TODO -->
+        <item>Купить еды</item>
+        <item>Помыть пол</item>
+    </string-array>
+    <string name="todo_description">Описание</string>
 </resources>

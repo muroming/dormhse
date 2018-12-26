@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="@dimen/activity_horizontal_margin"
+    android:paddingEnd="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
+
+    <TextView
+        android:id="@+id/tv_todo_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/todo_create_todo_title"
+        android:textColor="@color/secondaryText"
+        android:textSize="@dimen/small_14_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_todo_deadline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/todo_create_todo_time"
+        android:textSize="@dimen/small_14_text"
+        android:layout_marginTop="@dimen/todo_title_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_todo_title" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/gl_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".3"/>
+
+    <EditText
+        android:id="@+id/et_todo_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/small_14_text"
+        android:background="null"
+        app:layout_constraintStart_toEndOf="@id/gl_title"
+        app:layout_constraintTop_toTopOf="@id/tv_todo_title"
+        tools:hint="Помыть подмышки" />
+
+    <TextView
+        android:id="@+id/tv_button_todo_deadline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/small_14_text"
+        app:layout_constraintStart_toEndOf="@id/gl_title"
+        app:layout_constraintTop_toTopOf="@id/tv_todo_deadline"
+        tools:text="@string/field_not_set"/>
+    
+    <View
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/todo_separator_top_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_todo_deadline"
+        android:background="@color/separatorColor" />
+
+    <EditText
+        android:id="@+id/et_todo_description"
+        android:layout_marginTop="@dimen/todo_description_top_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/todo_description"
+        android:background="null"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/separator"/>
+
+</android.support.constraint.ConstraintLayout>

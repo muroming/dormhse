@@ -12,4 +12,9 @@
     <dimen name="todo_title_size">16sp</dimen>
     <dimen name="todo_start_padding">20dp</dimen>
     <dimen name="todo_bottom_padding">10dp</dimen>
+    <dimen name="small_14_text">14sp</dimen>
+    <dimen name="medium_16_text">16sp</dimen>
+    <dimen name="todo_title_margin">14dp</dimen>
+    <dimen name="todo_separator_top_margin">12dp</dimen>
+    <dimen name="todo_description_top_margin">16dp</dimen>
 </resources>
