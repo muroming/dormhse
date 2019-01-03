@@ -11,4 +11,5 @@ public interface TodoView extends MvpView {
     void unpinItem(TodoItem item);
     void removeItemAt(int position);
     void returnItem(TodoItem item, int position);
+    void addItem(TodoItem item);
 }

@@ -105,16 +105,26 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
         return items.size();
     }
 
-    TodoItem getTodoItem(int position){
+    TodoItem getTodoItem(int position) {
         return items.get(position);
     }
 
-    void removeItem(int position){
+    void removeItem(int position) {
         items.remove(position);
         notifyItemRemoved(position);
     }
 
     void insertItem(TodoItem item, int position) {
+        items.add(position, item);
+        notifyItemInserted(position);
+    }
+
+    void addItem(TodoItem item) {
+        int position;
+        for (position = 0; position < items.size() &&
+                items.get(position).getDeadline().before(item.getDeadline()); position++)
+            ;
+
         items.add(position, item);
         notifyItemInserted(position);
     }
@@ -138,11 +148,16 @@ public class TodoAdapter extends RecyclerView.Adapter<TodoAdapter.ViewHolder> {
 
         void bind(TodoItem item) {
             title.setText(item.getTitle());
+
             if (item.getCommentary().length() > TODO_MAX_CHARACTERS) {
                 commentary.setText(item.getCommentary().substring(0, TODO_MAX_CHARACTERS / 2) + "...");
             } else {
                 commentary.setText(item.getCommentary());
             }
+            if (item.getCommentary().isEmpty()) {
+                commentary.setVisibility(View.GONE);
+            }
+
             deadline.setText(item.getDeadlineString(dateFormat));
             pin.setVisibility(item.isPinned() ? View.VISIBLE : View.INVISIBLE);
             foregroundView.setOnClickListener(v -> listener.onClick(item));

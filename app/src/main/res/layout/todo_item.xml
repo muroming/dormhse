@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp">
+    android:layout_height="wrap_content"
+    android:maxHeight="100dp">
 
     <RelativeLayout
         android:id="@+id/rl_todo_background"
@@ -34,11 +35,12 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/cl_todo_foreground"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="match_parent"
         android:background="@color/white"
         android:elevation="2dp"
         android:paddingStart="@dimen/todo_start_padding"
-        android:paddingEnd="@dimen/activity_horizontal_margin">
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/todo_bottom_padding">
 
         <ImageView
             android:id="@+id/iv_todo_pin"
@@ -67,13 +69,13 @@
             android:textColor="@color/todo_deadline"
             app:layout_constraintStart_toStartOf="@id/tv_todo_title"
             app:layout_constraintTop_toBottomOf="@id/tv_todo_title"
+            app:layout_goneMarginBottom="@dimen/todo_bottom_padding"
             tools:text="8:30 - 13:00" />
 
         <TextView
             android:id="@+id/tv_todo_commentary"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/todo_bottom_padding"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/tv_todo_title"

@@ -104,4 +104,5 @@
         <item>Помыть пол</item>
     </string-array>
     <string name="todo_description">Описание</string>
+    <string name="todo_create_fields_error">Не все обязательные поля заполнены</string>
 </resources>

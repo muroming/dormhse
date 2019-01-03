@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingStart="@dimen/activity_horizontal_margin"
@@ -40,10 +39,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/small_14_text"
-        android:background="null"
+        android:inputType="text"
+        android:maxLines="1"
+        android:background="@null"
         app:layout_constraintStart_toEndOf="@id/gl_title"
         app:layout_constraintTop_toTopOf="@id/tv_todo_title"
-        tools:hint="Помыть подмышки" />
+        android:hint="Помыть подмышки" />
 
     <TextView
         android:id="@+id/tv_button_todo_deadline"
@@ -52,7 +53,7 @@
         android:textSize="@dimen/small_14_text"
         app:layout_constraintStart_toEndOf="@id/gl_title"
         app:layout_constraintTop_toTopOf="@id/tv_todo_deadline"
-        tools:text="@string/field_not_set"/>
+        android:text="@string/field_not_set"/>
     
     <View
         android:id="@+id/separator"
@@ -70,7 +71,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/todo_description"
-        android:background="null"
+        android:background="@null"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/separator"/>

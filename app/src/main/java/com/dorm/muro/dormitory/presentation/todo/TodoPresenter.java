@@ -18,6 +18,10 @@ public class TodoPresenter extends MvpPresenter<TodoView> {
         getViewState().setItems(items);
     }
 
+    void addTodo(TodoItem item) {
+        getViewState().addItem(item);
+    }
+
     void todoClicked(TodoItem item) {
         getViewState().showTodoDialog(item);
     }

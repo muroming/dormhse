@@ -1,6 +1,12 @@
 package com.dorm.muro.dormitory;
 
 public class Constants {
+    public static final int TODO_CREATED = 10;
+    public static final int TODO_CANCELED = -10;
+    public static final String TODO_TITLE = "TODO_TITLE";
+    public static final String TODO_DEADLINE = "TODO_DEADLINE";
+    public static final String TODO_DESCRIPTION = "TODO_DESCRIPTION";
+
     public static final String NOTIFICATIONS = "NOTIFICATIONS";
     public static final String SHARED_PREFERENCES = "APP_DORMITORY_PREFS";
     public static final String IS_LOGGED = "LOGIN_STATUS";
@@ -18,7 +24,8 @@ public class Constants {
     public static final String DATE_SEPARATOR = ".";
     public static final String DATE_SPLITTER = "\\.";
     public static final String PAYMENT_URL = "https://pay.hse.ru/moscow/prg";
-    public static final String FIRST_QUERY = "(function(){\n" +
+    public static final String FIRST_QUERY =
+            "(function(){\n" +
             "var check = document.getElementById('amount');\n" +
             "var alertMsg = document.getElementsByClassName('error-message')[0];\n" +
             "document.getElementById('fio').value='%s';\n" +

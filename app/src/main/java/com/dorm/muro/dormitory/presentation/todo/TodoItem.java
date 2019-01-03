@@ -10,7 +10,10 @@ public class TodoItem {
 
     TodoItem(String title, String commentary, Date deadline) {
         this.title = title;
-        this.commentary = commentary;
+        if (commentary != null && !commentary.isEmpty())
+            this.commentary = commentary;
+        else
+            this.commentary = "";
         this.deadline = deadline;
     }
 

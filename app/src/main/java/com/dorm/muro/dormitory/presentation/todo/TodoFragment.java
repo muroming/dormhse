@@ -2,6 +2,7 @@ package com.dorm.muro.dormitory.presentation.todo;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,8 +26,12 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.dorm.muro.dormitory.R;
+import com.dorm.muro.dormitory.presentation.createTodo.CreateTodoActivity;
 
+import java.util.Date;
 import java.util.List;
+
+import static com.dorm.muro.dormitory.Constants.*;
 
 public class TodoFragment extends MvpAppCompatFragment implements TodoView, TodoAdapter.OnTodoClicked, TodoItemTouchHelper.TodoItemTouchHelperListener {
 
@@ -37,6 +42,8 @@ public class TodoFragment extends MvpAppCompatFragment implements TodoView, Todo
     private FrameLayout rootLayout;
     private ItemTouchHelper.SimpleCallback recyclerSlideCallback;
     private TodoItem lastDeleted;
+
+    private final int TODO_REQUEST_CODE = 123;
 
     @Override
     public void onAttach(Context context) {
@@ -81,6 +88,18 @@ public class TodoFragment extends MvpAppCompatFragment implements TodoView, Todo
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == TODO_REQUEST_CODE && resultCode == TODO_CREATED) {
+            TodoItem item = new TodoItem(
+                    data.getStringExtra(TODO_TITLE),
+                    data.getStringExtra(TODO_DESCRIPTION),
+                    new Date(data.getLongExtra(TODO_DEADLINE, -1))
+            );
+            presenter.addTodo(item);
+        }
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu, menu);
         menu.findItem(R.id.menu_add).setVisible(true);
@@ -88,7 +107,15 @@ public class TodoFragment extends MvpAppCompatFragment implements TodoView, Todo
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.menu_add: {
+                Intent intent = new Intent(getContext(), CreateTodoActivity.class);
+                startActivityForResult(intent, TODO_REQUEST_CODE);
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -126,9 +153,14 @@ public class TodoFragment extends MvpAppCompatFragment implements TodoView, Todo
         lastDeleted = adapter.getTodoItem(position);
         presenter.finishTodo(position);
         Snackbar snackbar = Snackbar.make(rootLayout, R.string.todo_done, Snackbar.LENGTH_SHORT);
-        snackbar.setAction(R.string.cancel,  v -> {
-           presenter.returnTodo(lastDeleted, position);
+        snackbar.setAction(R.string.cancel, v -> {
+            presenter.returnTodo(lastDeleted, position);
         });
         snackbar.show();
+    }
+
+    @Override
+    public void addItem(TodoItem item) {
+        adapter.addItem(item);
     }
 }
