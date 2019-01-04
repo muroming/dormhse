@@ -31,7 +31,7 @@
             android:name=".presentation.createTodo.CreateTodoActivity"
             android:screenOrientation="portrait" />
 
-        <service android:name="com.dorm.muro.dormitory.service.PaymentFCM">
+        <service android:name="com.dorm.muro.dormitory.network.PaymentFCM">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

@@ -22,6 +22,7 @@ import android.widget.ViewFlipper;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.dorm.muro.dormitory.network.authentication.UserSessionManager;
 import com.dorm.muro.dormitory.presentation.main.MainActivity;
 import com.dorm.muro.dormitory.R;
 
@@ -40,19 +41,32 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
 
     private enum FlipDir {NEXT, PREV}
 
-    @BindView(R.id.et_login_mail) EditText mLoginEditText;
-    @BindView(R.id.et_login_password) EditText mPasswordEditText;
-    @BindView(R.id.vf_login_flipper) ViewFlipper mViewFlipper;
-    @BindView(R.id.ll_login_header) LinearLayout mLoginHeader;
-    @BindView(R.id.tv_login_register_stage1) ImageView mRegisterStage1;
-    @BindView(R.id.tv_login_register_stage2) ImageView mRegisterStage2;
-    @BindView(R.id.tv_register_already_have) TextView mAlreadyHaveAccount;
-    @BindView(R.id.tv_forgot_check_email_callback) TextView mCheckEmailCallback;
-    @BindView(R.id.et_forgot_mail) EditText mForgotMail;
-    @BindView(R.id.btn_forgot_button)  Button mForgotPasswordButton;
-    @BindView(R.id.tv_forgot_email_display) TextView mEmailDisplay;
-    @BindView(R.id.tv_forgot_title) TextView mForgotTitle;
-    @BindView(R.id.tv_forgot_unsuccessful_back) TextView mForgotBack;
+    @BindView(R.id.et_login_mail)
+    EditText mLoginEditText;
+    @BindView(R.id.et_login_password)
+    EditText mPasswordEditText;
+    @BindView(R.id.vf_login_flipper)
+    ViewFlipper mViewFlipper;
+    @BindView(R.id.ll_login_header)
+    LinearLayout mLoginHeader;
+    @BindView(R.id.tv_login_register_stage1)
+    ImageView mRegisterStage1;
+    @BindView(R.id.tv_login_register_stage2)
+    ImageView mRegisterStage2;
+    @BindView(R.id.tv_register_already_have)
+    TextView mAlreadyHaveAccount;
+    @BindView(R.id.tv_forgot_check_email_callback)
+    TextView mCheckEmailCallback;
+    @BindView(R.id.et_forgot_mail)
+    EditText mForgotMail;
+    @BindView(R.id.btn_forgot_button)
+    Button mForgotPasswordButton;
+    @BindView(R.id.tv_forgot_email_display)
+    TextView mEmailDisplay;
+    @BindView(R.id.tv_forgot_title)
+    TextView mForgotTitle;
+    @BindView(R.id.tv_forgot_unsuccessful_back)
+    TextView mForgotBack;
 
     private ProgressDialog pd;
     private FlipDir flipDir;
@@ -101,17 +115,17 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
     }
 
     @OnClick(R.id.btn_login_login)
-    public void onLoginClicked(){
+    public void onLoginClicked() {
         presenter.onSignInClicked(mLoginEditText.getText().toString(), mPasswordEditText.getText().toString());
     }
 
     @OnClick(R.id.tv_login_create_account)
-    public void onCreateAccountClicked(){
+    public void onCreateAccountClicked() {
         presenter.showRegisterForm();
     }
 
     @OnClick(R.id.btn_register_next)
-    public void onRegisterNextClicked(){
+    public void onRegisterNextClicked() {
         presenter.registerNextScreen();
     }
 
@@ -179,7 +193,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
     }
 
     @OnClick(R.id.tv_forgot_unsuccessful_back)
-    public void goBackTextViewClicked(){
+    public void goBackTextViewClicked() {
         presenter.goToMainScreen();
     }
 
@@ -213,15 +227,15 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
         changeFlipDirection();
     }
 
-    private void changeFlipDirection(){
-        switch (flipDir){
-            case NEXT:{
+    private void changeFlipDirection() {
+        switch (flipDir) {
+            case NEXT: {
                 mViewFlipper.setInAnimation(this, R.anim.slide_in_from_left);
                 mViewFlipper.setOutAnimation(this, R.anim.slide_out_to_right);
                 flipDir = FlipDir.PREV;
                 break;
             }
-            case PREV:{
+            case PREV: {
                 mViewFlipper.setInAnimation(this, R.anim.slide_in_from_right);
                 mViewFlipper.setOutAnimation(this, R.anim.slide_out_to_left);
                 flipDir = FlipDir.NEXT;
@@ -291,5 +305,10 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
     @Override
     public void showWrongEmail() {
         Toast.makeText(this, "Wrong email", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showOnException() {
+        Toast.makeText(this, getString(R.string.auth_exception), Toast.LENGTH_SHORT).show();
     }
 }

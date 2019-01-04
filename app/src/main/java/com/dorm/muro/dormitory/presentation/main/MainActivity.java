@@ -12,10 +12,11 @@ import android.text.style.ForegroundColorSpan;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.dorm.muro.dormitory.network.authentication.UserSessionManager;
 import com.dorm.muro.dormitory.presentation.payment.PaymentFragment;
 import com.dorm.muro.dormitory.R;
 import com.dorm.muro.dormitory.presentation.login.LoginActivity;
-import com.dorm.muro.dormitory.service.PaymentFCM;
+import com.dorm.muro.dormitory.network.PaymentFCM;
 
 
 import butterknife.BindView;
@@ -36,15 +37,13 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
     @InjectPresenter
     MainActivityPresenter presenter;
 
-    SharedPreferences preferences;
 
     @BindView(R.id.navigation)
     BottomNavigationView navigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        preferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
-        if (!preferences.getBoolean(IS_LOGGED, false)) {
+        if (UserSessionManager.getInstance().getCurrentUser() == null) {
             startActivity(getTargetIntent(LoginActivity.class));
             finish();
         }

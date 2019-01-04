@@ -30,4 +30,6 @@ public interface LoginView extends MvpView{
     void hideForgotEmailCallback();
 
     void showForgotEmailCallback(boolean isSuccessful, String mail);
+
+    void showOnException();
 }

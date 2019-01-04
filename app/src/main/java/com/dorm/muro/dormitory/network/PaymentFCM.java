@@ -1,4 +1,4 @@
-package com.dorm.muro.dormitory.service;
+package com.dorm.muro.dormitory.network;
 
 import android.app.PendingIntent;
 import android.content.Intent;

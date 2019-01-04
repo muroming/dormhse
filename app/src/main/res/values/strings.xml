@@ -17,6 +17,7 @@
     <string name="password">Пароль</string>
     <string name="forgot_password">Забыли пароль?</string>
     <string name="wrong_login_password">Неверный логин или пароль</string>
+    <string name="auth_exception">Произошла ошибка проверьте соединение\nи попытайтесь ещё раз</string>
     <string name="sign_in">Войти</string>
     <string name="sign_up">Создать аккаунт</string>
     <string name="notification_channel_name">DORMITORY_APP</string>
