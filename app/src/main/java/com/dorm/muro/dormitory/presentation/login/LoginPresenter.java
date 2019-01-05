@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import java.util.Random;
 import java.util.regex.Pattern;
 
+import io.reactivex.Maybe;
 import io.reactivex.MaybeObserver;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -88,14 +89,41 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
     }
 
 
-    void finishRegistration() {
+    void finishRegistration(String email, String password, String name, String surname, String contractId) {
         getViewState().showProgressDialog("Confirming Registration");
-        new Handler().postDelayed(
-                () -> {
-                    getViewState().hideProgressDialog();
-                    getViewState().signIn();
-                }, 2000
-        );
+        UserSessionManager.getInstance().registerNewUser(email, password)
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
+                .map(authResult -> authResult.getUser() != null)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new MaybeObserver<Boolean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        compositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onSuccess(Boolean isRegistered) {
+                        if (isRegistered) {
+                            getViewState().hideProgressDialog();
+                            getViewState().signIn();
+                        } else {
+                            getViewState().hideProgressDialog();
+                            getViewState().showOnException();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (e instanceof FirebaseNetworkException)
+                            getViewState().showOnException();
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     void forgotPasswordAction(final String mail) {

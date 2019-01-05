@@ -67,6 +67,16 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
     TextView mForgotTitle;
     @BindView(R.id.tv_forgot_unsuccessful_back)
     TextView mForgotBack;
+    @BindView(R.id.et_register_mail)
+    EditText mRegisterMail;
+    @BindView(R.id.et_register_password)
+    EditText mRegisterPassword;
+    @BindView(R.id.et_register_second_name)
+    EditText mRegisterSecondName;
+    @BindView(R.id.et_register_name)
+    EditText mRegisterName;
+    @BindView(R.id.et_register_contract_id)
+    EditText mRegisterContractId;
 
     private ProgressDialog pd;
     private FlipDir flipDir;
@@ -131,7 +141,8 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
 
     @OnClick(R.id.btn_register_finish)
     public void finishRegistration() {
-        presenter.finishRegistration();
+        presenter.finishRegistration(mRegisterMail.getText().toString(), mRegisterPassword.getText().toString(),
+                mRegisterName.getText().toString(), mRegisterSecondName.getText().toString(), mRegisterContractId.getText().toString());
     }
 
     //TODO: Make check email query
