@@ -7,6 +7,7 @@ import com.arellomobile.mvp.MvpPresenter;
 import com.dorm.muro.dormitory.R;
 import com.dorm.muro.dormitory.network.authentication.UserSessionManager;
 import com.google.firebase.FirebaseNetworkException;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
@@ -91,6 +92,9 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
 
                 if (exception instanceof FirebaseAuthUserCollisionException)
                     getViewState().showToast(R.string.email_already_in_use);
+
+                if (exception instanceof FirebaseAuthInvalidCredentialsException)
+                    getViewState().showToast(R.string.wrong_email);
             }
         });
     }

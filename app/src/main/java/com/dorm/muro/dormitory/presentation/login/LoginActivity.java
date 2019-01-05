@@ -117,7 +117,16 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
 
     @OnClick(R.id.btn_login_login)
     public void onLoginClicked() {
-        presenter.onSignInClicked(mLoginEditText.getText().toString(), mPasswordEditText.getText().toString());
+        String email = mLoginEditText.getText().toString(), password = mPasswordEditText.getText().toString();
+        if (email.isEmpty()) {
+            mLoginEditText.setError(getString(R.string.field_must_to_fill));
+        }
+        if (password.isEmpty()) {
+            mPasswordEditText.setError(getString(R.string.field_must_to_fill));
+        }
+        if (!email.isEmpty() && !password.isEmpty()) {
+            presenter.onSignInClicked(email, password);
+        }
     }
 
     @OnClick(R.id.tv_login_create_account)
@@ -132,8 +141,23 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
 
     @OnClick(R.id.btn_register_finish)
     public void finishRegistration() {
-        presenter.finishRegistration(mRegisterMail.getText().toString(), mRegisterPassword.getText().toString(),
-                mRegisterName.getText().toString(), mRegisterSecondName.getText().toString(), mRegisterContractId.getText().toString());
+        String name = mRegisterName.getText().toString(), surname = mRegisterSecondName.getText().toString(),
+                contractId = mRegisterContractId.getText().toString();
+
+        if (name.isEmpty()) {
+            mRegisterName.setError(getString(R.string.field_must_to_fill));
+        }
+        if (surname.isEmpty()) {
+            mRegisterSecondName.setError(getString(R.string.field_must_to_fill));
+        }
+        if (contractId.isEmpty()) {
+            mRegisterContractId.setError(getString(R.string.field_must_to_fill));
+        }
+
+        if (!name.isEmpty() && !surname.isEmpty() && !contractId.isEmpty()) {
+            presenter.finishRegistration(mRegisterMail.getText().toString(), mRegisterPassword.getText().toString(),
+                    mRegisterName.getText().toString(), mRegisterSecondName.getText().toString(), mRegisterContractId.getText().toString());
+        }
     }
 
     //TODO: Make check email query
@@ -264,9 +288,18 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
 
     @Override
     public void proceedToSecondPage() {
-        mViewFlipper.setDisplayedChild(2);
-        mRegisterStage2.setImageDrawable(getDrawable(R.drawable.ic_step_2));
-        mRegisterStage1.setImageDrawable(getDrawable(R.drawable.ic_gray_step));
+        String email = mRegisterMail.getText().toString(), password = mRegisterPassword.getText().toString();
+        if (email.isEmpty()) {
+            mRegisterMail.setError(getString(R.string.field_must_to_fill));
+        }
+        if (password.isEmpty()) {
+            mRegisterPassword.setError(getString(R.string.field_must_to_fill));
+        }
+        if (!email.isEmpty() && !password.isEmpty()) {
+            mViewFlipper.setDisplayedChild(2);
+            mRegisterStage2.setImageDrawable(getDrawable(R.drawable.ic_step_2));
+            mRegisterStage1.setImageDrawable(getDrawable(R.drawable.ic_gray_step));
+        }
     }
 
     @Override
