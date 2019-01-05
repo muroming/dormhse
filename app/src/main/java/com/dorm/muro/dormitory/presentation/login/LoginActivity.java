@@ -1,7 +1,6 @@
 package com.dorm.muro.dormitory.presentation.login;
 
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,16 +21,12 @@ import android.widget.ViewFlipper;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.dorm.muro.dormitory.network.authentication.UserSessionManager;
 import com.dorm.muro.dormitory.presentation.main.MainActivity;
 import com.dorm.muro.dormitory.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static com.dorm.muro.dormitory.Constants.IS_LOGGED;
-import static com.dorm.muro.dormitory.Constants.SHARED_PREFERENCES;
 
 
 public class LoginActivity extends MvpAppCompatActivity implements LoginView {
@@ -80,16 +75,12 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
 
     private ProgressDialog pd;
     private FlipDir flipDir;
-    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
         ButterKnife.bind(this);
-
-        preferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
-        presenter.setPreferences(preferences);
 
         //Setting flipping animations
         mViewFlipper.setInAnimation(this, R.anim.slide_in_from_right);
@@ -293,14 +284,8 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
 
     @Override
     public void signIn() {
-        preferences.edit().putBoolean(IS_LOGGED, true).apply();
         MainActivity.start(this);
         finish();
-    }
-
-    @Override
-    public void showWrongLoginPass() {
-        Toast.makeText(this, getString(R.string.wrong_login_password), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -314,12 +299,7 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
     }
 
     @Override
-    public void showWrongEmail() {
-        Toast.makeText(this, "Wrong email", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void showOnException() {
-        Toast.makeText(this, getString(R.string.auth_exception), Toast.LENGTH_SHORT).show();
+    public void showToast(int text) {
+        Toast.makeText(this, getString(text), Toast.LENGTH_SHORT).show();
     }
 }

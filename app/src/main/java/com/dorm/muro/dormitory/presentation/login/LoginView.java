@@ -9,10 +9,7 @@ public interface LoginView extends MvpView{
     void signIn();
 
     @StateStrategyType(SkipStrategy.class)
-    void showWrongLoginPass();
-
-    @StateStrategyType(SkipStrategy.class)
-    void showWrongEmail();
+    void showToast(int text);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void showMainScreen();
@@ -30,6 +27,4 @@ public interface LoginView extends MvpView{
     void hideForgotEmailCallback();
 
     void showForgotEmailCallback(boolean isSuccessful, String mail);
-
-    void showOnException();
 }

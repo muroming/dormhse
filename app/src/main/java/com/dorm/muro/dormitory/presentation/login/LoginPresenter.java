@@ -1,75 +1,42 @@
 package com.dorm.muro.dormitory.presentation.login;
 
-import android.content.SharedPreferences;
 import android.os.Handler;
-import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
+import com.dorm.muro.dormitory.R;
 import com.dorm.muro.dormitory.network.authentication.UserSessionManager;
 import com.google.firebase.FirebaseNetworkException;
-import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.regex.Pattern;
 
-import io.reactivex.Maybe;
-import io.reactivex.MaybeObserver;
-import io.reactivex.Scheduler;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.schedulers.IoScheduler;
-import io.reactivex.schedulers.Schedulers;
 
-import static com.dorm.muro.dormitory.Constants.IS_LOGGED;
+import static com.dorm.muro.dormitory.Constants.*;
 
 @InjectViewState
 public class LoginPresenter extends MvpPresenter<LoginView> {
 
-    //todo inject
-    private SharedPreferences preferences;
-
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     void onSignInClicked(String login, String password) {
-                UserSessionManager.getInstance().authenticate(login, password)
-                        .subscribeOn(Schedulers.io())
-                        .map(authResult -> authResult.getUser() != null)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new MaybeObserver<Boolean>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
-                                compositeDisposable.add(d);
-                            }
-
-                            @Override
-                            public void onSuccess(Boolean isLogged) {
-                                if (isLogged) {
-                                    getViewState().signIn();
-                                } else {
-                                    getViewState().showWrongLoginPass();
-                                }
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                if (e instanceof FirebaseNetworkException)
-                                    getViewState().showOnException();
-                                if (e instanceof FirebaseAuthInvalidCredentialsException)
-                                    getViewState().showWrongLoginPass();
-                            }
-
-                            @Override
-                            public void onComplete() {
-
-                            }
-                        });
-    }
-
-    public void setPreferences(SharedPreferences preferences) {
-        this.preferences = preferences;
+        UserSessionManager.getInstance().authenticate(login, password)
+                .addOnCompleteListener(authentication -> {
+                    if (authentication.isSuccessful()) {
+                        getViewState().signIn();
+                    } else {
+                        if (authentication.getException() instanceof FirebaseNetworkException) {
+                            getViewState().showToast(R.string.network_exception);
+                        } else {
+                            getViewState().showToast(R.string.wrong_login_password);
+                        }
+                    }
+                });
     }
 
     void registerNextScreen() {
@@ -91,39 +58,41 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
 
     void finishRegistration(String email, String password, String name, String surname, String contractId) {
         getViewState().showProgressDialog("Confirming Registration");
-        UserSessionManager.getInstance().registerNewUser(email, password)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.computation())
-                .map(authResult -> authResult.getUser() != null)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new MaybeObserver<Boolean>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-                        compositeDisposable.add(d);
-                    }
+        UserSessionManager.getInstance().registerNewUser(email, password).addOnCompleteListener(registration -> {
+            if (registration.isSuccessful()) {
+                Map<String, Object> initialValues = new HashMap<>(3);
+                initialValues.put(USER_NAME_FIELD, name);
+                initialValues.put(USER_SURNAME_FIELD, surname);
+                initialValues.put(USER_CONTRACT_ID_FIELD, contractId);
 
-                    @Override
-                    public void onSuccess(Boolean isRegistered) {
-                        if (isRegistered) {
-                            getViewState().hideProgressDialog();
-                            getViewState().signIn();
-                        } else {
-                            getViewState().hideProgressDialog();
-                            getViewState().showOnException();
+                UserSessionManager.getInstance().updateUserField(initialValues).addOnCompleteListener(
+                        initialization -> {
+                            if (initialization.isSuccessful()) {
+                                getViewState().hideProgressDialog();
+                                getViewState().signIn();
+                            } else {
+                                Exception exception = initialization.getException();
+                                getViewState().hideProgressDialog();
+
+                                if (exception instanceof FirebaseNetworkException)
+                                    getViewState().showToast(R.string.network_exception);
+                            }
                         }
-                    }
+                );
+            } else {
+                Exception exception = registration.getException();
+                getViewState().hideProgressDialog();
 
-                    @Override
-                    public void onError(Throwable e) {
-                        if (e instanceof FirebaseNetworkException)
-                            getViewState().showOnException();
-                    }
+                if (exception instanceof FirebaseNetworkException)
+                    getViewState().showToast(R.string.network_exception);
 
-                    @Override
-                    public void onComplete() {
+                if (exception instanceof FirebaseAuthWeakPasswordException)
+                    getViewState().showToast(R.string.registration_weak_password);
 
-                    }
-                });
+                if (exception instanceof FirebaseAuthUserCollisionException)
+                    getViewState().showToast(R.string.email_already_in_use);
+            }
+        });
     }
 
     void forgotPasswordAction(final String mail) {
@@ -137,7 +106,7 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
                 getViewState().showForgotEmailCallback(test, mail);
             }, 1000);
         } else {
-            getViewState().showWrongEmail();
+            getViewState().showToast(R.string.wrong_email);
         }
     }
 

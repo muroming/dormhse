@@ -17,7 +17,10 @@
     <string name="password">Пароль</string>
     <string name="forgot_password">Забыли пароль?</string>
     <string name="wrong_login_password">Неверный логин или пароль</string>
-    <string name="auth_exception">Произошла ошибка проверьте соединение\nи попытайтесь ещё раз</string>
+    <string name="network_exception">Произошла ошибка проверьте соединение\nи попытайтесь ещё раз</string>
+    <string name="email_already_in_use">Адрес почтовой почты уже используется</string>
+    <string name="wrong_email">Неверный адрес почты</string>
+    <string name="registration_weak_password">Слабый пароль (минимум 6 символов)</string>
     <string name="sign_in">Войти</string>
     <string name="sign_up">Создать аккаунт</string>
     <string name="notification_channel_name">DORMITORY_APP</string>

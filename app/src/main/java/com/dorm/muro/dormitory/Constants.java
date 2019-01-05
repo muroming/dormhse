@@ -51,4 +51,9 @@ public class Constants {
             "var c=document.getElementById(\"input-year\").value=%s;" +
             "var d=document.getElementById(\"iTEXT\").value='%s';";
     public static final int TODO_MAX_CHARACTERS = 80;
+
+    public static final String USER_INFO_DATABASE = "user_info";
+    public static final String USER_NAME_FIELD = "name";
+    public static final String USER_SURNAME_FIELD = "surname";
+    public static final String USER_CONTRACT_ID_FIELD = "contract_id";
 }
