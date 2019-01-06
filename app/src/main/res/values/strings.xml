@@ -14,7 +14,9 @@
     <string name="login_email_hint">Введите Email</string>
     <string name="login_pass_hint">Введите пароль</string>
     <string name="reset_pass_hint">Введите новый пароль</string>
+    <string name="reset_pass_successful">Пароль сменён успешно</string>
     <string name="reset_pass_repeat_hint">Повторите новый пароль</string>
+    <string name="reset_pass_not_watch">Пароли должны совпадать</string>
     <string name="register_name_hint">Введите имя</string>
     <string name="register_second_name_hint">Введите фамилию</string>
     <string name="about_app">О приложении</string>

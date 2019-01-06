@@ -29,13 +29,13 @@
             android:screenOrientation="portrait" />
         <activity android:name=".presentation.resetPassword.ResetPasswordActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="https"
-                    android:host="dormhse.resetpassword" />
-            </intent-filter>
+            <!-- TODO <intent-filter>-->
+                <!--<action android:name="android.intent.action.VIEW" />-->
+                <!--<category android:name="android.intent.category.BROWSABLE" />-->
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+                <!--<data android:scheme="https"-->
+                    <!--android:host="dormhse.resetpassword" />-->
+            <!--</intent-filter>-->
         </activity>
 
         <service android:name=".network.PaymentFCM">

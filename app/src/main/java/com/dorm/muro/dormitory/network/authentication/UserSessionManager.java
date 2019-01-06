@@ -44,6 +44,7 @@ public class UserSessionManager {
         return user.updatePassword(newPassword);
     }
 
+
     public Task<Void> updateUserField(Map<String, Object> newValues) {
         if (mAuth.getCurrentUser() == null) {
             return null;
