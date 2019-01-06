@@ -20,7 +20,7 @@ public interface LoginView extends MvpView{
 
     void proceedToSecondPage();
 
-    void showProgressDialog(String msg);
+    void showProgressDialog(int text);
 
     void hideProgressDialog();
 

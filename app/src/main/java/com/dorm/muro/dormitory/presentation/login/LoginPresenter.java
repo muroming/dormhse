@@ -58,7 +58,7 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
 
 
     void finishRegistration(String email, String password, String name, String surname, String contractId) {
-        getViewState().showProgressDialog("Confirming Registration");
+        getViewState().showProgressDialog(R.string.confirming_registration_progress_title);
         UserSessionManager.getInstance().registerNewUser(email, password).addOnCompleteListener(registration -> {
             if (registration.isSuccessful()) {
                 Map<String, Object> initialValues = new HashMap<>(3);
@@ -99,16 +99,15 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
         });
     }
 
-    void forgotPasswordAction(final String mail) {
+    void forgotPasswordAction(String mail) {
         Pattern pattern = Pattern.compile("[a-z0-9A-Z]+@[a-z0-9A-Z]+\\.[a-zA-Z]{2,6}", Pattern.CASE_INSENSITIVE);
 
         if (pattern.matcher(mail).find()) {  // Check if email matches pattern. If true, proceed, else show warning
-            getViewState().showProgressDialog("Checking Email");
-            new Handler().postDelayed(() -> {
-                boolean test = new Random().nextBoolean();
+            getViewState().showProgressDialog(R.string.sending_restore_email_progress_title);
+            UserSessionManager.getInstance().sendRestoreEmail(mail).addOnCompleteListener(task -> {
                 getViewState().hideProgressDialog();
-                getViewState().showForgotEmailCallback(test, mail);
-            }, 1000);
+                getViewState().showForgotEmailCallback(task.isSuccessful(), mail);
+            });
         } else {
             getViewState().showToast(R.string.wrong_email);
         }

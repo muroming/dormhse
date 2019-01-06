@@ -4,6 +4,8 @@
     <string name="fragment_schedule_title">График уборки</string>
     <string name="fragment_options_title">Настройки</string>
     <string name="fragment_todo_title">Список дел</string>
+    <string name="activity_reset_password">Восстановление пароля</string>
+
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="login">Войти</string>
@@ -11,6 +13,8 @@
     <string name="login_contract_hint">Введите номер договора</string>
     <string name="login_email_hint">Введите Email</string>
     <string name="login_pass_hint">Введите пароль</string>
+    <string name="reset_pass_hint">Введите новый пароль</string>
+    <string name="reset_pass_repeat_hint">Повторите новый пароль</string>
     <string name="register_name_hint">Введите имя</string>
     <string name="register_second_name_hint">Введите фамилию</string>
     <string name="about_app">О приложении</string>
@@ -22,6 +26,8 @@
     <string name="wrong_email">Неверный адрес почты</string>
     <string name="registration_weak_password">Слабый пароль (минимум 6 символов)</string>
     <string name="field_must_to_fill">Поле обязательно для заполнения</string>
+    <string name="sending_restore_email_progress_title">Высылаем письмо</string>
+    <string name="confirming_registration_progress_title">Подтверждаем регистрацию</string>
     <string name="sign_in">Войти</string>
     <string name="sign_up">Создать аккаунт</string>
     <string name="notification_channel_name">DORMITORY_APP</string>

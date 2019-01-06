@@ -12,7 +12,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".presentation.main.MainActivity"
             android:screenOrientation="portrait">
@@ -22,16 +21,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".presentation.login.LoginActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".presentation.createTodo.CreateTodoActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".presentation.resetPassword.ResetPasswordActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="https"
+                    android:host="dormhse.resetpassword" />
+            </intent-filter>
+        </activity>
 
-        <service android:name="com.dorm.muro.dormitory.network.PaymentFCM">
+        <service android:name=".network.PaymentFCM">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>

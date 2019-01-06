@@ -44,12 +44,16 @@ public class UserSessionManager {
         return user.updatePassword(newPassword);
     }
 
-    public Task<Void> updateUserField(Map<String, Object> newValues){
+    public Task<Void> updateUserField(Map<String, Object> newValues) {
         if (mAuth.getCurrentUser() == null) {
             return null;
         }
         String id = mAuth.getCurrentUser().getUid();
         return mDatabase.child(USER_INFO_DATABASE).child(id).updateChildren(newValues);
+    }
+
+    public Task<Void> sendRestoreEmail(String email) {
+        return mAuth.sendPasswordResetEmail(email);
     }
 
     public FirebaseUser getCurrentUser() {

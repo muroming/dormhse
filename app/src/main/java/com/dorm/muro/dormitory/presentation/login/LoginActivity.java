@@ -272,9 +272,9 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
 
 
     @Override
-    public void showProgressDialog(String msg) {
+    public void showProgressDialog(int text) {
         pd = new ProgressDialog(this);
-        pd.setMessage(msg);
+        pd.setMessage(getString(text));
         pd.show();
     }
 
