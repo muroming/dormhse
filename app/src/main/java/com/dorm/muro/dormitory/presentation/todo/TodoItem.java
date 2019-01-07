@@ -7,6 +7,7 @@ public class TodoItem {
     private String title, commentary;
     private Date deadline;
     private boolean isPinned;
+    private String key, pushKey;
 
     TodoItem(String title, String commentary, Date deadline) {
         this.title = title;
@@ -15,6 +16,22 @@ public class TodoItem {
         else
             this.commentary = "";
         this.deadline = deadline;
+    }
+
+    public String getPushKey() {
+        return pushKey;
+    }
+
+    public void setPushKey(String pushKey) {
+        this.pushKey = pushKey;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getTitle() {

@@ -56,4 +56,7 @@ public class Constants {
     public static final String USER_NAME_FIELD = "name";
     public static final String USER_SURNAME_FIELD = "surname";
     public static final String USER_CONTRACT_ID_FIELD = "contract_id";
+
+    public static final String TODO_DATABASE = "todos";
+    public static final String USERS_TODOS_DATABASE = "users_todos";
 }
