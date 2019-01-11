@@ -118,4 +118,5 @@
     </string-array>
     <string name="todo_description">Описание</string>
     <string name="todo_create_fields_error">Не все обязательные поля заполнены</string>
+    <string name="error_try_later">Произошла ошибка, повторить попытку немного позже</string>
 </resources>

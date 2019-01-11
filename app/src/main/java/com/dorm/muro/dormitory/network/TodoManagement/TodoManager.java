@@ -13,11 +13,12 @@ public class TodoManager {
 
     private TodoManager(){}
 
-    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference mDatabase;
 
     public static TodoManager getInstance() {
         if (instance == null) {
             instance = new TodoManager();
+            instance.mDatabase = FirebaseDatabase.getInstance().getReference();
         }
 
         return instance;
@@ -32,13 +33,12 @@ public class TodoManager {
     public Task<Void> assignTask(TodoItem item) {
         String userKey = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String todoPushKey = mDatabase.child(USERS_TODOS_DATABASE).child(userKey).push().getKey();
-        item.setPushKey(todoPushKey);
         return mDatabase.child(USERS_TODOS_DATABASE).child(userKey).child(todoPushKey).setValue(item.getKey());
     }
 
     public Task<Void> unassignTask(TodoItem item) {
         String userKey = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        return mDatabase.child(USERS_TODOS_DATABASE).child(userKey).child(item.getPushKey()).removeValue();
+        return mDatabase.child(USERS_TODOS_DATABASE).child(userKey).orderByValue().equalTo(item.getKey()).getRef().removeValue();
     }
 
     public Task<Void> removeTodo(TodoItem item) {
