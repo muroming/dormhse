@@ -19,6 +19,7 @@ public class TodoManager {
         if (instance == null) {
             instance = new TodoManager();
             instance.mDatabase = FirebaseDatabase.getInstance().getReference();
+            instance.mDatabase.keepSynced(true);
         }
 
         return instance;

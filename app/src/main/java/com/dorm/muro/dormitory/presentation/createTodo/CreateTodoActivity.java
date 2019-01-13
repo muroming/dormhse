@@ -3,8 +3,10 @@ package com.dorm.muro.dormitory.presentation.createTodo;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.DatePicker;
@@ -16,6 +18,8 @@ import com.dorm.muro.dormitory.Constants;
 import com.dorm.muro.dormitory.R;
 import com.dorm.muro.dormitory.network.TodoManagement.TodoManager;
 import com.dorm.muro.dormitory.presentation.todo.TodoItem;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.Date;
 
@@ -56,24 +60,15 @@ public class CreateTodoActivity extends AppCompatActivity {
                 if (chechTodo()) {
                     String todoTitle = mTodoTitle.getText().toString(), todoDescription = mTodoDescription.getText().toString();
                     TodoItem todoItem = new TodoItem(todoTitle, todoDescription, mDeadline);
-                    TodoManager.getInstance().uploadTodo(todoItem).addOnCompleteListener(todoUpload -> {
-                        if (todoUpload.isSuccessful()) {
-                            TodoManager.getInstance().assignTask(todoItem).addOnCompleteListener(assingTodo -> {
-                                if (assingTodo.isSuccessful()) {
-                                    Intent todoData = new Intent();
-                                    todoData.putExtra(TODO_TITLE, todoTitle);
-                                    todoData.putExtra(TODO_DEADLINE, mDeadline.getTime());
-                                    todoData.putExtra(TODO_DESCRIPTION, todoDescription);
-                                    setResult(Constants.TODO_CREATED, todoData);
-                                    finish();
-                                } else {
-                                    Toast.makeText(this, getString(R.string.error_try_later), Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        } else {
-                            Toast.makeText(this, getString(R.string.error_try_later), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    TodoManager.getInstance().uploadTodo(todoItem);
+                    TodoManager.getInstance().assignTask(todoItem);
+
+                    Intent todoData = new Intent();
+                    todoData.putExtra(TODO_TITLE, todoTitle);
+                    todoData.putExtra(TODO_DEADLINE, mDeadline.getTime());
+                    todoData.putExtra(TODO_DESCRIPTION, todoDescription);
+                    setResult(Constants.TODO_CREATED, todoData);
+                    finish();
                 } else {
                     Toast.makeText(this, getString(R.string.todo_create_fields_error), Toast.LENGTH_SHORT).show();
                 }

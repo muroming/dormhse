@@ -1,6 +1,5 @@
 package com.dorm.muro.dormitory.presentation.login;
 
-import android.os.Handler;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
@@ -13,7 +12,6 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.regex.Pattern;
 
 import io.reactivex.disposables.CompositeDisposable;
