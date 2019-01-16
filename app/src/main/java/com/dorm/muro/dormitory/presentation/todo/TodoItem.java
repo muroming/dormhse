@@ -19,6 +19,9 @@ public class TodoItem implements Serializable {
         this.deadline = deadline;
     }
 
+    public TodoItem() {
+    }
+
     public String getKey() {
         return key;
     }

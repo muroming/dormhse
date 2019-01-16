@@ -4,7 +4,6 @@
     android:id="@+id/fl_todo_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/activity_vertical_margin"
     tools:context=".presentation.todo.TodoFragment" >
 
     <android.support.v7.widget.RecyclerView
