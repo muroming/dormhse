@@ -64,9 +64,7 @@ public class CreateTodoActivity extends AppCompatActivity {
                     TodoManager.getInstance().assignTask(todoItem);
 
                     Intent todoData = new Intent();
-                    todoData.putExtra(TODO_TITLE, todoTitle);
-                    todoData.putExtra(TODO_DEADLINE, mDeadline.getTime());
-                    todoData.putExtra(TODO_DESCRIPTION, todoDescription);
+                    todoData.putExtra(TODO_SERIALIZED, todoItem);
                     setResult(Constants.TODO_CREATED, todoData);
                     finish();
                 } else {

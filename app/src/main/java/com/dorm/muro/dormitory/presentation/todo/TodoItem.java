@@ -1,9 +1,10 @@
 package com.dorm.muro.dormitory.presentation.todo;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class TodoItem {
+public class TodoItem implements Serializable {
     private String title, commentary;
     private Date deadline;
     private boolean isPinned;

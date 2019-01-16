@@ -26,6 +26,7 @@ import com.arellomobile.mvp.MvpAppCompatFragment;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.dorm.muro.dormitory.R;
+import com.dorm.muro.dormitory.network.TodoManagement.TodoManager;
 import com.dorm.muro.dormitory.presentation.createTodo.CreateTodoActivity;
 
 import java.util.Date;
@@ -40,7 +41,6 @@ public class TodoFragment extends MvpAppCompatFragment implements TodoView, Todo
 
     private TodoAdapter adapter;
     private FrameLayout rootLayout;
-    private ItemTouchHelper.SimpleCallback recyclerSlideCallback;
     private TodoItem lastDeleted;
 
     private final int TODO_REQUEST_CODE = 123;
@@ -90,11 +90,7 @@ public class TodoFragment extends MvpAppCompatFragment implements TodoView, Todo
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == TODO_REQUEST_CODE && resultCode == TODO_CREATED) {
-            TodoItem item = new TodoItem(
-                    data.getStringExtra(TODO_TITLE),
-                    data.getStringExtra(TODO_DESCRIPTION),
-                    new Date(data.getLongExtra(TODO_DEADLINE, -1))
-            );
+            TodoItem item = (TodoItem) data.getSerializableExtra(TODO_SERIALIZED);
             presenter.addTodo(item);
         }
     }
@@ -153,8 +149,14 @@ public class TodoFragment extends MvpAppCompatFragment implements TodoView, Todo
         lastDeleted = adapter.getTodoItem(position);
         presenter.finishTodo(position);
         Snackbar snackbar = Snackbar.make(rootLayout, R.string.todo_done, Snackbar.LENGTH_SHORT);
+
+        TodoManager.getInstance().removeTodo(lastDeleted);
+        TodoManager.getInstance().unassignTask(lastDeleted);
+
         snackbar.setAction(R.string.cancel, v -> {
             presenter.returnTodo(lastDeleted, position);
+            TodoManager.getInstance().uploadTodo(lastDeleted);
+            TodoManager.getInstance().assignTask(lastDeleted);
         });
         snackbar.show();
     }

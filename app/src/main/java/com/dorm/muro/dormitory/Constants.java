@@ -3,9 +3,7 @@ package com.dorm.muro.dormitory;
 public class Constants {
     public static final int TODO_CREATED = 10;
     public static final int TODO_CANCELED = -10;
-    public static final String TODO_TITLE = "TODO_TITLE";
-    public static final String TODO_DEADLINE = "TODO_DEADLINE";
-    public static final String TODO_DESCRIPTION = "TODO_DESCRIPTION";
+    public static final String TODO_SERIALIZED = "TODO_SERIALIZED";
 
     public static final String NOTIFICATIONS = "NOTIFICATIONS";
     public static final String SHARED_PREFERENCES = "APP_DORMITORY_PREFS";
