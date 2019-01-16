@@ -7,7 +7,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.dorm.muro.dormitory.R;
-import com.dorm.muro.dormitory.network.authentication.UserSessionManager;
+import com.dorm.muro.dormitory.network.UserSessionManagement.UserSessionManager;
 import com.dorm.muro.dormitory.presentation.main.MainActivity;
 import com.google.firebase.FirebaseNetworkException;
 

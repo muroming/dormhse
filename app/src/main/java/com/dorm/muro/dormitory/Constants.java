@@ -4,7 +4,7 @@ public class Constants {
     public static final int TODO_CREATED = 10;
     public static final int TODO_CANCELED = -10;
     public static final String TODO_SERIALIZED = "TODO_SERIALIZED";
-
+    public static final String ROOM_KEY = "ROOM_KEY";
     public static final String NOTIFICATIONS = "NOTIFICATIONS";
     public static final String SIGNED_IN_ROOM = "SIGNED_IN_ROOM";
     public static final String SHARED_PREFERENCES = "APP_DORMITORY_PREFS";
@@ -56,6 +56,7 @@ public class Constants {
     public static final String USER_SURNAME_FIELD = "surname";
     public static final String USER_CONTRACT_ID_FIELD = "contract_id";
 
-    public static final String TODO_DATABASE = "todos";
+    public static final String TODOS_DATABASE = "todos";
     public static final String USERS_TODOS_DATABASE = "users_todos";
+    public static final String ROOM_USERS_DATABASE = "room_users";
 }

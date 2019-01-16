@@ -2,7 +2,6 @@ package com.dorm.muro.dormitory.presentation.main;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -12,7 +11,7 @@ import android.text.style.ForegroundColorSpan;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.dorm.muro.dormitory.network.authentication.UserSessionManager;
+import com.dorm.muro.dormitory.network.UserSessionManagement.UserSessionManager;
 import com.dorm.muro.dormitory.presentation.payment.PaymentFragment;
 import com.dorm.muro.dormitory.R;
 import com.dorm.muro.dormitory.presentation.login.LoginActivity;
@@ -21,8 +20,6 @@ import com.dorm.muro.dormitory.network.PaymentFCM;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.dorm.muro.dormitory.Constants.*;
 
 public class MainActivity extends MvpAppCompatActivity implements MainActivityView {
 

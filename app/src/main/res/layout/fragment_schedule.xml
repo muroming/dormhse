@@ -221,9 +221,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="invisible"
-        app:constraint_referenced_ids="tv_title, btn_create_room, btn_join_room" />
+        app:constraint_referenced_ids="tv_title, btn_create_room, btn_join_room, iv_blurred" />
 
     <ImageView
+        android:id="@+id/iv_blurred"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/schedule_no_room_bg" />

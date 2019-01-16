@@ -1,13 +1,19 @@
 package com.dorm.muro.dormitory.presentation.schedule;
 
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.dorm.muro.dormitory.R;
+import com.dorm.muro.dormitory.network.ScheduleManagement.ScheduleManagement;
+import com.dorm.muro.dormitory.network.UserSessionManagement.UserSessionManager;
 
 import java.util.Calendar;
 import java.util.TimeZone;
+
+import static com.dorm.muro.dormitory.Constants.*;
 
 @InjectViewState
 public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView> {
@@ -23,11 +29,34 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
 
     private boolean isEditing = false, isAdding = false;
 
+    //todo inject
+    private SharedPreferences preferences;
+
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
         getViewState().updateCalendar(currentDate.get(Calendar.MONTH));
         getViewState().setOptions(null, R.id.menu_add);
+
+        if (!preferences.getBoolean(SIGNED_IN_ROOM, false)) {
+            getViewState().showNoRoom();
+        }
+    }
+
+    void setPreferences(SharedPreferences preferences) {
+        this.preferences = preferences;
+    }
+
+    void onCreateRoomClicked() {
+        //todo move all managers to dagger injection
+        String userKey = UserSessionManager.getInstance().getCurrentUser().getUid();
+        String roomKey = ScheduleManagement.getInstance().createRoom(userKey);
+
+        preferences.edit().putBoolean(SIGNED_IN_ROOM, true).apply();
+        preferences.edit().putString(ROOM_KEY, roomKey).apply();
+
+        getViewState().closeDialog();
+        getViewState().showSchedule();
     }
 
     void onRoomClicked(ROOM_NUM roomNum) {

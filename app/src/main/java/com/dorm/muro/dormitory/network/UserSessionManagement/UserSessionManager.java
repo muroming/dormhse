@@ -1,4 +1,4 @@
-package com.dorm.muro.dormitory.network.authentication;
+package com.dorm.muro.dormitory.network.UserSessionManagement;
 
 
 import com.google.android.gms.tasks.Task;

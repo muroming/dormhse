@@ -1,6 +1,7 @@
 package com.dorm.muro.dormitory.presentation.schedule;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -11,6 +12,7 @@ import android.support.constraint.Group;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,9 +20,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
@@ -96,6 +100,7 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
     private int currentSelectedRoom;
     private int[] menuIds;
     private Integer upButton;
+    private AlertDialog dialog;
 
     @InjectPresenter
     ScheduleFragmentPresenter presenter;
@@ -115,12 +120,9 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         preferences = getContext().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        presenter.setPreferences(preferences);
         View view = inflater.inflate(R.layout.fragment_schedule, container, false);
         ButterKnife.bind(this, view);
-
-        if (!preferences.getBoolean(SIGNED_IN_ROOM, false)) {
-            mNoRoomGroup.setVisibility(View.VISIBLE);
-        }
 
         gridAdapter = new CalendarAdapter(getContext(), this);
         grid.setAdapter(gridAdapter);
@@ -150,7 +152,7 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
 
     @OnClick(R.id.btn_create_room)
     public void onCreateRoomClicked(Button b) {
-
+       showCreateRoomDialog();
     }
 
     @OnClick(R.id.btn_join_room)
@@ -333,6 +335,72 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
         });
 
         bar.show();
+    }
+
+    public void showCreateRoomDialog() {
+        LinearLayout layout = new LinearLayout(getContext());
+        EditText flatNum = new EditText(getContext());
+
+        flatNum.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        ((LinearLayout.LayoutParams) flatNum.getLayoutParams()).setMarginStart(getResources().getDimensionPixelOffset(R.dimen.room_dialog_start_margin));
+        ((LinearLayout.LayoutParams) flatNum.getLayoutParams()).setMarginEnd(getResources().getDimensionPixelOffset(R.dimen.room_dialog_end_margin));
+        ((LinearLayout.LayoutParams) flatNum.getLayoutParams()).bottomMargin = getResources().getDimensionPixelOffset(R.dimen.room_dialog_vertical_margin);
+        ((LinearLayout.LayoutParams) flatNum.getLayoutParams()).topMargin = getResources().getDimensionPixelOffset(R.dimen.room_dialog_vertical_margin);
+
+        layout.addView(flatNum);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setView(layout)
+                .setTitle(R.string.title_create_room)
+                .setPositiveButton(R.string.create, (dialog, which) -> {
+                    presenter.onCreateRoomClicked();
+                })
+                .setNegativeButton(R.string.cancel, ((dialog, which) -> closeDialog()));
+
+        dialog = builder.create();
+        dialog.show();
+    }
+
+    public void showJoinRoomDialog() {
+        LinearLayout layout = new LinearLayout(getContext());
+        EditText flatNum = new EditText(getContext());
+
+        flatNum.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        ((LinearLayout.LayoutParams) flatNum.getLayoutParams()).setMarginStart(getResources().getDimensionPixelOffset(R.dimen.room_dialog_start_margin));
+        ((LinearLayout.LayoutParams) flatNum.getLayoutParams()).setMarginEnd(getResources().getDimensionPixelOffset(R.dimen.room_dialog_end_margin));
+        ((LinearLayout.LayoutParams) flatNum.getLayoutParams()).bottomMargin = getResources().getDimensionPixelOffset(R.dimen.room_dialog_vertical_margin);
+        ((LinearLayout.LayoutParams) flatNum.getLayoutParams()).topMargin = getResources().getDimensionPixelOffset(R.dimen.room_dialog_vertical_margin);
+
+        layout.addView(flatNum);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setView(layout)
+                .setTitle(R.string.title_join_room)
+                .setPositiveButton(R.string.create, (dialog, which) -> {
+
+                })
+                .setNegativeButton(R.string.cancel, ((dialog, which) -> closeDialog()));
+
+        dialog = builder.create();
+        dialog.show();
+    }
+
+    @Override
+    public void closeDialog() {
+        if(dialog != null) {
+            dialog.dismiss();
+            dialog = null;
+        }
+    }
+
+    @Override
+    public void showNoRoom() {
+        mNoRoomGroup.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showSchedule() {
+        mNoRoomGroup.setVisibility(View.GONE);
     }
 
     @Override

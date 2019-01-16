@@ -123,4 +123,7 @@
     <string name="schedule_select_or_join_room">Чтобы пользоваться расписание войдите или создайте квартиру</string>
     <string name="button_join_room">Присоединиться к квартире</string>
     <string name="button_create_room">Создать свою квартиру</string>
+    <string name="title_create_room">Введите номер квартиры</string>
+    <string name="title_join_room">Введите код квартиры</string>
+    <string name="create">Создать</string>
 </resources>

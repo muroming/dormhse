@@ -28,4 +28,10 @@ interface ScheduleFragmentView extends MvpView {
     void showRangeDeleteSnackbar(ScheduleCell start, ScheduleCell end);
 
     void updateCalendar();
+
+    void closeDialog();
+
+    void showNoRoom();
+
+    void showSchedule();
 }

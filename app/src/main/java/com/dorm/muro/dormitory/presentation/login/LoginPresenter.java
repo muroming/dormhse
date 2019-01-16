@@ -4,7 +4,7 @@ package com.dorm.muro.dormitory.presentation.login;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.dorm.muro.dormitory.R;
-import com.dorm.muro.dormitory.network.authentication.UserSessionManager;
+import com.dorm.muro.dormitory.network.UserSessionManagement.UserSessionManager;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
