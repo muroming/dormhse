@@ -17,7 +17,6 @@
     <dimen name="todo_title_margin">14dp</dimen>
     <dimen name="todo_separator_top_margin">12dp</dimen>
     <dimen name="todo_description_top_margin">16dp</dimen>
-    <dimen name="room_dialog_start_margin">15dp</dimen>
-    <dimen name="room_dialog_end_margin">15dp</dimen>
+    <dimen name="room_dialog_horizontal_margin">15dp</dimen>
     <dimen name="room_dialog_vertical_margin">25dp</dimen>
 </resources>

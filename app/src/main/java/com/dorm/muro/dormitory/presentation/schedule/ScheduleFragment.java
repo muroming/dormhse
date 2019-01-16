@@ -1,7 +1,6 @@
 package com.dorm.muro.dormitory.presentation.schedule;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -152,12 +151,12 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
 
     @OnClick(R.id.btn_create_room)
     public void onCreateRoomClicked(Button b) {
-       showCreateRoomDialog();
+        showCreateRoomDialog();
     }
 
     @OnClick(R.id.btn_join_room)
     public void onJoinRoomClicked(Button b) {
-
+        showJoinRoomDialog();
     }
 
     @Override
@@ -340,20 +339,28 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
     public void showCreateRoomDialog() {
         LinearLayout layout = new LinearLayout(getContext());
         EditText flatNum = new EditText(getContext());
+        EditText flatId = new EditText(getContext());
+
+        layout.setPadding(getResources().getDimensionPixelOffset(R.dimen.room_dialog_horizontal_margin), 0,
+                getResources().getDimensionPixelOffset(R.dimen.room_dialog_horizontal_margin), 0);
+        layout.setOrientation(LinearLayout.VERTICAL);
 
         flatNum.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        ((LinearLayout.LayoutParams) flatNum.getLayoutParams()).setMarginStart(getResources().getDimensionPixelOffset(R.dimen.room_dialog_start_margin));
-        ((LinearLayout.LayoutParams) flatNum.getLayoutParams()).setMarginEnd(getResources().getDimensionPixelOffset(R.dimen.room_dialog_end_margin));
         ((LinearLayout.LayoutParams) flatNum.getLayoutParams()).bottomMargin = getResources().getDimensionPixelOffset(R.dimen.room_dialog_vertical_margin);
         ((LinearLayout.LayoutParams) flatNum.getLayoutParams()).topMargin = getResources().getDimensionPixelOffset(R.dimen.room_dialog_vertical_margin);
 
+        flatId.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        ((LinearLayout.LayoutParams) flatId.getLayoutParams()).bottomMargin = getResources().getDimensionPixelOffset(R.dimen.room_dialog_vertical_margin);
+
+
         layout.addView(flatNum);
+        layout.addView(flatId);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setView(layout)
                 .setTitle(R.string.title_create_room)
                 .setPositiveButton(R.string.create, (dialog, which) -> {
-                    presenter.onCreateRoomClicked();
+                    presenter.onCreateRoomClicked(flatNum.getText().toString(), flatId.getText().toString());
                 })
                 .setNegativeButton(R.string.cancel, ((dialog, which) -> closeDialog()));
 
@@ -363,21 +370,22 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
 
     public void showJoinRoomDialog() {
         LinearLayout layout = new LinearLayout(getContext());
-        EditText flatNum = new EditText(getContext());
+        EditText flatId = new EditText(getContext());
 
-        flatNum.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        ((LinearLayout.LayoutParams) flatNum.getLayoutParams()).setMarginStart(getResources().getDimensionPixelOffset(R.dimen.room_dialog_start_margin));
-        ((LinearLayout.LayoutParams) flatNum.getLayoutParams()).setMarginEnd(getResources().getDimensionPixelOffset(R.dimen.room_dialog_end_margin));
-        ((LinearLayout.LayoutParams) flatNum.getLayoutParams()).bottomMargin = getResources().getDimensionPixelOffset(R.dimen.room_dialog_vertical_margin);
-        ((LinearLayout.LayoutParams) flatNum.getLayoutParams()).topMargin = getResources().getDimensionPixelOffset(R.dimen.room_dialog_vertical_margin);
+        layout.setPadding(getResources().getDimensionPixelOffset(R.dimen.room_dialog_horizontal_margin), 0,
+                getResources().getDimensionPixelOffset(R.dimen.room_dialog_horizontal_margin), 0);
 
-        layout.addView(flatNum);
+        flatId.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        ((LinearLayout.LayoutParams) flatId.getLayoutParams()).bottomMargin = getResources().getDimensionPixelOffset(R.dimen.room_dialog_vertical_margin);
+        ((LinearLayout.LayoutParams) flatId.getLayoutParams()).topMargin = getResources().getDimensionPixelOffset(R.dimen.room_dialog_vertical_margin);
+
+        layout.addView(flatId);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setView(layout)
                 .setTitle(R.string.title_join_room)
-                .setPositiveButton(R.string.create, (dialog, which) -> {
-
+                .setPositiveButton(R.string.join, (dialog, which) -> {
+                    presenter.onJoinRoomClicked(flatId.getText().toString());
                 })
                 .setNegativeButton(R.string.cancel, ((dialog, which) -> closeDialog()));
 
@@ -387,7 +395,7 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
 
     @Override
     public void closeDialog() {
-        if(dialog != null) {
+        if (dialog != null) {
             dialog.dismiss();
             dialog = null;
         }

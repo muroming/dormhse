@@ -2,7 +2,6 @@ package com.dorm.muro.dormitory.presentation.schedule;
 
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
-import android.view.View;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
@@ -13,6 +12,10 @@ import com.dorm.muro.dormitory.network.UserSessionManagement.UserSessionManager;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+
 import static com.dorm.muro.dormitory.Constants.*;
 
 @InjectViewState
@@ -22,6 +25,8 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
     private ScheduleCell rangeStartDate;
     private ScheduleCell rangeEndDate;
     private ROOM_NUM currentRoom;
+
+    private CompositeDisposable disposable = new CompositeDisposable();
 
 
     // current displayed month
@@ -47,16 +52,28 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
         this.preferences = preferences;
     }
 
-    void onCreateRoomClicked() {
+    void onCreateRoomClicked(String flatNum, String flatId) {
         //todo move all managers to dagger injection
         String userKey = UserSessionManager.getInstance().getCurrentUser().getUid();
-        String roomKey = ScheduleManagement.getInstance().createRoom(userKey);
+        ScheduleManagement.getInstance().createRoom(userKey, flatNum, flatId);
 
         preferences.edit().putBoolean(SIGNED_IN_ROOM, true).apply();
-        preferences.edit().putString(ROOM_KEY, roomKey).apply();
 
         getViewState().closeDialog();
         getViewState().showSchedule();
+    }
+
+    void onJoinRoomClicked(String flatId) {
+        String userKey = UserSessionManager.getInstance().getCurrentUser().getUid();
+        disposable.add(ScheduleManagement.getInstance().joinRoom(userKey, flatId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(next -> {
+                    if(next) {
+                        getViewState().showSchedule();
+                        preferences.edit().putBoolean(SIGNED_IN_ROOM, true).apply();
+                    }
+                }));
     }
 
     void onRoomClicked(ROOM_NUM roomNum) {
@@ -78,7 +95,7 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
 
     void onDateClicked(ScheduleCell date, @Nullable ScheduleCell start, @Nullable ScheduleCell end) {
         if (isEditing) { // If clicked while adding a duty
-            if(date.getRoomNum() != currentRoom && date.getState() != ScheduleFragment.CELL_STATE.NONE){
+            if (date.getRoomNum() != currentRoom && date.getState() != ScheduleFragment.CELL_STATE.NONE) {
                 return;
             }
             if (rangeStartDate != null) {  // If first date is selected
@@ -180,5 +197,12 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
             }
         }
         stopEditing();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (!disposable.isDisposed()) {
+            disposable.dispose();
+        }
     }
 }
