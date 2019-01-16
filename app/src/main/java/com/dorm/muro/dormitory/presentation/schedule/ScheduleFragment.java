@@ -1,10 +1,13 @@
 package com.dorm.muro.dormitory.presentation.schedule;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.Group;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -14,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -33,6 +37,8 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.dorm.muro.dormitory.Constants.*;
 
 
 /**
@@ -58,6 +64,9 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
 
     public enum CELL_STATE {START, MEDIUM, END, NONE}
 
+    //todo inject
+    private SharedPreferences preferences;
+
     //Grid adapter
     private CalendarAdapter gridAdapter;
 
@@ -81,6 +90,9 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
     @BindView(R.id.tv_schedule_commentary)
     TextView mRoomCommentary;
 
+    @BindView(R.id.no_room_group)
+    Group mNoRoomGroup;
+
     private int currentSelectedRoom;
     private int[] menuIds;
     private Integer upButton;
@@ -102,8 +114,13 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        preferences = getContext().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
         View view = inflater.inflate(R.layout.fragment_schedule, container, false);
         ButterKnife.bind(this, view);
+
+        if (!preferences.getBoolean(SIGNED_IN_ROOM, false)) {
+            mNoRoomGroup.setVisibility(View.VISIBLE);
+        }
 
         gridAdapter = new CalendarAdapter(getContext(), this);
         grid.setAdapter(gridAdapter);
@@ -129,6 +146,16 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
     public void onRoomClicked(TextView room) {
         int roomNum = mRooms.indexOf(room);
         presenter.onRoomClicked(ROOM_NUM.values()[roomNum]);
+    }
+
+    @OnClick(R.id.btn_create_room)
+    public void onCreateRoomClicked(Button b) {
+
+    }
+
+    @OnClick(R.id.btn_join_room)
+    public void onJoinRoomClicked(Button b) {
+
     }
 
     @Override

@@ -119,4 +119,8 @@
     <string name="todo_description">Описание</string>
     <string name="todo_create_fields_error">Не все обязательные поля заполнены</string>
     <string name="error_try_later">Произошла ошибка, повторить попытку немного позже</string>
+
+    <string name="schedule_select_or_join_room">Чтобы пользоваться расписание войдите или создайте квартиру</string>
+    <string name="button_join_room">Присоединиться к квартире</string>
+    <string name="button_create_room">Создать свою квартиру</string>
 </resources>
