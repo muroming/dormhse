@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.dorm.muro.dormitory.R;
+import com.dorm.muro.dormitory.network.ScheduleManagement.ScheduleManagement;
+import com.dorm.muro.dormitory.network.UserSessionManagement.UserSessionManager;
 
 import static com.dorm.muro.dormitory.Constants.*;
 
@@ -107,5 +109,20 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
         } else {
             getViewState().showErrorToast(R.string.settings_wrong_pass);
         }
+    }
+
+    void exitRoomClicked() {
+        getViewState().showRoomLeaveWarning();
+    }
+
+    void exitRoom() {
+        String userKey = UserSessionManager.getInstance().getCurrentUser().getUid();
+        String roomKey = preferences.getString(ROOM_KEY, "");
+        if (!roomKey.isEmpty()) {
+            ScheduleManagement.getInstance().leaveRoom(userKey, roomKey);
+            preferences.edit().putBoolean(SIGNED_IN_ROOM, false).apply();
+            preferences.edit().remove(ROOM_KEY).apply();
+        }
+        getViewState().closeDialog();
     }
 }

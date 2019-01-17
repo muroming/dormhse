@@ -55,9 +55,10 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
     void onCreateRoomClicked(String flatNum, String flatId) {
         //todo move all managers to dagger injection
         String userKey = UserSessionManager.getInstance().getCurrentUser().getUid();
-        ScheduleManagement.getInstance().createRoom(userKey, flatNum, flatId);
+        String roomKey = ScheduleManagement.getInstance().createRoom(userKey, flatNum, flatId);
 
         preferences.edit().putBoolean(SIGNED_IN_ROOM, true).apply();
+        preferences.edit().putString(ROOM_KEY, roomKey).apply();
 
         getViewState().closeDialog();
         getViewState().showSchedule();
@@ -68,10 +69,11 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
         disposable.add(ScheduleManagement.getInstance().joinRoom(userKey, flatId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(next -> {
-                    if(next) {
+                .subscribe(res -> {
+                    if(!res.isEmpty()) {
                         getViewState().showSchedule();
                         preferences.edit().putBoolean(SIGNED_IN_ROOM, true).apply();
+                        preferences.edit().putString(ROOM_KEY, res).apply();
                     }
                 }));
     }

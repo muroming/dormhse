@@ -19,4 +19,6 @@ public interface OptionsView extends MvpView {
 
     @StateStrategyType(AddToEndSingleStrategy.class)
     void setInfo(String mail, String contractId, String fio, int cardNum);  //todo add card drawable
+
+    void showRoomLeaveWarning();
 }

@@ -68,6 +68,9 @@ public class TodoManager {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Map<String, String> todoKeys = (HashMap<String, String>) dataSnapshot.getValue();
+                if (todoKeys == null)
+                    return;
+
                 for (String todoKey : todoKeys.values()) {
                     mDatabase.child(TODOS_DATABASE).child(todoKey).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override

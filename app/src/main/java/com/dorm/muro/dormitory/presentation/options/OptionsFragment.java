@@ -85,6 +85,11 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
         presenter.onChangePersonalDataClicked();
     }
 
+    @OnClick(R.id.exit_room)
+    void exitRoom(View v) {
+        presenter.exitRoomClicked();
+    }
+
     @Override
     public void proceedToLoginScreen() {
         Intent intent = new Intent(getContext(), LoginActivity.class);
@@ -145,6 +150,20 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
         dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE)
                 .setOnClickListener(v -> presenter.onChangeInfo(code, confirm.getText().toString(),
                         et1.getText().toString(), et2.getText().toString())));
+        dialog.show();
+    }
+
+    @Override
+    public void showRoomLeaveWarning() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(R.string.settings_exit_room_warning_title)
+                .setMessage(R.string.settings_exit_room_warning_message)
+                .setPositiveButton(R.string.select, (dialog1, which) -> {
+                    presenter.exitRoom();
+                })
+                .setNegativeButton(R.string.cancel, ((dialog1, which) -> closeDialog()));
+
+        dialog = builder.create();
         dialog.show();
     }
 

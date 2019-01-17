@@ -170,6 +170,26 @@
             app:layout_constraintTop_toBottomOf="@id/notifications" />
 
         <TextView
+            android:id="@+id/exit_room"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:paddingBottom="18dp"
+            android:paddingTop="18dp"
+            android:text="@string/settings_exit_room"
+            android:textColor="@color/dangerousAction"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sep5" />
+
+        <View
+            android:id="@+id/sep6"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/separatorColor"
+            app:layout_constraintTop_toBottomOf="@id/exit_room" />
+
+        <TextView
             android:id="@+id/exit_account"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -180,7 +200,7 @@
             android:textColor="@color/dangerousAction"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/sep5" />
+            app:layout_constraintTop_toBottomOf="@id/sep6" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

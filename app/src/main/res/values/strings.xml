@@ -48,6 +48,9 @@
     <string name="settings_new_mail">Новая почта</string>
     <string name="settings_notifications">Оповещения</string>
     <string name="settings_exit_account">Выйти из аккаунта</string>
+    <string name="settings_exit_room">Выйти из квартиры</string>
+    <string name="settings_exit_room_warning_title">Внимание!</string>
+    <string name="settings_exit_room_warning_message">Вы не сможете вернуться в квартру если в ней не останется участников</string>
     <string name="settings_contract">Номер договора</string>
     <string name="settings_contract_title">Изменить номер договора</string>
     <string name="settings_new_contract">Новый номер договора</string>
