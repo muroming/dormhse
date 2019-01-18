@@ -4,11 +4,20 @@
     android:id="@+id/fl_todo_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.todo.TodoFragment" >
+    tools:context=".presentation.todo.TodoFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_todo_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/tv_no_todos"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:text="@string/todo_no_todos_title" />
 
 </FrameLayout>

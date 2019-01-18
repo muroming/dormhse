@@ -11,6 +11,8 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.Html;
+import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -31,6 +34,9 @@ import com.dorm.muro.dormitory.presentation.createTodo.CreateTodoActivity;
 
 import java.util.Date;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static com.dorm.muro.dormitory.Constants.*;
 
@@ -68,6 +74,7 @@ public class TodoFragment extends MvpAppCompatFragment implements TodoView, Todo
         rv.setAdapter(adapter);
         adapter.setListener(this);
         rv.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayout.VERTICAL));
+
         ItemTouchHelper.SimpleCallback itemTouchCallback = new TodoItemTouchHelper(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(itemTouchCallback).attachToRecyclerView(rv);
 
@@ -136,11 +143,21 @@ public class TodoFragment extends MvpAppCompatFragment implements TodoView, Todo
 
     @Override
     public void removeItemAt(int position) {
+        TextView noTodos = rootLayout.findViewById(R.id.tv_no_todos);
+        if (noTodos.getVisibility() == View.INVISIBLE) {
+            noTodos.setVisibility(View.VISIBLE);
+        }
+
         adapter.removeItem(position);
     }
 
     @Override
     public void returnItem(TodoItem item, int position) {
+        TextView noTodos = rootLayout.findViewById(R.id.tv_no_todos);
+        if (noTodos.getVisibility() == View.VISIBLE) {
+            noTodos.setVisibility(View.INVISIBLE);
+        }
+
         adapter.insertItem(item, position);
     }
 
@@ -163,6 +180,11 @@ public class TodoFragment extends MvpAppCompatFragment implements TodoView, Todo
 
     @Override
     public void addItem(TodoItem item) {
+        TextView noTodos = rootLayout.findViewById(R.id.tv_no_todos);
+        if (noTodos.getVisibility() == View.VISIBLE) {
+            noTodos.setVisibility(View.INVISIBLE);
+        }
+
         adapter.addItem(item);
     }
 }

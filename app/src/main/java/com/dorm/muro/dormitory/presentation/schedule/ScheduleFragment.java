@@ -12,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -345,10 +346,16 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
                 getResources().getDimensionPixelOffset(R.dimen.room_dialog_horizontal_margin), 0);
         layout.setOrientation(LinearLayout.VERTICAL);
 
+        flatNum.setMaxLines(1);
+        flatNum.setInputType(InputType.TYPE_CLASS_NUMBER);
+        flatNum.setHint(R.string.schedule_room_number_hint);
         flatNum.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         ((LinearLayout.LayoutParams) flatNum.getLayoutParams()).bottomMargin = getResources().getDimensionPixelOffset(R.dimen.room_dialog_vertical_margin);
         ((LinearLayout.LayoutParams) flatNum.getLayoutParams()).topMargin = getResources().getDimensionPixelOffset(R.dimen.room_dialog_vertical_margin);
 
+        flatId.setMaxLines(1);
+        flatId.setInputType(InputType.TYPE_CLASS_TEXT);
+        flatId.setHint(R.string.schedule_room_id_hint);
         flatId.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         ((LinearLayout.LayoutParams) flatId.getLayoutParams()).bottomMargin = getResources().getDimensionPixelOffset(R.dimen.room_dialog_vertical_margin);
 
@@ -375,6 +382,9 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
         layout.setPadding(getResources().getDimensionPixelOffset(R.dimen.room_dialog_horizontal_margin), 0,
                 getResources().getDimensionPixelOffset(R.dimen.room_dialog_horizontal_margin), 0);
 
+        flatId.setMaxLines(1);
+        flatId.setInputType(InputType.TYPE_CLASS_TEXT);
+        flatId.setHint(R.string.schedule_room_id_hint);
         flatId.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         ((LinearLayout.LayoutParams) flatId.getLayoutParams()).bottomMargin = getResources().getDimensionPixelOffset(R.dimen.room_dialog_vertical_margin);
         ((LinearLayout.LayoutParams) flatId.getLayoutParams()).topMargin = getResources().getDimensionPixelOffset(R.dimen.room_dialog_vertical_margin);

@@ -108,10 +108,13 @@
     <string name="schedule_add_duty">Добавить</string>
     <string name="schedule_edit_duty">Редактировать</string>
     <string name="schedule_duty_deleted">Дежурство удалено</string>
+    <string name="schedule_room_number_hint">Введите номер квартиры</string>
+    <string name="schedule_room_id_hint">Введите ID квартиры</string>
 
     <string name="todo_done">Выполнено</string>
     <string name="todo_create_todo_title">Название</string>
     <string name="todo_create_todo_time">Крайний срок</string>
+    <string name="todo_no_todos_title">Создайтеg ToDo нажав на &#43; в верху приложения</string>
     <string-array name="todo_titles">
         <item>Покормить кота</item>
         <item>Полить цветы</item>
