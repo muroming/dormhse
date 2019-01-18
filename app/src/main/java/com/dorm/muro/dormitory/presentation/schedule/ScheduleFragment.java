@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.Group;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
@@ -45,10 +44,6 @@ import butterknife.OnClick;
 import static com.dorm.muro.dormitory.Constants.*;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
-
 enum ROOM_NUM {
     FIRST(0), SECOND(1), THIRD(2), FORTH(3);
     private final int value;
@@ -59,6 +54,21 @@ enum ROOM_NUM {
 
     public int get() {
         return value;
+    }
+
+    public static ROOM_NUM getRoomNum(int v) {
+        switch (v) {
+            case 0:
+                return FIRST;
+            case 1:
+                return SECOND;
+            case 2:
+                return THIRD;
+            case 3:
+                return FORTH;
+            default:
+                return null;
+        }
     }
 }
 
@@ -418,6 +428,7 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
 
     @Override
     public void showSchedule() {
+        presenter.loadSchedules();
         mNoRoomGroup.setVisibility(View.GONE);
     }
 

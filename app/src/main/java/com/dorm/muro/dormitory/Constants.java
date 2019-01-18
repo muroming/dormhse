@@ -61,4 +61,10 @@ public class Constants {
     public static final String ROOM_USERS_DATABASE = "room_users";
     public static final String ROOMS_DATABASE = "rooms";
     public static final String ID_ROOM_DATABASE = "room_id";
+
+    public static final String DUTY_START = "DUTY_START";
+    public static final String DUTY_END = "DUTY_END";
+    public static final String DUTY_ROOM = "DUTY_ROOM";
+    public static final String DUTIES_DATABASE = "duties";
+    public static final String ROOM_DUTIES_DATABASE = "room_duties";
 }

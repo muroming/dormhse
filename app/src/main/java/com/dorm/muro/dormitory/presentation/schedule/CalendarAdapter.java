@@ -53,7 +53,7 @@ public class CalendarAdapter extends ArrayAdapter<ScheduleCell> {
         int startInd = -1;
         for (int i = 0; i < days.size(); i++) {
             ScheduleCell cell = days.get(i);
-            if (startInd == -1 && cell.getDate().equals(startDate)) {
+            if (startInd == -1 && cell.equals(startDate)) {
                 startInd = i;
                 cell.setRoomNum(roomNum);
                 cell.setState(ScheduleFragment.CELL_STATE.START);
@@ -63,7 +63,7 @@ public class CalendarAdapter extends ArrayAdapter<ScheduleCell> {
                 cell.setRoomNum(roomNum);
                 cell.setState(ScheduleFragment.CELL_STATE.MEDIUM);
             }
-            if (cell.getDate().equals(endDate)) {
+            if (cell.equals(endDate)) {
                 cell.setRoomNum(roomNum);
                 cell.setState(ScheduleFragment.CELL_STATE.END);
                 break;

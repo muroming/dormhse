@@ -2,13 +2,16 @@ package com.dorm.muro.dormitory.network.ScheduleManagement;
 
 
 import android.support.annotation.NonNull;
+import android.util.Pair;
 
+import com.dorm.muro.dormitory.presentation.schedule.ScheduleCell;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -88,5 +91,56 @@ public class ScheduleManagement {
 
             }
         });
+    }
+
+    public String uploadDuty(String flatKey, int roomNumber, ScheduleCell startDate, ScheduleCell endDate) {
+        Map<String, Object> duty = new HashMap<>();
+        duty.put(DUTY_ROOM, roomNumber);
+        duty.put(DUTY_START, startDate);
+        duty.put(DUTY_END, endDate);
+
+        String pushKey = mDatabase.child(DUTIES_DATABASE).push().getKey();
+        mDatabase.child(DUTIES_DATABASE).child(pushKey).setValue(duty);
+
+        String flatPushKey = mDatabase.child(ROOM_DUTIES_DATABASE).child(flatKey).push().getKey();
+        mDatabase.child(ROOM_DUTIES_DATABASE).child(flatKey).child(flatPushKey).setValue(pushKey);
+
+        return pushKey;
+    }
+
+    public void updateDuty(String dutyKey, int roomNumber, Date startDate, Date endDate) {
+        Map<String, Object> duty = new HashMap<>();
+        duty.put(DUTY_ROOM, roomNumber);
+        duty.put(DUTY_START, startDate);
+        duty.put(DUTY_END, endDate);
+
+        mDatabase.child(DUTIES_DATABASE).child(dutyKey).updateChildren(duty);
+    }
+
+    public DatabaseReference getFlatDuties(String flatKey) {
+        return  mDatabase.child(ROOM_DUTIES_DATABASE).child(flatKey);
+    }
+
+    public PublishSubject<Map<String, Object>> getDutyByKey(String dutyKey) {
+        PublishSubject subject = PublishSubject.create();
+
+        mDatabase.child(DUTIES_DATABASE).child(dutyKey).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Map<String, Object> duty = new HashMap<>();
+                duty.put(DUTY_ROOM, dataSnapshot.child(DUTY_ROOM).getValue(Long.class));
+                duty.put(DUTY_START, dataSnapshot.child(DUTY_START).getValue(ScheduleCell.class));
+                duty.put(DUTY_END, dataSnapshot.child(DUTY_END).getValue(ScheduleCell.class));
+
+                subject.onNext(duty);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        return subject;
     }
 }

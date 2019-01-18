@@ -10,6 +10,9 @@ public class ScheduleCell {
     private ROOM_NUM roomNum;
     private ScheduleFragment.CELL_STATE state;
 
+    public ScheduleCell() {
+    }
+
     ScheduleCell(Date date) {
         this.date = date;
         state = ScheduleFragment.CELL_STATE.NONE;
@@ -78,13 +81,18 @@ public class ScheduleCell {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof ScheduleCell)) {
-            return false;
+        if (obj instanceof ScheduleCell) {
+            ScheduleCell cell = (ScheduleCell) obj;
+            return date.getDate() == cell.getDate().getDate() && date.getYear() == cell.getDate().getYear() &&
+                    date.getMonth() == cell.getDate().getMonth();
+        } else {
+            if(obj instanceof Date) {
+                Date cell = (Date) obj;
+                return date.getDate() == cell.getDate() && date.getYear() == cell.getYear() &&
+                        date.getMonth() == cell.getMonth();
+            }
         }
-        try {
-            return date.getTime() == ((ScheduleCell) obj).date.getTime();
-        } catch (ClassCastException | NullPointerException e) {
-            return false;
-        }
+
+        return false;
     }
 }

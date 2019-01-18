@@ -1,6 +1,7 @@
 package com.dorm.muro.dormitory.presentation.schedule;
 
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.arellomobile.mvp.InjectViewState;
@@ -8,8 +9,15 @@ import com.arellomobile.mvp.MvpPresenter;
 import com.dorm.muro.dormitory.R;
 import com.dorm.muro.dormitory.network.ScheduleManagement.ScheduleManagement;
 import com.dorm.muro.dormitory.network.UserSessionManagement.UserSessionManager;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -19,7 +27,7 @@ import io.reactivex.schedulers.Schedulers;
 import static com.dorm.muro.dormitory.Constants.*;
 
 @InjectViewState
-public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView> {
+public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView> implements ChildEventListener {
 
     // Calendar State
     private ScheduleCell rangeStartDate;
@@ -45,7 +53,11 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
 
         if (!preferences.getBoolean(SIGNED_IN_ROOM, false)) {
             getViewState().showNoRoom();
+            return;
         }
+
+        loadSchedules();
+        initScheduleListener();
     }
 
     void setPreferences(SharedPreferences preferences) {
@@ -70,7 +82,7 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(res -> {
-                    if(!res.isEmpty()) {
+                    if (!res.isEmpty()) {
                         getViewState().showSchedule();
                         preferences.edit().putBoolean(SIGNED_IN_ROOM, true).apply();
                         preferences.edit().putString(ROOM_KEY, res).apply();
@@ -172,6 +184,16 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
     }
 
     private void stopEditing() {
+        if (isAdding) {
+            String flatKey = preferences.getString(ROOM_KEY, "");
+            String pushKey = ScheduleManagement.getInstance().uploadDuty(flatKey, currentRoom.get(), rangeStartDate, rangeEndDate);
+        } else {
+            if (isEditing) {
+                //todo
+            }
+        }
+
+
         isEditing = false;
         isAdding = false;
         rangeStartDate = null;
@@ -199,6 +221,83 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
             }
         }
         stopEditing();
+    }
+
+    void loadSchedules() {
+        String roomKey = preferences.getString(ROOM_KEY, "");
+        ScheduleManagement.getInstance().getFlatDuties(roomKey).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                GenericTypeIndicator<HashMap<String, String>> t = new GenericTypeIndicator<HashMap<String, String>>() {};
+                Map<String, String> duties = dataSnapshot.getValue(t);
+                for (String dutyKey : duties.values()) {
+                    disposable.add(ScheduleManagement.getInstance().getDutyByKey(dutyKey)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(duty -> {
+                                if (duty != null) {
+                                    ROOM_NUM roomNum = ROOM_NUM.getRoomNum(Math.toIntExact((Long) duty.get(DUTY_ROOM)));
+                                    ScheduleCell start = (ScheduleCell) duty.get(DUTY_START);
+                                    ScheduleCell end = (ScheduleCell) duty.get(DUTY_END);
+
+                                    getViewState().showDutyRange(start, end, roomNum);
+                                }
+                            }));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    void initScheduleListener() {
+        String flatKey = preferences.getString(ROOM_KEY, "");
+        ScheduleManagement.getInstance().getFlatDuties(flatKey).addChildEventListener(this);
+    }
+
+    @Override
+    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+        String dutyKey = dataSnapshot.getValue(String.class);
+
+        if (dutyKey == null) {
+            return;
+        }
+
+        disposable.add(ScheduleManagement.getInstance().getDutyByKey(dutyKey)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(duty -> {
+                    if (duty != null) {
+                        ROOM_NUM roomNum = ROOM_NUM.getRoomNum(Math.toIntExact((Long) duty.get(DUTY_ROOM)));
+                        ScheduleCell start = (ScheduleCell) duty.get(DUTY_START);
+                        ScheduleCell end = (ScheduleCell) duty.get(DUTY_END);
+
+                        getViewState().showDutyRange(start, end, roomNum);
+                    }
+                }));
+    }
+
+    @Override
+    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+    }
+
+    @Override
+    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+    }
+
+    @Override
+    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+    }
+
+    @Override
+    public void onCancelled(@NonNull DatabaseError databaseError) {
+
     }
 
     @Override
