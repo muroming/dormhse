@@ -3,6 +3,7 @@ package com.dorm.muro.dormitory.presentation.schedule;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
@@ -41,6 +42,7 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
     private Calendar currentDate = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 
     private boolean isEditing = false, isAdding = false;
+    private String dutyKey;
 
     //todo inject
     private SharedPreferences preferences;
@@ -48,16 +50,34 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        getViewState().updateCalendar(currentDate.get(Calendar.MONTH));
-        getViewState().setOptions(null, R.id.menu_add);
 
         if (!preferences.getBoolean(SIGNED_IN_ROOM, false)) {
-            getViewState().showNoRoom();
-            return;
-        }
+            String userKey = UserSessionManager.getInstance().getCurrentUser().getUid();
+            disposable.add(ScheduleManagement.getInstance().checkIfUserInRoom(userKey)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(roomKey -> {
+                        if (roomKey != null && !roomKey.isEmpty()) {
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putBoolean(SIGNED_IN_ROOM, true);
+                            editor.putString(ROOM_KEY, roomKey);
+                            editor.apply();
 
-        loadSchedules();
-        initScheduleListener();
+
+                            getViewState().showCalendar();
+                        } else {
+                            getViewState().showNoRoom();
+                        }
+                    }));
+        } else {
+            showCalendar();
+        }
+    }
+
+    void showCalendar() {
+        getViewState().updateCalendar(currentDate.get(Calendar.MONTH));
+        getViewState().setOptions(null, R.id.menu_add);
+        getViewState().showCalendar();
     }
 
     void setPreferences(SharedPreferences preferences) {
@@ -78,7 +98,7 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
                         preferences.edit().putString(ROOM_KEY, roomKey).apply();
 
                         getViewState().closeDialog();
-                        getViewState().showCalendar();
+                        showCalendar();
                     } else {
                         getViewState().showToast(R.string.schedule_room_id_exists);
                     }
@@ -92,7 +112,7 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(res -> {
                     if (!res.isEmpty()) {
-                        getViewState().showCalendar();
+                        showCalendar();
                         preferences.edit().putBoolean(SIGNED_IN_ROOM, true).apply();
                         preferences.edit().putString(ROOM_KEY, res).apply();
                     } else {
@@ -141,6 +161,8 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
             }
         } else {
             if (date.getState() != ScheduleFragment.CELL_STATE.NONE) {  //Clicked on date
+                dutyKey = preferences.getString(String.valueOf(start.getDate().getTime()), "");
+
                 isEditing = true;
                 currentRoom = date.getRoomNum();
                 rangeStartDate = start;
@@ -158,9 +180,14 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
                 rangeEndDate.setState(ScheduleFragment.CELL_STATE.END);
                 getViewState().showDutyRange(rangeStartDate, rangeEndDate, currentRoom);
             } else {
-                rangeEndDate.setState(ScheduleFragment.CELL_STATE.START);
-                rangeStartDate.setState(ScheduleFragment.CELL_STATE.END);
-                getViewState().showDutyRange(rangeEndDate, rangeStartDate, currentRoom);
+                ScheduleCell temp = rangeEndDate;
+                rangeEndDate = rangeStartDate;
+                rangeStartDate = temp;
+
+                rangeStartDate.setState(ScheduleFragment.CELL_STATE.START);
+                rangeEndDate.setState(ScheduleFragment.CELL_STATE.END);
+
+                getViewState().showDutyRange(rangeStartDate, rangeEndDate, currentRoom);
             }
         } else {  // Update range
             long startDelta = Math.abs(date.getDate().getTime() - rangeStartDate.getDate().getTime()),
@@ -181,7 +208,7 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
     }
 
     void applyRange() {
-        stopEditing();
+        stopEditing(true);
     }
 
     void addRange(ScheduleCell start, ScheduleCell end) {
@@ -191,16 +218,21 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
     void deleteRange() {
         getViewState().deleteRange(rangeStartDate, rangeEndDate);
         getViewState().showRangeDeleteSnackbar(rangeStartDate, rangeEndDate);
-        stopEditing();
+        stopEditing(false);
     }
 
-    private void stopEditing() {
+    private void stopEditing(boolean shouldSave) {
         if (isAdding) {
-            String flatKey = preferences.getString(ROOM_KEY, "");
-            String pushKey = ScheduleManagement.getInstance().uploadDuty(flatKey, currentRoom.get(), rangeStartDate, rangeEndDate);
+            if (shouldSave) {
+                String flatKey = preferences.getString(ROOM_KEY, "");
+                String pushKey = ScheduleManagement.getInstance().uploadDuty(flatKey, currentRoom.get(), rangeStartDate, rangeEndDate);
+                preferences.edit().putString(String.valueOf(rangeStartDate.getDate().getTime()), pushKey).apply();
+            }
         } else {
             if (isEditing) {
-                //todo
+                ScheduleManagement.getInstance().updateDuty(dutyKey, currentRoom.get(), rangeStartDate, rangeEndDate);
+                preferences.edit().remove(dutyKey).apply();
+                preferences.edit().putString(String.valueOf(rangeStartDate.getDate().getTime()), dutyKey).apply();
             }
         }
 
@@ -209,6 +241,8 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
         isAdding = false;
         rangeStartDate = null;
         rangeEndDate = null;
+        dutyKey = "";
+
         getViewState().setOptions(null, R.id.menu_add);
         getViewState().setTitle(R.string.fragment_schedule_title);
     }
@@ -231,10 +265,10 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
                 }
             }
         }
-        stopEditing();
+        stopEditing(false);
     }
 
-    void loadSchedules() {
+    void loadDuties() {
         String roomKey = preferences.getString(ROOM_KEY, "");
         ScheduleManagement.getInstance().getFlatDuties(roomKey).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -270,7 +304,7 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
         });
     }
 
-    private void initScheduleListener() {
+    void initScheduleListener() {
         String flatKey = preferences.getString(ROOM_KEY, "");
         ScheduleManagement.getInstance().getFlatDuties(flatKey).addChildEventListener(this);
     }
@@ -299,12 +333,12 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
 
     @Override
     public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+        loadDuties();
     }
 
     @Override
     public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
+        Log.d("sdf", dataSnapshot.getValue().toString());
     }
 
     @Override

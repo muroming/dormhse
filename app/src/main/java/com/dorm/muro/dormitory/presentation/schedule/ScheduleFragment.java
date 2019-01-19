@@ -235,7 +235,7 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
         calendar.set(Calendar.MONTH, month);
         txtDate.setText(calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()));
 
-        presenter.loadSchedules();
+        presenter.loadDuties();
     }
 
     @Override
@@ -323,14 +323,6 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
     @Override
     public void deleteRange(ScheduleCell start, ScheduleCell end) {
         gridAdapter.deleteRange(start, end);
-    }
-
-    public ScheduleCell getRangeStart(ScheduleCell dateClicked) {
-        return gridAdapter.getRangeStart(dateClicked);
-    }
-
-    public ScheduleCell getRangeEnd(ScheduleCell dateClicked) {
-        return gridAdapter.getRangeEnd(dateClicked);
     }
 
     @Override
@@ -431,7 +423,8 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
 
     @Override
     public void showCalendar() {
-        presenter.loadSchedules();
+        presenter.loadDuties();
+        presenter.initScheduleListener();
         mNoRoomGroup.setVisibility(View.GONE);
     }
 

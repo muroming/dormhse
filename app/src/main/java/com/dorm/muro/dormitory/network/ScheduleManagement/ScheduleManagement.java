@@ -42,6 +42,7 @@ public class ScheduleManagement {
         mDatabase.child(ROOM_USERS_DATABASE).child(roomKey).child(pushKey).setValue(userKey);
         mDatabase.child(ROOMS_DATABASE).child(roomKey).setValue(roomNum);
         mDatabase.child(ID_ROOM_DATABASE).child(roomId).setValue(roomKey);
+        mDatabase.child(USER_INFO_DATABASE).child(userKey).child(USER_ROOM_ID).setValue(roomKey);
 
         return roomKey;
     }
@@ -67,6 +68,7 @@ public class ScheduleManagement {
     public PublishSubject<String> joinRoom(String userKey, String roomId) {
         PublishSubject<String> subject = PublishSubject.create();
 
+
         mDatabase.child(ID_ROOM_DATABASE).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -77,6 +79,9 @@ public class ScheduleManagement {
 
                     upd.put(userPushKey, userKey);
                     mDatabase.child(ROOM_USERS_DATABASE).child(roomKey).updateChildren(upd);
+
+
+                    mDatabase.child(USER_INFO_DATABASE).child(userKey).child(USER_ROOM_ID).setValue(roomKey);
 
                     subject.onNext(roomKey);
                 } else {
@@ -101,6 +106,7 @@ public class ScheduleManagement {
                 if (!dataSnapshot.hasChildren()) {  // no members left
                     mDatabase.child(ROOMS_DATABASE).child(roomId).removeValue();
                     mDatabase.child(ID_ROOM_DATABASE).orderByValue().equalTo(roomId).getRef().removeValue();
+                    mDatabase.child(USER_INFO_DATABASE).child(userKey).child(USER_ROOM_ID).removeValue();
                 }
             }
 
@@ -126,7 +132,30 @@ public class ScheduleManagement {
         return pushKey;
     }
 
-    public void updateDuty(String dutyKey, int roomNumber, Date startDate, Date endDate) {
+    public PublishSubject<String> checkIfUserInRoom(String userId) {
+        PublishSubject<String> subject = PublishSubject.create();
+
+        mDatabase.child(USER_INFO_DATABASE).child(userId).child(USER_ROOM_ID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String roomKey = dataSnapshot.getValue(String.class);
+                if (roomKey == null) {
+                    subject.onNext("");
+                } else {
+                    subject.onNext(roomKey);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        return subject;
+    }
+
+    public void updateDuty(String dutyKey, int roomNumber, ScheduleCell startDate, ScheduleCell endDate) {
         Map<String, Object> duty = new HashMap<>();
         duty.put(DUTY_ROOM, roomNumber);
         duty.put(DUTY_START, startDate);
@@ -135,8 +164,12 @@ public class ScheduleManagement {
         mDatabase.child(DUTIES_DATABASE).child(dutyKey).updateChildren(duty);
     }
 
+    public void removeDuty(String dutyKey) {
+
+    }
+
     public DatabaseReference getFlatDuties(String flatKey) {
-        return  mDatabase.child(ROOM_DUTIES_DATABASE).child(flatKey);
+        return mDatabase.child(ROOM_DUTIES_DATABASE).child(flatKey);
     }
 
     public PublishSubject<Map<String, Object>> getDutyByKey(String dutyKey) {
