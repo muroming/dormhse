@@ -25,6 +25,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -233,6 +234,8 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
 
         calendar.set(Calendar.MONTH, month);
         txtDate.setText(calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()));
+
+        presenter.loadSchedules();
     }
 
     @Override
@@ -427,7 +430,7 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
     }
 
     @Override
-    public void showSchedule() {
+    public void showCalendar() {
         presenter.loadSchedules();
         mNoRoomGroup.setVisibility(View.GONE);
     }
@@ -435,5 +438,10 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
     @Override
     public void updateCalendar() {
         gridAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showToast(int text) {
+        Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
     }
 }

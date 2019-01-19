@@ -33,5 +33,7 @@ interface ScheduleFragmentView extends MvpView {
 
     void showNoRoom();
 
-    void showSchedule();
+    void showCalendar();
+
+    void showToast(int text);
 }

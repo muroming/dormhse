@@ -66,14 +66,23 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
 
     void onCreateRoomClicked(String flatNum, String flatId) {
         //todo move all managers to dagger injection
-        String userKey = UserSessionManager.getInstance().getCurrentUser().getUid();
-        String roomKey = ScheduleManagement.getInstance().createRoom(userKey, flatNum, flatId);
+        disposable.add(ScheduleManagement.getInstance().roomExists(flatId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(exists -> {
+                    if (!exists) {
+                        String userKey = UserSessionManager.getInstance().getCurrentUser().getUid();
+                        String roomKey = ScheduleManagement.getInstance().createRoom(userKey, flatNum, flatId);
 
-        preferences.edit().putBoolean(SIGNED_IN_ROOM, true).apply();
-        preferences.edit().putString(ROOM_KEY, roomKey).apply();
+                        preferences.edit().putBoolean(SIGNED_IN_ROOM, true).apply();
+                        preferences.edit().putString(ROOM_KEY, roomKey).apply();
 
-        getViewState().closeDialog();
-        getViewState().showSchedule();
+                        getViewState().closeDialog();
+                        getViewState().showCalendar();
+                    } else {
+                        getViewState().showToast(R.string.schedule_room_id_exists);
+                    }
+                }));
     }
 
     void onJoinRoomClicked(String flatId) {
@@ -83,9 +92,11 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(res -> {
                     if (!res.isEmpty()) {
-                        getViewState().showSchedule();
+                        getViewState().showCalendar();
                         preferences.edit().putBoolean(SIGNED_IN_ROOM, true).apply();
                         preferences.edit().putString(ROOM_KEY, res).apply();
+                    } else {
+                        getViewState().showToast(R.string.schedule_room_not_found);
                     }
                 }));
     }
@@ -225,11 +236,17 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
 
     void loadSchedules() {
         String roomKey = preferences.getString(ROOM_KEY, "");
-        ScheduleManagement.getInstance().getFlatDuties(roomKey).addValueEventListener(new ValueEventListener() {
+        ScheduleManagement.getInstance().getFlatDuties(roomKey).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                GenericTypeIndicator<HashMap<String, String>> t = new GenericTypeIndicator<HashMap<String, String>>() {};
+                GenericTypeIndicator<HashMap<String, String>> t = new GenericTypeIndicator<HashMap<String, String>>() {
+                };
                 Map<String, String> duties = dataSnapshot.getValue(t);
+
+                if (duties == null) {
+                    return;
+                }
+
                 for (String dutyKey : duties.values()) {
                     disposable.add(ScheduleManagement.getInstance().getDutyByKey(dutyKey)
                             .subscribeOn(Schedulers.io())
@@ -253,7 +270,7 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
         });
     }
 
-    void initScheduleListener() {
+    private void initScheduleListener() {
         String flatKey = preferences.getString(ROOM_KEY, "");
         ScheduleManagement.getInstance().getFlatDuties(flatKey).addChildEventListener(this);
     }

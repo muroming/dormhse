@@ -46,6 +46,24 @@ public class ScheduleManagement {
         return roomKey;
     }
 
+    public PublishSubject<Boolean> roomExists(String roomId) {
+        PublishSubject<Boolean> subject = PublishSubject.create();
+
+        mDatabase.child(ID_ROOM_DATABASE).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                subject.onNext(dataSnapshot.hasChild(roomId));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        return subject;
+    }
+
     public PublishSubject<String> joinRoom(String userKey, String roomId) {
         PublishSubject<String> subject = PublishSubject.create();
 
