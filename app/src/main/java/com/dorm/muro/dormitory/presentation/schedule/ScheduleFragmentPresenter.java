@@ -208,35 +208,53 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
     }
 
     void applyRange() {
-        stopEditing(true);
+        if (isAdding) {
+            saveDuty();
+        } else {
+            updateDuty();
+        }
+
+        stopEditing();
     }
 
     void addRange(ScheduleCell start, ScheduleCell end) {
         getViewState().showDutyRange(start, end, start.getRoomNum());
+
+        rangeStartDate = start;
+        rangeEndDate = end;
+        saveDuty();
+        stopEditing();
     }
 
     void deleteRange() {
         getViewState().deleteRange(rangeStartDate, rangeEndDate);
         getViewState().showRangeDeleteSnackbar(rangeStartDate, rangeEndDate);
-        stopEditing(false);
+
+        removeDuty();
+        stopEditing();
     }
 
-    private void stopEditing(boolean shouldSave) {
-        if (isAdding) {
-            if (shouldSave) {
-                String flatKey = preferences.getString(ROOM_KEY, "");
-                String pushKey = ScheduleManagement.getInstance().uploadDuty(flatKey, currentRoom.get(), rangeStartDate, rangeEndDate);
-                preferences.edit().putString(String.valueOf(rangeStartDate.getDate().getTime()), pushKey).apply();
-            }
-        } else {
-            if (isEditing) {
-                ScheduleManagement.getInstance().updateDuty(dutyKey, currentRoom.get(), rangeStartDate, rangeEndDate);
-                preferences.edit().remove(dutyKey).apply();
-                preferences.edit().putString(String.valueOf(rangeStartDate.getDate().getTime()), dutyKey).apply();
-            }
-        }
+    void saveDuty() {
+        String flatKey = preferences.getString(ROOM_KEY, "");
+        String pushKey = ScheduleManagement.getInstance().uploadDuty(flatKey, currentRoom.get(), rangeStartDate, rangeEndDate);
+        preferences.edit().putString(String.valueOf(rangeStartDate.getDate().getTime()), pushKey).apply();
+    }
 
+    void updateDuty() {
+        ScheduleManagement.getInstance().updateDuty(dutyKey, currentRoom.get(), rangeStartDate, rangeEndDate);
+        preferences.edit().remove(dutyKey).apply();
+        preferences.edit().putString(String.valueOf(rangeStartDate.getDate().getTime()), dutyKey).apply();
+    }
 
+    void removeDuty() {
+        String dutyKey = preferences.getString(String.valueOf(rangeStartDate.getDate().getTime()), "");
+        String roomKey = preferences.getString(ROOM_KEY, "");
+
+        ScheduleManagement.getInstance().removeDuty(roomKey, dutyKey);
+        preferences.edit().remove(String.valueOf(rangeStartDate.getDate().getTime())).apply();
+    }
+
+    private void stopEditing() {
         isEditing = false;
         isAdding = false;
         rangeStartDate = null;
@@ -254,7 +272,7 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
         getViewState().setTitle(R.string.schedule_add_duty);
     }
 
-    void onEditStop() {
+    void onEditStop() {  // when user presses X while editing just stop w/o saving to DB
         if (isAdding) {
             if (rangeStartDate != null) {
                 if (rangeEndDate == null) {
@@ -265,7 +283,8 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
                 }
             }
         }
-        stopEditing(false);
+
+        stopEditing();
     }
 
     void loadDuties() {
