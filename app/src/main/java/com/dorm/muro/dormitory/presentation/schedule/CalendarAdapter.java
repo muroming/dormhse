@@ -136,7 +136,7 @@ public class CalendarAdapter extends ArrayAdapter<ScheduleCell> {
         notifyDataSetChanged();
     }
 
-    void deleteRange(ScheduleCell start, ScheduleCell end) {
+    void deleteRange(Date start, Date end) {
         boolean flag = false;
         for (int i = 0; i < days.size(); i++) {
             ScheduleCell cell = days.get(i);

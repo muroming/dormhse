@@ -34,6 +34,7 @@ import com.dorm.muro.dormitory.presentation.main.MainActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -322,6 +323,11 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
 
     @Override
     public void deleteRange(ScheduleCell start, ScheduleCell end) {
+        gridAdapter.deleteRange(start.getDate(), end.getDate());
+    }
+
+    @Override
+    public void deleteRange(Date start, Date end) {
         gridAdapter.deleteRange(start, end);
     }
 

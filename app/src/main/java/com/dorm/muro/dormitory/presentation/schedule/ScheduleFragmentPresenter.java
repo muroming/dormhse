@@ -17,6 +17,7 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
@@ -237,13 +238,14 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
     void saveDuty() {
         String flatKey = preferences.getString(ROOM_KEY, "");
         String pushKey = ScheduleManagement.getInstance().uploadDuty(flatKey, currentRoom.get(), rangeStartDate, rangeEndDate);
-        preferences.edit().putString(String.valueOf(rangeStartDate.getDate().getTime()), pushKey).apply();
+
+        writeDutyToPrefs(pushKey, rangeStartDate, rangeEndDate);
     }
 
     void updateDuty() {
         ScheduleManagement.getInstance().updateDuty(dutyKey, currentRoom.get(), rangeStartDate, rangeEndDate);
         preferences.edit().remove(dutyKey).apply();
-        preferences.edit().putString(String.valueOf(rangeStartDate.getDate().getTime()), dutyKey).apply();
+        writeDutyToPrefs(dutyKey, rangeStartDate, rangeEndDate);
     }
 
     void removeDuty() {
@@ -252,6 +254,11 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
 
         ScheduleManagement.getInstance().removeDuty(roomKey, dutyKey);
         preferences.edit().remove(String.valueOf(rangeStartDate.getDate().getTime())).apply();
+    }
+
+    private void writeDutyToPrefs(String dutyKey, ScheduleCell rangeStartDate, ScheduleCell rangeEndDate) {
+        preferences.edit().putString(String.valueOf(rangeStartDate.getDate().getTime()), dutyKey).apply();
+        preferences.edit().putString(dutyKey, String.valueOf(rangeStartDate.getDate().getTime()) + " " + String.valueOf(rangeEndDate.getDate().getTime())).apply();
     }
 
     private void stopEditing() {
@@ -310,6 +317,7 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
                                     ScheduleCell start = (ScheduleCell) duty.get(DUTY_START);
                                     ScheduleCell end = (ScheduleCell) duty.get(DUTY_END);
 
+
                                     getViewState().showDutyRange(start, end, roomNum);
                                 }
                             }));
@@ -345,6 +353,7 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
                         ScheduleCell start = (ScheduleCell) duty.get(DUTY_START);
                         ScheduleCell end = (ScheduleCell) duty.get(DUTY_END);
 
+                        writeDutyToPrefs(dutyKey, start, end);
                         getViewState().showDutyRange(start, end, roomNum);
                     }
                 }));
@@ -357,7 +366,13 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
 
     @Override
     public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-        Log.d("sdf", dataSnapshot.getValue().toString());
+        String dutyKey = dataSnapshot.getValue(String.class);
+        String times = preferences.getString(dutyKey, "");
+        if (times == null || times.isEmpty())
+            return;
+
+        long startTime = Long.parseLong(times.split(" ")[0]), endTime = Long.parseLong(times.split(" ")[1]);
+        getViewState().deleteRange(new Date(startTime), new Date(endTime));
     }
 
     @Override
@@ -367,7 +382,6 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
 
     @Override
     public void onCancelled(@NonNull DatabaseError databaseError) {
-
     }
 
     @Override

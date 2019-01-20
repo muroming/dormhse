@@ -4,6 +4,8 @@ import android.support.annotation.Nullable;
 
 import com.arellomobile.mvp.MvpView;
 
+import java.util.Date;
+
 interface ScheduleFragmentView extends MvpView {
     void showDutyRange(ScheduleCell start, ScheduleCell end, ROOM_NUM roomNum);
 
@@ -24,6 +26,8 @@ interface ScheduleFragmentView extends MvpView {
     void setTitle(int titleId);
 
     void deleteRange(ScheduleCell start, ScheduleCell end);
+
+    void deleteRange(Date start, Date end);
 
     void showRangeDeleteSnackbar(ScheduleCell start, ScheduleCell end);
 
