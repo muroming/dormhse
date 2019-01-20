@@ -164,8 +164,9 @@ public class ScheduleManagement {
         mDatabase.child(DUTIES_DATABASE).child(dutyKey).updateChildren(duty);
     }
 
-    public void removeDuty(String dutyKey) {
-
+    public void removeDuty(String roomKey, String dutyKey) {
+        mDatabase.child(DUTIES_DATABASE).child(dutyKey).removeValue();
+        mDatabase.child(ROOM_DUTIES_DATABASE).child(roomKey).orderByValue().equalTo(dutyKey).getRef().removeValue();
     }
 
     public DatabaseReference getFlatDuties(String flatKey) {
