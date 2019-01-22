@@ -10,19 +10,25 @@ import com.dorm.muro.dormitory.presentation.schedule.ScheduleFragment;
 
 @InjectViewState
 public class MainActivityPresenter extends MvpPresenter<MainActivityView> {
+    @Override
+    protected void onFirstViewAttach() {
+        super.onFirstViewAttach();
+        getViewState().showPage(0, R.string.fragment_todo_title);
+    }
+
     void showTodoFragment() {
-        getViewState().showFragment(new TodoFragment(), R.string.fragment_todo_title);
+        getViewState().showPage(0, R.string.fragment_todo_title);
     }
 
     void showScheduleFragment() {
-        getViewState().showFragment(new ScheduleFragment(), R.string.fragment_schedule_title);
+        getViewState().showPage(1, R.string.fragment_schedule_title);
     }
 
     void showPaymentFragment() {
-        getViewState().showFragment(new PaymentFragment(), R.string.fragment_payment_title);
+        getViewState().showPage(2, R.string.fragment_payment_title);
     }
 
     void showSettingsFragment() {
-        getViewState().showFragment(new OptionsFragment(), R.string.fragment_options_title);
+        getViewState().showPage(3, R.string.fragment_options_title);
     }
 }

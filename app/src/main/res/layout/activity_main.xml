@@ -8,8 +8,8 @@
     android:layout_height="match_parent"
     tools:context=".presentation.main.MainActivity">
 
-    <FrameLayout
-        android:id="@+id/fl_main_fragment_container"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_main_framgent_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/navigation"/>
