@@ -52,15 +52,10 @@ public class TodoFragment extends MvpAppCompatFragment implements TodoView, Todo
     private final int TODO_REQUEST_CODE = 123;
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        adapter = new TodoAdapter(context);
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        presenter.loadTodos();
     }
 
     @Nullable
@@ -71,14 +66,15 @@ public class TodoFragment extends MvpAppCompatFragment implements TodoView, Todo
 
         RecyclerView rv = v.findViewById(R.id.rv_todo_list);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
+        rv.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayout.VERTICAL));
+
+        adapter = new TodoAdapter(getContext());
         rv.setAdapter(adapter);
         adapter.setListener(this);
-        rv.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayout.VERTICAL));
 
         ItemTouchHelper.SimpleCallback itemTouchCallback = new TodoItemTouchHelper(0, ItemTouchHelper.LEFT, this);
         new ItemTouchHelper(itemTouchCallback).attachToRecyclerView(rv);
 
-        presenter.loadTodos();
         return v;
     }
 
