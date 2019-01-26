@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -61,7 +59,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
 
         navigation.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
-                case R.id.navigation_nearby:
+                case R.id.navigation_todo:
                     presenter.showTodoFragment();
                     return true;
                 case R.id.navigation_schedule:
@@ -78,7 +76,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
         });
     }
 
-    private void setupViewPagerAdapter(){
+    private void setupViewPagerAdapter() {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(0, new TodoFragment(), getString(R.string.fragment_todo_title));
         adapter.addFragment(1, new ScheduleFragment(), getString(R.string.fragment_schedule_title));
@@ -86,6 +84,44 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
         adapter.addFragment(3, new OptionsFragment(), getString(R.string.fragment_options_title));
 
         mViewPager.setAdapter(adapter);
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                int id = 0;
+
+                switch (i) {
+                    case 0: {
+                        id = R.id.navigation_todo;
+                        break;
+                    }
+                    case 1: {
+                        id = R.id.navigation_schedule;
+                        break;
+                    }
+                    case 2: {
+                        id = R.id.navigation_payment;
+                        break;
+                    }
+                    case 3: {
+                        id = R.id.navigation_settings;
+                    }
+                }
+
+                navigation.setSelectedItemId(id);
+                setTitle(mViewPager.getAdapter().getPageTitle(i));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+
+            }
+        });
+        mViewPager.setOffscreenPageLimit(3);
     }
 
     @Override

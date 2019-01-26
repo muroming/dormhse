@@ -1,7 +1,6 @@
 package com.dorm.muro.dormitory.presentation.todo;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,8 +10,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.text.Html;
-import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,11 +29,7 @@ import com.dorm.muro.dormitory.R;
 import com.dorm.muro.dormitory.network.TodoManagement.TodoManager;
 import com.dorm.muro.dormitory.presentation.createTodo.CreateTodoActivity;
 
-import java.util.Date;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 import static com.dorm.muro.dormitory.Constants.*;
 
