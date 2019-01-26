@@ -35,7 +35,7 @@
     <string name="notification_channel_name">DORMITORY_APP</string>
     <string name="notification_channel_description">This channel is used for Dormitory app notifications</string>
     <string name="notification_payment_title">Time to PAY >:c</string>
-    <string name="notification_payment_context">Long boring context that no one will ever read</string>
+    <string name="notification_payment_text">Long boring context that no one will ever read</string>
 
     <string name="settings">Настройки</string>
     <string name="settings_personal_data">Личные данные</string>
