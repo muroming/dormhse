@@ -57,12 +57,6 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
 
         setupViewPagerAdapter();
 
-        //todo remove
-        Intent intent = new Intent(this, PaymentNotificationReciever.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 7000, pendingIntent);
-
         navigation.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_todo:

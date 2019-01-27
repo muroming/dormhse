@@ -7,8 +7,10 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -121,6 +123,29 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
 
             if (hint == R.string.settings_card_number || hint == R.string.settings_change_cost) {
                 et.setInputType(InputType.TYPE_CLASS_NUMBER);
+            }
+
+            if (hint == R.string.settings_card_number) {
+                et.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4 * 4 + 3)});
+            }
+
+            if (hint == R.string.settings_cardholder_name) {
+                et.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        Log.d("sdf", String.format("%s %d %d %d", s, start, before, count));
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
             }
 
             layout.addView(et);

@@ -43,7 +43,7 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
         if (s.isEmpty()) {
             cardNum = -1;
         } else {
-            cardNum = Integer.parseInt(s.split(" ")[0]);
+            cardNum = Integer.parseInt(s.substring(s.length() - 4));
         }
         getViewState().setInfo(mail, contract, fio, cardNum);
 
@@ -68,7 +68,7 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
 
     void onChangePasswordClicked() {
         int[] hints = new int[]{R.string.settings_confirm_password, R.string.settings_new_password};
-        String[] values = new String[] {"", ""};
+        String[] values = new String[]{"", ""};
 
         getViewState().showChangeDialog(R.string.settings_password_title, PASSWORD, hints, values);
     }
@@ -82,16 +82,16 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
 
     void onChangeMailClicked() {
         int[] hints = new int[]{R.string.settings_new_mail, R.string.settings_confirm_password};
-        String[] values = new String[] {preferences.getString(USER_EMAIL, ""), ""};
+        String[] values = new String[]{preferences.getString(USER_EMAIL, ""), ""};
 
         getViewState().showChangeDialog(R.string.settings_mail_title, EMAIL, hints, values);
     }
 
     void onChangeContractClicked() {
-        int hints[] = new int[] {R.string.settings_new_contract, R.string.settings_change_cost, R.string.settings_confirm_password};
-        String[] values = new String[] {preferences.getString(CONTRACT_ID, ""), "", ""};
+        int hints[] = new int[]{R.string.settings_new_contract, R.string.settings_change_cost, R.string.settings_confirm_password};
+        String[] values = new String[]{preferences.getString(CONTRACT_ID, ""), "", ""};
         float cost = preferences.getFloat(MONTHLY_COST, -1);
-        if(cost > 0) {
+        if (cost > 0) {
             values[1] = String.valueOf(cost);
         }
 
@@ -124,9 +124,11 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
                 }
                 case PERSONAL: {
                     fio = newInfo[0];
-                    cardNum = Integer.parseInt(newInfo[1].split(" ")[0]);
                     preferences.edit().putString(USER_FIO, newInfo[0]).apply();
-                    preferences.edit().putString(CARD_NUMBER, newInfo[1]).apply();
+                    if (newInfo[1].length() >= 4) {
+                        cardNum = Integer.parseInt(newInfo[1].substring(newInfo[1].length() - 4));
+                        preferences.edit().putString(CARD_NUMBER, newInfo[1]).apply();
+                    }
                     break;
                 }
             }

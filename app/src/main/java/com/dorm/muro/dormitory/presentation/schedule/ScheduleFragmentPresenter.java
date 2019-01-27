@@ -65,7 +65,7 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
                             editor.apply();
 
 
-                            getViewState().showCalendar();
+                            showCalendar();
                         } else {
                             getViewState().showNoRoom();
                         }
