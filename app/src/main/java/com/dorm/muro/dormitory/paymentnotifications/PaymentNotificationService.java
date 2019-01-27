@@ -12,6 +12,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import com.dorm.muro.dormitory.R;
 import com.dorm.muro.dormitory.presentation.main.MainActivity;
 import com.dorm.muro.dormitory.presentation.payment.PaymentFragment;
+import static com.dorm.muro.dormitory.Constants.*;
 
 public class PaymentNotificationService extends IntentService {
 
@@ -24,6 +25,9 @@ public class PaymentNotificationService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
+        if (!getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE).getBoolean(NOTIFICATIONS, true))
+            return;
+
         Context context = getApplicationContext();
         Intent startingIntent = new Intent(context, MainActivity.class);
         startingIntent.putExtra(TARGET_FRAGMENT, PaymentFragment.class.getSimpleName());

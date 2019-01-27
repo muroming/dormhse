@@ -44,6 +44,11 @@ public class UserSessionManager {
         return user.updatePassword(newPassword);
     }
 
+    public Task<Void> updateUserEmail(String newEmail) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        return user.updateEmail(newEmail);
+    }
+
 
     public Task<Void> updateUserField(Map<String, Object> newValues) {
         if (mAuth.getCurrentUser() == null) {

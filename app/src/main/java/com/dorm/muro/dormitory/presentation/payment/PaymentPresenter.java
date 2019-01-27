@@ -134,7 +134,7 @@ public class PaymentPresenter extends MvpPresenter<PaymentView> {
         }
     }
 
-    public void incrementStep() {
+    void incrementStep() {
         getViewState().incrementStep();
     }
 
@@ -150,5 +150,17 @@ public class PaymentPresenter extends MvpPresenter<PaymentView> {
             }
         }
         return res.toString();
+    }
+
+    void inputCVV() {
+        getViewState().showCVVInputDialog();
+    }
+
+    void inputSMS() {
+        getViewState().showSMSCodeInputDialog();
+    }
+
+    void paymentComplete() {
+        getViewState().showCompleteDialog();
     }
 }

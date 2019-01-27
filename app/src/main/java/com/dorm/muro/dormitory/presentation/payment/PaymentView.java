@@ -31,4 +31,13 @@ public interface PaymentView extends MvpView {
     void loadQuery(String query);
 
     void incrementStep();
+
+    @StateStrategyType(SkipStrategy.class)
+    void showCVVInputDialog();
+
+    @StateStrategyType(SkipStrategy.class)
+    void showSMSCodeInputDialog();
+
+    @StateStrategyType(SkipStrategy.class)
+    void showCompleteDialog();
 }

@@ -48,7 +48,14 @@ public class Constants {
     public static final String ENTER_CARD_AND_CONFIRM_INFO = "var a=document.getElementById(\"iPAN_sub\").value='%s';" +
             "var b=document.getElementById(\"input-month\").value=%s;" +
             "var c=document.getElementById(\"input-year\").value=%s;" +
-            "var d=document.getElementById(\"iTEXT\").value='%s';";
+            "var d=document.getElementById(\"iTEXT\").value='%s';" +
+            "window.CallBack.inputCVV();";
+    public static final String CONFIRM_CARD = "var a=document.getElementById(\"iCVC\").value='%s';" +
+            "var c=document.getElementById(\"buttonPayment\").click();";
+
+    public static final String INPUT_SMS = "var a=document.getElementById(\"psw_id\").value='%s';" +
+            "var a=document.getElementById(\"btnSubmit\").click();";
+
     public static final int TODO_MAX_CHARACTERS = 80;
 
     public static final String USER_INFO_DATABASE = "user_info";

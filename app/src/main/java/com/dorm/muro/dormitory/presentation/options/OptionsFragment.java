@@ -6,10 +6,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -98,58 +103,44 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
     }
 
     @Override
-    public void showChangeDialog(int h1, int h2, int title, int type) {
-        String hint1 = getString(h1), hint2 = getString(h2);
-        View layout = LayoutInflater.from(getContext()).inflate(R.layout.settings_change_dialog, null);
-        EditText et1 = layout.findViewById(R.id.et1), et2 = layout.findViewById(R.id.et2);
-        et1.setHint(hint1);
-        et2.setHint(hint2);
+    public void showChangeDialog(int title, int code, int[] hints, String[] values) {
+        LinearLayout layout = new LinearLayout(getContext());
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setGravity(Gravity.CENTER);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        EditText[] ets = new EditText[hints.length];
+        for (int i = 0; i < hints.length; i++) {
+            int hint = hints[i];
+            EditText et = new EditText(getContext());
+            et.setLayoutParams(new LinearLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.settings_edit_text_width), ViewGroup.LayoutParams.WRAP_CONTENT));
+            et.setHint(hint);
+            et.setText(values[i]);
+            ((LinearLayout.LayoutParams) et.getLayoutParams()).topMargin = getResources().getDimensionPixelSize(R.dimen.settings_edit_text_margins);
+            et.setInputType(InputType.TYPE_CLASS_TEXT);
+            et.setMaxLines(1);
 
-        builder.setTitle(getString(title))
+            if (hint == R.string.settings_card_number || hint == R.string.settings_change_cost) {
+                et.setInputType(InputType.TYPE_CLASS_NUMBER);
+            }
+
+            layout.addView(et);
+            ets[i] = et;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
                 .setView(layout)
+                .setTitle(title)
                 .setNegativeButton(getString(R.string.cancel), (d, w) -> presenter.onDialogCancel())
-                .setPositiveButton(getString(R.string.save), (d, w) -> presenter.onChangeInfo(type,
-                        et2.getText().toString(), et1.getText().toString()));
+                .setPositiveButton(getString(R.string.save), (d, w) -> {
+                    String password = ets[ets.length - 1].getText().toString();
+                    String[] updates = new String[hints.length - 1];
+                    for (int i = 0; i < ets.length - 1; i++) {
+                        updates[i] = ets[i].getText().toString();
+                    }
+                    presenter.onChangeInfo(code, password, updates);
+                });
 
         dialog = builder.create();
-        dialog.show();
-    }
-
-    @Override
-    public void showBigChangeDialog(int h1, int h2, int h3, int title, int code) {
-        String hint1 = getString(h1), hint2 = getString(h2), hint3 = getString(h3);
-        ConstraintLayout layout = (ConstraintLayout) LayoutInflater.from(getContext()).inflate(R.layout.settings_change_dialog, null);
-        EditText et1 = layout.findViewById(R.id.et1), et2 = layout.findViewById(R.id.et2);
-        et1.setHint(hint1);
-        et2.setHint(hint2);
-
-        //Setup third confirm password view
-        EditText confirm = new EditText(getContext());
-        confirm.setHint(h3);
-        confirm.setLayoutParams(new ConstraintLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.settings_edit_text_width),
-                getResources().getDimensionPixelSize(R.dimen.settings_edit_text_height)));
-        ((ConstraintLayout.LayoutParams) confirm.getLayoutParams()).setMargins(0,
-                getResources().getDimensionPixelSize(R.dimen.settings_edit_text_margins), 0, 0);
-        ((ConstraintLayout.LayoutParams) confirm.getLayoutParams()).startToStart = ConstraintLayout.LayoutParams.PARENT_ID;
-        ((ConstraintLayout.LayoutParams) confirm.getLayoutParams()).endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
-        ((ConstraintLayout.LayoutParams) confirm.getLayoutParams()).topToBottom = R.id.et2;
-
-        layout.addView(confirm);
-
-        //Build dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-
-        builder.setTitle(getString(title))
-                .setView(layout)
-                .setNegativeButton(getString(R.string.cancel), (d, w) -> presenter.onDialogCancel())
-                .setPositiveButton(getString(R.string.save), null);
-
-        dialog = builder.create();
-        dialog.setOnShowListener(dialog -> ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE)
-                .setOnClickListener(v -> presenter.onChangeInfo(code, confirm.getText().toString(),
-                        et1.getText().toString(), et2.getText().toString())));
         dialog.show();
     }
 

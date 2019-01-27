@@ -3,11 +3,14 @@ package com.dorm.muro.dormitory.presentation.payment;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.Group;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +20,8 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -113,8 +118,18 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
                 } else {
                     if (url.contains("checkout")) {  //Skip final page reviewing payment info
                         mPaymentWebView.evaluateJavascript(SKIP_CHECKOUT, null);
-                    } else {  //Input card info and confirm payment
-                        presenter.loadCardInfo();
+                    } else {  //Input card info and confirm card
+                        if(url.contains("securepayments.sberbank.ru")) {
+                            presenter.loadCardInfo();
+                        } else {
+                            if (url.contains("acs1.sbrf.ru")) {  //Input SMS code
+
+                            } else {
+                                if (url.contains("pay.hse.ru") && url.contains("complete")) {
+
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -232,7 +247,62 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
             mPaymentContract.setText(contract);
     }
 
+    @Override
+    public void showCVVInputDialog() {
+        LinearLayout layout = new LinearLayout(getContext());
+        EditText cvv = new EditText(getContext());
+        layout.setPadding(getResources().getDimensionPixelSize(R.dimen.room_dialog_horizontal_margin), getResources().getDimensionPixelSize(R.dimen.room_dialog_vertical_margin),
+                getResources().getDimensionPixelSize(R.dimen.room_dialog_horizontal_margin), getResources().getDimensionPixelSize(R.dimen.room_dialog_vertical_margin));
 
+        cvv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        cvv.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+        cvv.setMaxLines(1);
+        cvv.setHint(R.string.payment_cvv_hint);
+        layout.addView(cvv);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                .setView(layout)
+                .setPositiveButton(R.string.proceed, (dialog, which) -> {
+
+                })
+                .setNegativeButton(R.string.cancel, (d, w) -> {
+                    d.dismiss();
+                    presenter.stopPayment();
+                });
+
+        builder.create().show();
+    }
+
+    @Override
+    public void showSMSCodeInputDialog() {
+        LinearLayout layout = new LinearLayout(getContext());
+        EditText cvv = new EditText(getContext());
+        layout.setPadding(getResources().getDimensionPixelSize(R.dimen.room_dialog_horizontal_margin), getResources().getDimensionPixelSize(R.dimen.room_dialog_vertical_margin),
+                getResources().getDimensionPixelSize(R.dimen.room_dialog_horizontal_margin), getResources().getDimensionPixelSize(R.dimen.room_dialog_vertical_margin));
+
+        cvv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        cvv.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+        cvv.setMaxLines(1);
+        cvv.setHint(R.string.payment_cvv_hint);
+        layout.addView(cvv);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                .setView(layout)
+                .setPositiveButton(R.string.proceed, (dialog, which) -> {
+
+                })
+                .setNegativeButton(R.string.cancel, (d, w) -> {
+                    d.dismiss();
+                    presenter.stopPayment();
+                });
+
+        builder.create().show();
+    }
+
+    @Override
+    public void showCompleteDialog() {
+
+    }
 
     @OnClick(R.id.btn_payment_cancel)
     public void onStopClicked(View v) {
@@ -262,5 +332,20 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
     @JavascriptInterface
     public void nextStep() {
         presenter.incrementStep();
+    }
+
+    @JavascriptInterface
+    public void inputCVV() {
+        presenter.inputCVV();
+    }
+
+    @JavascriptInterface
+    public void inputSMSCode() {
+        presenter.inputSMS();
+    }
+
+    @JavascriptInterface
+    public void onPaymentComplete() {
+        presenter.paymentComplete();
     }
 }

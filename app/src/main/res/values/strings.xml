@@ -83,6 +83,7 @@
     <string name="payment_card_tmp">• • • • %d</string>
     <string name="field_not_set">Не установлено</string>
     <string name="no_payment_credits_set">Некоторые платежные данные не заданы</string>
+    <string name="payment_cvv_hint">Введите CVV/CVC2 для продолжения платежа</string>
     <string-array name="payment_progress">
         <item>Грабим банк&#8230;</item>
         <item>Берем в долг&#8230;</item>
@@ -135,4 +136,5 @@
     <string name="title_join_room">Введите код квартиры</string>
     <string name="create">Создать</string>
     <string name="join">Присоединиться</string>
+    <string name="proceed">Продолжить</string>
 </resources>

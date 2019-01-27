@@ -1,6 +1,8 @@
 package com.dorm.muro.dormitory.presentation.login;
 
 
+import android.content.SharedPreferences;
+
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.dorm.muro.dormitory.R;
@@ -22,12 +24,17 @@ import static com.dorm.muro.dormitory.Constants.*;
 public class LoginPresenter extends MvpPresenter<LoginView> {
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private SharedPreferences preferences;
 
     void onSignInClicked(String login, String password) {
         UserSessionManager.getInstance().authenticate(login, password)
                 .addOnCompleteListener(authentication -> {
                     if (authentication.isSuccessful()) {
                         getViewState().signIn();
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString(USER_PASSWORD, password);
+                        editor.putString(USER_EMAIL, login);
+                        editor.apply();
                     } else {
                         if (authentication.getException() instanceof FirebaseNetworkException) {
                             getViewState().showToast(R.string.network_exception);
@@ -36,6 +43,10 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
                         }
                     }
                 });
+    }
+
+    void setPreferences(SharedPreferences preferences) {
+        this.preferences = preferences;
     }
 
     void registerNextScreen() {

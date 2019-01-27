@@ -6,8 +6,7 @@ import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 public interface OptionsView extends MvpView {
-    void showChangeDialog(int h1, int h2, int title, int type);
-    void showBigChangeDialog(int h1, int h2, int h3, int title, int code);
+    void showChangeDialog(int title, int code, int[] hints, String[] values);
     void closeDialog();
     void showErrorToast(int stringRes);
 
@@ -18,7 +17,7 @@ public interface OptionsView extends MvpView {
     void setNotificationSwitch(boolean isEnabled);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
-    void setInfo(String mail, String contractId, String fio, int cardNum);  //todo add card drawable
+    void setInfo(String mail, String contractId, String fio, int cardNum);  //todo add card payment system(visa, mc, ...) drawable
 
     void showRoomLeaveWarning();
 }

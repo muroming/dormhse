@@ -1,6 +1,7 @@
 package com.dorm.muro.dormitory.presentation.login;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -27,7 +28,7 @@ import com.dorm.muro.dormitory.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
+import static com.dorm.muro.dormitory.Constants.*;
 
 public class LoginActivity extends MvpAppCompatActivity implements LoginView {
 
@@ -81,6 +82,8 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
         ButterKnife.bind(this);
+
+        presenter.setPreferences(getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE));
 
         //Setting flipping animations
         mViewFlipper.setInAnimation(this, R.anim.slide_in_from_right);
