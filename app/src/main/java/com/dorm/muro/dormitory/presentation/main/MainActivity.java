@@ -1,5 +1,7 @@
 package com.dorm.muro.dormitory.presentation.main;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,11 +14,12 @@ import android.text.style.ForegroundColorSpan;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.dorm.muro.dormitory.network.UserSessionManagement.UserSessionManager;
+import com.dorm.muro.dormitory.paymentnotifications.PaymentNotificationReciever;
+import com.dorm.muro.dormitory.paymentnotifications.PaymentNotificationService;
 import com.dorm.muro.dormitory.presentation.options.OptionsFragment;
 import com.dorm.muro.dormitory.presentation.payment.PaymentFragment;
 import com.dorm.muro.dormitory.R;
 import com.dorm.muro.dormitory.presentation.login.LoginActivity;
-import com.dorm.muro.dormitory.network.PaymentFCM;
 import com.dorm.muro.dormitory.presentation.schedule.ScheduleFragment;
 import com.dorm.muro.dormitory.presentation.todo.TodoFragment;
 
@@ -25,9 +28,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends MvpAppCompatActivity implements MainActivityView {
-
-    public static final String CHANNEL_ID = "DORMITORY_CHANNEL";
-    public static final String DIALOG_TAG = "DIALOG_TAG";
 
     public static void start(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -56,6 +56,12 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
         ButterKnife.bind(this);
 
         setupViewPagerAdapter();
+
+        //todo remove
+        Intent intent = new Intent(this, PaymentNotificationReciever.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 7000, pendingIntent);
 
         navigation.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
@@ -127,7 +133,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
     @Override
     protected void onStart() {
         super.onStart();
-        String fragmentToOpen = getIntent().getStringExtra(PaymentFCM.TARGET_FRAGMENT);
+        String fragmentToOpen = getIntent().getStringExtra(PaymentNotificationService.TARGET_FRAGMENT);
 
         if (fragmentToOpen != null && fragmentToOpen.equals(PaymentFragment.class.getSimpleName())) {
             presenter.showPaymentFragment();
