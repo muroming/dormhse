@@ -40,4 +40,6 @@
 
     <color name="todo_deadline">#C41B00</color>
     <color name="todo_done_bg">#00c853</color>
+
+    <color name="black_overlay">#66000000</color>
 </resources>

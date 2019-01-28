@@ -27,23 +27,27 @@
         <activity
             android:name=".presentation.createTodo.CreateTodoActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".presentation.resetPassword.ResetPasswordActivity"
+        <activity
+            android:name=".presentation.resetPassword.ResetPasswordActivity"
             android:screenOrientation="portrait">
-            <!-- TODO <intent-filter>-->
-                <!--<action android:name="android.intent.action.VIEW" />-->
-                <!--<category android:name="android.intent.category.BROWSABLE" />-->
-                <!--<category android:name="android.intent.category.DEFAULT" />-->
-                <!--<data android:scheme="https"-->
-                    <!--android:host="dormhse.resetpassword" />-->
-            <!--</intent-filter>-->
+
+            <!-- TODO <intent-filter> -->
+            <!-- <action android:name="android.intent.action.VIEW" /> -->
+            <!-- <category android:name="android.intent.category.BROWSABLE" /> -->
+            <!-- <category android:name="android.intent.category.DEFAULT" /> -->
+            <!-- <data android:scheme="https" -->
+            <!-- android:host="dormhse.resetpassword" /> -->
+            <!-- </intent-filter> -->
         </activity>
 
-        <service android:name=".paymentnotifications.PaymentNotificationService"
-            android:exported="false"/>
+        <service
+            android:name=".paymentnotifications.PaymentNotificationService"
+            android:exported="false" />
 
-        <receiver android:name=".paymentnotifications.PaymentNotificationReciever"
-            android:exported="false"
-            android:enabled="true" />
+        <receiver
+            android:name=".paymentnotifications.PaymentNotificationReciever"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>

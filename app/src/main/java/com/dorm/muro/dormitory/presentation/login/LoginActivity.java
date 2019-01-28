@@ -28,6 +28,7 @@ import com.dorm.muro.dormitory.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 import static com.dorm.muro.dormitory.Constants.*;
 
 public class LoginActivity extends MvpAppCompatActivity implements LoginView {
@@ -73,6 +74,8 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
     EditText mRegisterName;
     @BindView(R.id.et_register_contract_id)
     EditText mRegisterContractId;
+    @BindView(R.id.et_register_patronymic)
+    EditText mRegisterPatronymic;
 
     private ProgressDialog pd;
     private FlipDir flipDir;
@@ -159,7 +162,8 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
 
         if (!name.isEmpty() && !surname.isEmpty() && !contractId.isEmpty()) {
             presenter.finishRegistration(mRegisterMail.getText().toString(), mRegisterPassword.getText().toString(),
-                    mRegisterName.getText().toString(), mRegisterSecondName.getText().toString(), mRegisterContractId.getText().toString());
+                    mRegisterName.getText().toString(), mRegisterSecondName.getText().toString(), mRegisterPatronymic.getText().toString(),
+                    mRegisterContractId.getText().toString());
         }
     }
 

@@ -19,6 +19,7 @@
     <string name="reset_pass_not_watch">Пароли должны совпадать</string>
     <string name="register_name_hint">Введите имя</string>
     <string name="register_second_name_hint">Введите фамилию</string>
+    <string name="register_patronymic_hint">Введите отчество</string>
     <string name="about_app">О приложении</string>
     <string name="password">Пароль</string>
     <string name="forgot_password">Забыли пароль?</string>
@@ -141,4 +142,8 @@
     <string name="create">Создать</string>
     <string name="join">Присоединиться</string>
     <string name="proceed">Продолжить</string>
+
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

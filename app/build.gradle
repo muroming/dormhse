@@ -51,6 +51,7 @@ dependencies {
 
     //Butterknife
     implementation "com.jakewharton:butterknife:$butterknife_version"
+    implementation 'com.android.support:support-v4:28.0.0'
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterknife_version"
 
     //Firebase

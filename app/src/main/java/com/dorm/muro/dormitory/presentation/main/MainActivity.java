@@ -2,12 +2,19 @@ package com.dorm.muro.dormitory.presentation.main;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.constraint.Group;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -23,8 +30,15 @@ import com.dorm.muro.dormitory.presentation.todo.TodoFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
-public class MainActivity extends MvpAppCompatActivity implements MainActivityView {
+import static com.dorm.muro.dormitory.Constants.CONTRACT_ID;
+import static com.dorm.muro.dormitory.Constants.SHARED_PREFERENCES;
+import static com.dorm.muro.dormitory.Constants.USER_FIO;
+
+public class MainActivity extends MvpAppCompatActivity implements MainActivityView, Animation.AnimationListener {
 
     public static void start(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -34,6 +48,8 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
     @InjectPresenter
     MainActivityPresenter presenter;
 
+    @BindView(R.id.splash)
+    View mSplashGroup;
 
     @BindView(R.id.navigation)
     BottomNavigationView navigation;
@@ -41,12 +57,18 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
     @BindView(R.id.vp_main_framgent_pager)
     ViewPager mViewPager;
 
+    private ActionBar mBar;
+
+    private Disposable userLoading;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (UserSessionManager.getInstance().getCurrentUser() == null) {
             startActivity(getTargetIntent(LoginActivity.class));
             finish();
         }
+
+        mBar = getSupportActionBar();
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -71,6 +93,24 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
             }
             return false;
         });
+
+        SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
+
+        userLoading = UserSessionManager.getInstance().getUserInfo()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(info -> {
+                    preferences.edit()
+                            .putString(USER_FIO, info[0])
+                            .putString(CONTRACT_ID, info[1])
+                            .apply();
+
+                    new Handler().postDelayed(() -> {
+                        Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.splash_slide_up);
+                        animation.setAnimationListener(MainActivity.this);
+                        mSplashGroup.startAnimation(animation);
+                    }, 2000);
+                });
     }
 
     private void setupViewPagerAdapter() {
@@ -159,5 +199,45 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
         SpannableString string = new SpannableString(getString(titleRes));
         string.setSpan(new ForegroundColorSpan(getColor(R.color.black)), 0, string.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         setTitle(string);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (userLoading != null) {
+            userLoading.dispose();
+            userLoading = null;
+        }
+    }
+
+    @Override
+    public void showSplash() {
+        mSplashGroup.setVisibility(View.VISIBLE);
+        mViewPager.setVisibility(View.INVISIBLE);
+        navigation.setVisibility(View.INVISIBLE);
+        mBar.hide();
+    }
+
+    @Override
+    public void hideSplash() {
+        mSplashGroup.setVisibility(View.INVISIBLE);
+        mViewPager.setVisibility(View.VISIBLE);
+        navigation.setVisibility(View.VISIBLE);
+        mBar.show();
+    }
+
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    @Override
+    public void onAnimationEnd(Animation animation) {
+        presenter.hideSplash();
+
+    }
+
+    @Override
+    public void onAnimationRepeat(Animation animation) {
     }
 }

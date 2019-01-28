@@ -13,7 +13,7 @@ public class MainActivityPresenter extends MvpPresenter<MainActivityView> {
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        getViewState().showPage(0, R.string.fragment_todo_title);
+        getViewState().showSplash();
     }
 
     void showTodoFragment() {
@@ -30,5 +30,9 @@ public class MainActivityPresenter extends MvpPresenter<MainActivityView> {
 
     void showSettingsFragment() {
         getViewState().showPage(3, R.string.fragment_options_title);
+    }
+
+    void hideSplash() {
+        getViewState().hideSplash();
     }
 }

@@ -66,13 +66,14 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
     }
 
 
-    void finishRegistration(String email, String password, String name, String surname, String contractId) {
+    void finishRegistration(String email, String password, String name, String surname, String patronymic, String contractId) {
         getViewState().showProgressDialog(R.string.confirming_registration_progress_title);
         UserSessionManager.getInstance().registerNewUser(email, password).addOnCompleteListener(registration -> {
             if (registration.isSuccessful()) {
                 Map<String, Object> initialValues = new HashMap<>(3);
                 initialValues.put(USER_NAME_FIELD, name);
                 initialValues.put(USER_SURNAME_FIELD, surname);
+                initialValues.put(USER_PATRONYMIC_FIELD, patronymic);
                 initialValues.put(USER_CONTRACT_ID_FIELD, contractId);
 
                 UserSessionManager.getInstance().updateUserField(initialValues).addOnCompleteListener(
