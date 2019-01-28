@@ -1,6 +1,5 @@
 package com.dorm.muro.dormitory.presentation.options;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 
 import com.arellomobile.mvp.InjectViewState;
@@ -21,10 +20,11 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
     private static final int EMAIL = 1;
     private static final int CONTRACT = 3;
     private static final int PERSONAL = 4;
+    private static final int NAME = 5;
 
     //TODO inject preferences
     private SharedPreferences preferences;
-    private String mail, fio, contract;
+    private String mail, cardholderName, contract, userName;
     private int cardNum;
 
     @Override
@@ -36,8 +36,9 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
     void setPreferences(SharedPreferences preferences) {
         //todo remove this like wtf????
         mail = preferences.getString(USER_EMAIL, "");
-        fio = preferences.getString(USER_FIO, "");
+        cardholderName = preferences.getString(CARDHOLDER_NAME, "");
         contract = preferences.getString(CONTRACT_ID, "");
+        userName = preferences.getString(USER_FIO, "");
 
         String s = preferences.getString(CARD_NUMBER, "");
         if (s.isEmpty()) {
@@ -45,13 +46,14 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
         } else {
             cardNum = Integer.parseInt(s.substring(s.length() - 4));
         }
-        getViewState().setInfo(mail, contract, fio, cardNum);
+        getViewState().setInfo(mail, contract, cardholderName, userName, cardNum);
 
         this.preferences = preferences;
     }
 
     void onExitClicked() {
-        preferences.edit().remove(IS_LOGGED).apply();
+        preferences.edit().remove(IS_LOGGED)
+                .clear().apply();
         getViewState().proceedToLoginScreen();
     }
 
@@ -74,10 +76,20 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
     }
 
     void onChangePersonalDataClicked() {
-        int[] hints = new int[]{R.string.settings_cardholder_name, R.string.settings_card_number, R.string.settings_confirm_password};
-        String[] values = new String[]{preferences.getString(CARDHOLDER_NAME, ""), preferences.getString(CARD_NUMBER, ""), ""};
+        int[] hints = new int[]{R.string.settings_cardholder_name, R.string.settings_card_number, R.string.settings_card_date, R.string.settings_confirm_password};
+        String[] values = new String[]{preferences.getString(CARDHOLDER_NAME, ""), preferences.getString(CARD_NUMBER, ""), "", ""};
+        if (preferences.contains(CARD_MONTH) && preferences.contains(CARD_YEAR)) {
+            values[2] = String.format("%s/%s", preferences.getString(CARD_MONTH, ""), preferences.getString(CARD_YEAR, ""));
+        }
 
         getViewState().showChangeDialog(R.string.settings_change_personal_title, PERSONAL, hints, values);
+    }
+
+    void onChangeUserNameClicked() {
+        int hints[] = new int[] {R.string.settings_name_hint, R.string.settings_confirm_password};
+        String[] values = new String[] {preferences.getString(USER_FIO,""), ""};
+
+        getViewState().showChangeDialog(R.string.settings_name_title, NAME, hints, values);
     }
 
     void onChangeMailClicked() {
@@ -118,21 +130,30 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
                     upd.put(USER_CONTRACT_ID_FIELD, newInfo[0]);
                     UserSessionManager.getInstance().updateUserField(upd);
                     contract = newInfo[0];
-                    preferences.edit().putString(CONTRACT_ID, newInfo[0]).apply();
-                    preferences.edit().putFloat(MONTHLY_COST, Float.parseFloat(newInfo[1])).apply();
+
+                    preferences.edit().putString(CONTRACT_ID, newInfo[0])
+                            .putFloat(MONTHLY_COST, Float.parseFloat(newInfo[1])).apply();
                     break;
                 }
                 case PERSONAL: {
-                    fio = newInfo[0];
-                    preferences.edit().putString(USER_FIO, newInfo[0]).apply();
+                    cardholderName = newInfo[0];
+                    preferences.edit().putString(CARDHOLDER_NAME, newInfo[0])
+                            .putString(CARD_MONTH, newInfo[2].split("/")[0])
+                            .putString(CARD_YEAR, newInfo[2].split("/")[1]).apply();
+
                     if (newInfo[1].length() >= 4) {
                         cardNum = Integer.parseInt(newInfo[1].substring(newInfo[1].length() - 4));
                         preferences.edit().putString(CARD_NUMBER, newInfo[1]).apply();
                     }
                     break;
                 }
+                case NAME: {
+                    userName = newInfo[0];
+                    preferences.edit()
+                            .putString(USER_FIO, newInfo[0]).apply();
+                }
             }
-            getViewState().setInfo(mail, contract, fio, cardNum);
+            getViewState().setInfo(mail, contract, cardholderName, userName, cardNum);
             getViewState().closeDialog();
         } else {
             getViewState().showErrorToast(R.string.settings_wrong_pass);

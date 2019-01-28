@@ -119,15 +119,11 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
                     if (url.contains("checkout")) {  //Skip final page reviewing payment info
                         mPaymentWebView.evaluateJavascript(SKIP_CHECKOUT, null);
                     } else {  //Input card info and confirm card
-                        if(url.contains("securepayments.sberbank.ru")) {
+                        if (url.contains("securepayments.sberbank.ru")) {
                             presenter.loadCardInfo();
                         } else {
-                            if (url.contains("acs1.sbrf.ru")) {  //Input SMS code
-
-                            } else {
-                                if (url.contains("pay.hse.ru") && url.contains("complete")) {
-
-                                }
+                            if (url.contains("pay.hse.ru") && url.contains("complete")) {
+                                presenter.onPaymentFinishedSuccessfully();
                             }
                         }
                     }
@@ -148,11 +144,6 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
     @Override
     public void loadQuery(String query) {
         mPaymentWebView.evaluateJavascript(query, null);
-    }
-
-    @Override
-    public void showCreditCardLayout() {
-
     }
 
     @OnClick(R.id.btn_pay_button)
@@ -263,7 +254,7 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
                 .setView(layout)
                 .setPositiveButton(R.string.proceed, (dialog, which) -> {
-
+                    presenter.onCVVEntered(cvv.getText().toString());
                 })
                 .setNegativeButton(R.string.cancel, (d, w) -> {
                     d.dismiss();
@@ -276,20 +267,20 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
     @Override
     public void showSMSCodeInputDialog() {
         LinearLayout layout = new LinearLayout(getContext());
-        EditText cvv = new EditText(getContext());
+        EditText sms = new EditText(getContext());
         layout.setPadding(getResources().getDimensionPixelSize(R.dimen.room_dialog_horizontal_margin), getResources().getDimensionPixelSize(R.dimen.room_dialog_vertical_margin),
                 getResources().getDimensionPixelSize(R.dimen.room_dialog_horizontal_margin), getResources().getDimensionPixelSize(R.dimen.room_dialog_vertical_margin));
 
-        cvv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        cvv.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD);
-        cvv.setMaxLines(1);
-        cvv.setHint(R.string.payment_cvv_hint);
-        layout.addView(cvv);
+        sms.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        sms.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+        sms.setMaxLines(1);
+        sms.setHint(R.string.payment_sms_hint);
+        layout.addView(sms);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
                 .setView(layout)
                 .setPositiveButton(R.string.proceed, (dialog, which) -> {
-
+                    presenter.onSMSEntered(sms.getText().toString());
                 })
                 .setNegativeButton(R.string.cancel, (d, w) -> {
                     d.dismiss();

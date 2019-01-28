@@ -17,7 +17,7 @@ public interface OptionsView extends MvpView {
     void setNotificationSwitch(boolean isEnabled);
 
     @StateStrategyType(AddToEndSingleStrategy.class)
-    void setInfo(String mail, String contractId, String fio, int cardNum);  //todo add card payment system(visa, mc, ...) drawable
+    void setInfo(String mail, String contractId, String cardholderName, String userName, int cardNum);  //todo add card payment system(visa, mc, ...) drawable
 
     void showRoomLeaveWarning();
 }

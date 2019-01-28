@@ -14,7 +14,6 @@ public interface PaymentView extends MvpView {
     void showPaymentGroup();
     void showDatePickedDialog();
     void stopPayment();
-    void showCreditCardLayout();
 
     void showPrice(int priceTitle, boolean isSet, int... nums);
     void showRange(int string, Object... params);

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -54,6 +53,9 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
     @BindView(R.id.card_data)
     TextView cardData;
 
+    @BindView(R.id.user_name)
+    TextView userName;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_options, container, false);
@@ -97,6 +99,11 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
         presenter.exitRoomClicked();
     }
 
+    @OnClick(R.id.name_title)
+    void changeUserName(View v) {
+        presenter.onChangeUserNameClicked();
+    }
+
     @Override
     public void proceedToLoginScreen() {
         Intent intent = new Intent(getContext(), LoginActivity.class);
@@ -121,8 +128,12 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
             et.setInputType(InputType.TYPE_CLASS_TEXT);
             et.setMaxLines(1);
 
-            if (hint == R.string.settings_card_number || hint == R.string.settings_change_cost) {
+            if (hint == R.string.settings_card_number) {
                 et.setInputType(InputType.TYPE_CLASS_NUMBER);
+            }
+
+            if (hint == R.string.settings_change_cost) {
+                et.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED);
             }
 
             if (hint == R.string.settings_card_number) {
@@ -202,7 +213,7 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
     }
 
     @Override
-    public void setInfo(String email, String contractId, String name, int cardNum) {
+    public void setInfo(String email, String contractId, String cardholderName, String userName, int cardNum) {
         if (email.isEmpty()) {
             mail.setText(R.string.field_not_set);
         } else {
@@ -215,15 +226,22 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
             contract.setText(contractId);
         }
 
-        if (name.isEmpty()) {
+        if (cardholderName.isEmpty()) {
             fio.setText(R.string.field_not_set);
         } else {
-            fio.setText(name);
+            fio.setText(cardholderName);
         }
+
         if (cardNum == -1) {
             cardData.setText(R.string.field_not_set);
         } else {
             cardData.setText(getString(R.string.payment_card_tmp, cardNum));
+        }
+
+        if(userName.isEmpty()) {
+            this.userName.setText(R.string.field_not_set);
+        } else {
+            this.userName.setText(userName);
         }
     }
 }

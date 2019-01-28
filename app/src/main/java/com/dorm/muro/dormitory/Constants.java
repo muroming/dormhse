@@ -20,11 +20,10 @@ public class Constants {
     public static final String CARDHOLDER_NAME = "CARDHOLDER_NAME";
     public static final String CARD_YEAR = "CARD_YEAR";
     public static final String CARD_MONTH = "CARD_MONTH";
-    public static final String DATE_SEPARATOR = ".";
+    public static final String DATE_SEPARATOR = "\\.";
     public static final String DATE_SPLITTER = "\\.";
     public static final String PAYMENT_URL = "https://pay.hse.ru/moscow/prg";
     public static final String FIRST_QUERY =
-            "(function(){\n" +
             "var check = document.getElementById('amount');\n" +
             "var alertMsg = document.getElementsByClassName('error-message')[0];\n" +
             "document.getElementById('fio').value='%s';\n" +
@@ -42,8 +41,7 @@ public class Constants {
             "document.getElementById('amount').value='%s';\n" +
             "var c=document.getElementById('kop').value='%s';\n" +
             "var d=document.getElementsByClassName('pay_button')[0].click();return 'ok';}}\n" +
-            "checkFlag();\n" +
-            "})();";
+            "checkFlag();";
     public static final String SKIP_CHECKOUT = "document.getElementById('button-checkout').click();";
     public static final String ENTER_CARD_AND_CONFIRM_INFO = "var a=document.getElementById(\"iPAN_sub\").value='%s';" +
             "var b=document.getElementById(\"input-month\").value=%s;" +
@@ -51,7 +49,8 @@ public class Constants {
             "var d=document.getElementById(\"iTEXT\").value='%s';" +
             "window.CallBack.inputCVV();";
     public static final String CONFIRM_CARD = "var a=document.getElementById(\"iCVC\").value='%s';" +
-            "var c=document.getElementById(\"buttonPayment\").click();";
+            "var c=document.getElementById(\"buttonPayment\").click();" +
+            "window.CallBack.inputSMSCode();";
 
     public static final String INPUT_SMS = "var a=document.getElementById(\"psw_id\").value='%s';" +
             "var a=document.getElementById(\"btnSubmit\").click();";

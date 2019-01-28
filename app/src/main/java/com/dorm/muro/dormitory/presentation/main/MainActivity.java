@@ -1,7 +1,5 @@
 package com.dorm.muro.dormitory.presentation.main;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +12,6 @@ import android.text.style.ForegroundColorSpan;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.dorm.muro.dormitory.network.UserSessionManagement.UserSessionManager;
-import com.dorm.muro.dormitory.paymentnotifications.PaymentNotificationReciever;
 import com.dorm.muro.dormitory.paymentnotifications.PaymentNotificationService;
 import com.dorm.muro.dormitory.presentation.options.OptionsFragment;
 import com.dorm.muro.dormitory.presentation.payment.PaymentFragment;

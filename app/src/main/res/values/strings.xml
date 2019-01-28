@@ -52,6 +52,9 @@
     <string name="settings_exit_room_warning_title">Внимание!</string>
     <string name="settings_exit_room_warning_message">Вы не сможете вернуться в квартру если в ней не останется участников</string>
     <string name="settings_contract">Номер договора</string>
+    <string name="settings_name">ФИО</string>
+    <string name="settings_name_hint">Введите ФИО</string>
+    <string name="settings_name_title">Изменить ФИО</string>
     <string name="settings_contract_title">Изменить номер договора</string>
     <string name="settings_new_contract">Новый номер договора</string>
     <string name="settings_cost_per_month">Цена за месяц:</string>
@@ -84,6 +87,7 @@
     <string name="field_not_set">Не установлено</string>
     <string name="no_payment_credits_set">Некоторые платежные данные не заданы</string>
     <string name="payment_cvv_hint">Введите CVV/CVC2 для продолжения платежа</string>
+    <string name="payment_sms_hint">Введите код из SMS для подтверждения платежа</string>
     <string-array name="payment_progress">
         <item>Грабим банк&#8230;</item>
         <item>Берем в долг&#8230;</item>

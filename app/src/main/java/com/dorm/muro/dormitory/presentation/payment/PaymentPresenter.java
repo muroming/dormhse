@@ -86,6 +86,20 @@ public class PaymentPresenter extends MvpPresenter<PaymentView> {
         }
     }
 
+    void onCVVEntered(String cvv) {
+        String query = String.format(CONFIRM_CARD, cvv);
+        getViewState().loadQuery(query);
+    }
+
+    void onSMSEntered(String sms) {
+        String query = String.format(INPUT_SMS, sms);
+        getViewState().loadQuery(query);
+    }
+
+    void onPaymentFinishedSuccessfully() {
+        getViewState().showCompleteDialog();
+    }
+
     void onPayerWrongDataError() {
         getViewState().showErrorToast(R.string.payment_user_not_found);
         stopPayment();
