@@ -146,6 +146,13 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
         return view;
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (isVisibleToUser) {
+            presenter.checkUserInRoom();
+        }
+    }
+
     private void addListeners() {
         btnNext.setOnClickListener(v -> {
             presenter.onShowNextMonth();

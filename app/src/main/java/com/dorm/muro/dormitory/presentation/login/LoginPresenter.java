@@ -27,8 +27,10 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
     private SharedPreferences preferences;
 
     void onSignInClicked(String login, String password) {
+        getViewState().showProgressDialog(R.string.sign_in_progress);
         UserSessionManager.getInstance().authenticate(login, password)
                 .addOnCompleteListener(authentication -> {
+                    getViewState().hideProgressDialog();
                     if (authentication.isSuccessful()) {
                         getViewState().signIn();
                         SharedPreferences.Editor editor = preferences.edit();

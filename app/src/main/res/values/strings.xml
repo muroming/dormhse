@@ -31,6 +31,7 @@
     <string name="field_must_to_fill">Поле обязательно для заполнения</string>
     <string name="sending_restore_email_progress_title">Высылаем письмо</string>
     <string name="confirming_registration_progress_title">Подтверждаем регистрацию</string>
+    <string name="sign_in_progress">Выполняется вход</string>
     <string name="sign_in">Войти</string>
     <string name="sign_up">Создать аккаунт</string>
     <string name="notification_channel_name">DORMITORY_APP</string>

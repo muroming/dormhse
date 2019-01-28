@@ -36,6 +36,7 @@ import io.reactivex.schedulers.Schedulers;
 
 import static com.dorm.muro.dormitory.Constants.CONTRACT_ID;
 import static com.dorm.muro.dormitory.Constants.SHARED_PREFERENCES;
+import static com.dorm.muro.dormitory.Constants.USER_EMAIL;
 import static com.dorm.muro.dormitory.Constants.USER_FIO;
 
 public class MainActivity extends MvpAppCompatActivity implements MainActivityView, Animation.AnimationListener {
@@ -63,14 +64,16 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         if (UserSessionManager.getInstance().getCurrentUser() == null) {
             startActivity(getTargetIntent(LoginActivity.class));
             finish();
+            return;
         }
 
         mBar = getSupportActionBar();
 
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
@@ -103,6 +106,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
                     preferences.edit()
                             .putString(USER_FIO, info[0])
                             .putString(CONTRACT_ID, info[1])
+                            .putString(USER_EMAIL, info[2])
                             .apply();
 
                     new Handler().postDelayed(() -> {

@@ -52,6 +52,10 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
 
+        checkUserInRoom();
+    }
+
+    void checkUserInRoom() {
         if (!preferences.getBoolean(SIGNED_IN_ROOM, false)) {
             String userKey = UserSessionManager.getInstance().getCurrentUser().getUid();
             disposable.add(ScheduleManagement.getInstance().checkIfUserInRoom(userKey)

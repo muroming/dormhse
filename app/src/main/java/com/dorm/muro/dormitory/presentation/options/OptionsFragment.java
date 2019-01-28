@@ -64,6 +64,13 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
         return v;
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (isVisibleToUser) {
+            presenter.loadUserInfo();
+        }
+    }
+
     @OnClick(R.id.change_password)
     void changePassword(View v) {
         presenter.onChangePasswordClicked();
@@ -213,7 +220,7 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
     }
 
     @Override
-    public void setInfo(String email, String contractId, String cardholderName, String userName, int cardNum) {
+    public void setInfo(String email, String contractId, String cardholderName, String userName, int cardNum, boolean notifications) {
         if (email.isEmpty()) {
             mail.setText(R.string.field_not_set);
         } else {
@@ -243,5 +250,6 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
         } else {
             this.userName.setText(userName);
         }
+        mSwitch.setChecked(notifications);
     }
 }

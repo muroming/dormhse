@@ -88,9 +88,6 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
         presenter.setPreferences(preferences);
         progressTitles = getResources().getStringArray(R.array.payment_progress);
 
-        //Setup user
-        presenter.loadInfo();
-
         // Set JS interaction
         mPaymentWebView.getSettings().setJavaScriptEnabled(true);
         mPaymentWebView.addJavascriptInterface(this, "CallBack");
@@ -139,6 +136,13 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
         return view;
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (isVisibleToUser) {
+            //Setup user
+            presenter.loadInfo();
+        }
+    }
 
     //fill all forms and proceed to confirm page
     @Override

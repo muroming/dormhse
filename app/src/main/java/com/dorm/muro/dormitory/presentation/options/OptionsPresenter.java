@@ -26,19 +26,19 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
     private SharedPreferences preferences;
     private String mail, cardholderName, contract, userName;
     private int cardNum;
+    private boolean notifications;
 
     @Override
     protected void onFirstViewAttach() {
         super.onFirstViewAttach();
-        getViewState().setNotificationSwitch(preferences.getBoolean(NOTIFICATIONS, true));
     }
 
-    void setPreferences(SharedPreferences preferences) {
-        //todo remove this like wtf????
+    void loadUserInfo() {
         mail = preferences.getString(USER_EMAIL, "");
         cardholderName = preferences.getString(CARDHOLDER_NAME, "");
         contract = preferences.getString(CONTRACT_ID, "");
         userName = preferences.getString(USER_FIO, "");
+        notifications = preferences.getBoolean(NOTIFICATIONS, true);
 
         String s = preferences.getString(CARD_NUMBER, "");
         if (s.isEmpty()) {
@@ -46,14 +46,16 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
         } else {
             cardNum = Integer.parseInt(s.substring(s.length() - 4));
         }
-        getViewState().setInfo(mail, contract, cardholderName, userName, cardNum);
+        getViewState().setInfo(mail, contract, cardholderName, userName, cardNum, notifications);
+    }
 
+    void setPreferences(SharedPreferences preferences) {
         this.preferences = preferences;
     }
 
     void onExitClicked() {
-        preferences.edit().remove(IS_LOGGED)
-                .clear().apply();
+        preferences.edit().clear().apply();
+        UserSessionManager.getInstance().logout();
         getViewState().proceedToLoginScreen();
     }
 
@@ -86,8 +88,8 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
     }
 
     void onChangeUserNameClicked() {
-        int hints[] = new int[] {R.string.settings_name_hint, R.string.settings_confirm_password};
-        String[] values = new String[] {preferences.getString(USER_FIO,""), ""};
+        int hints[] = new int[]{R.string.settings_name_hint, R.string.settings_confirm_password};
+        String[] values = new String[]{preferences.getString(USER_FIO, ""), ""};
 
         getViewState().showChangeDialog(R.string.settings_name_title, NAME, hints, values);
     }
@@ -153,7 +155,7 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
                             .putString(USER_FIO, newInfo[0]).apply();
                 }
             }
-            getViewState().setInfo(mail, contract, cardholderName, userName, cardNum);
+            getViewState().setInfo(mail, contract, cardholderName, userName, cardNum, notifications);
             getViewState().closeDialog();
         } else {
             getViewState().showErrorToast(R.string.settings_wrong_pass);
@@ -167,9 +169,10 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
     void exitRoom() {
         String userKey = UserSessionManager.getInstance().getCurrentUser().getUid();
         String roomKey = preferences.getString(ROOM_KEY, "");
+        preferences.edit().putBoolean(SIGNED_IN_ROOM, false).apply();
+
         if (!roomKey.isEmpty()) {
             ScheduleManagement.getInstance().leaveRoom(userKey, roomKey);
-            preferences.edit().putBoolean(SIGNED_IN_ROOM, false).apply();
             preferences.edit().remove(ROOM_KEY).apply();
         }
         getViewState().closeDialog();
