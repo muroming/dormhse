@@ -7,6 +7,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.constraint.Group;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -80,9 +81,6 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
 
     public enum CELL_STATE {START, MEDIUM, END, NONE}
 
-    //todo inject
-    private SharedPreferences preferences;
-
     //Grid adapter
     private CalendarAdapter gridAdapter;
 
@@ -107,7 +105,13 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
     TextView mRoomCommentary;
 
     @BindView(R.id.no_room_group)
-    Group mNoRoomGroup;
+    View mNoRoomGroup;
+
+    @BindView(R.id.schedule_calendar_group)
+    View mScheduleCalendarGroup;
+
+    @BindView(R.id.cl_schedule_root_view)
+    ConstraintLayout mRootView;
 
     private int currentSelectedRoom;
     private int[] menuIds;
@@ -131,7 +135,8 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        preferences = getContext().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        //todo inject
+        SharedPreferences preferences = getContext().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
         presenter.setPreferences(preferences);
         View view = inflater.inflate(R.layout.fragment_schedule, container, false);
         ButterKnife.bind(this, view);
@@ -432,14 +437,17 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
     @Override
     public void showNoRoom() {
         mNoRoomGroup.setVisibility(View.VISIBLE);
+        mScheduleCalendarGroup.setVisibility(View.INVISIBLE);
+        mRootView.setBackground(getResources().getDrawable(R.drawable.schedule_no_room_bg, null));
     }
 
     @Override
     public void showCalendar() {
         presenter.loadDuties();
         presenter.initScheduleListener();
-        mNoRoomGroup.setVisibility(View.GONE);
-    }
+        mNoRoomGroup.setVisibility(View.INVISIBLE);
+        mScheduleCalendarGroup.setVisibility(View.VISIBLE);
+        mRootView.setBackground(null);    }
 
     @Override
     public void updateCalendar() {

@@ -17,7 +17,6 @@ import static com.dorm.muro.dormitory.Constants.*;
 public class PaymentNotificationService extends IntentService {
 
     private static final int NOTIFICATION_ID = 3;
-    public static final String TARGET_FRAGMENT = "TARGET_FRAGMENT";
 
     public PaymentNotificationService() {
         super("PaymentNotificationService");

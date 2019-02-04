@@ -135,8 +135,8 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
             et.setInputType(InputType.TYPE_CLASS_TEXT);
             et.setMaxLines(1);
 
-            if (hint == R.string.settings_card_number) {
-                et.setInputType(InputType.TYPE_CLASS_NUMBER);
+            if (hint == R.string.settings_card_number || hint == R.string.settings_card_date) {
+                et.setInputType(InputType.TYPE_NUMBER_VARIATION_NORMAL);
             }
 
             if (hint == R.string.settings_change_cost) {
@@ -145,6 +145,10 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
 
             if (hint == R.string.settings_card_number) {
                 et.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4 * 4 + 3)});
+            }
+
+            if (hint == R.string.settings_confirm_password) {
+                et.setInputType(InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD);
             }
 
             if (hint == R.string.settings_cardholder_name) {

@@ -45,6 +45,8 @@ public class CalendarAdapter extends ArrayAdapter<ScheduleCell> {
         notifyDataSetChanged();
     }
 
+
+
     void setCurrentMonth(int currentMonth) {
         this.currentMonth = currentMonth;
     }

@@ -64,9 +64,9 @@ public class UserSessionManager {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Map<String, String> info = (Map<String, String>) dataSnapshot.getValue();
-                String fio = info.get(USER_NAME_FIELD) + " " + info.get(USER_SURNAME_FIELD) + " " + info.get(USER_PATRONYMIC_FIELD);
+                String fio = info.get(USER_SURNAME_FIELD) + " " + info.get(USER_NAME_FIELD) + " " + info.get(USER_PATRONYMIC_FIELD);
 
-                subject.onNext(new String[] {fio, info.get(USER_CONTRACT_ID_FIELD), mAuth.getCurrentUser().getEmail()});
+                subject.onNext(new String[]{fio, info.get(USER_CONTRACT_ID_FIELD), mAuth.getCurrentUser().getEmail()});
             }
 
             @Override

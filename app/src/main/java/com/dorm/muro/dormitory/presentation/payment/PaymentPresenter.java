@@ -66,6 +66,7 @@ public class PaymentPresenter extends MvpPresenter<PaymentView> {
             }
         } else {
             getViewState().showRange(R.string.field_not_set);
+            getViewState().showPrice(R.string.field_not_set, false);
         }
 
         String fio = preferences.getString(USER_FIO, null), contract = preferences.getString(CONTRACT_ID, null);
@@ -116,8 +117,8 @@ public class PaymentPresenter extends MvpPresenter<PaymentView> {
 
     void onDateSelected(int year, int month) {
         Calendar c = Calendar.getInstance();
-        String from = c.get(Calendar.MONTH) + 1 + DATE_SEPARATOR + c.get(Calendar.YEAR) % 100,
-                to = month + 1 + DATE_SEPARATOR + year % 100;
+        String from = String.format("%s.%s",c.get(Calendar.MONTH) + 1, + c.get(Calendar.YEAR) % 100),
+                to = String.format("%s.%s", month + 1, + year % 100);
         preferences.edit().putString(MONTHS_FROM, from).apply();
         preferences.edit().putString(MONTHS_TO, to).apply();
         loadInfo();

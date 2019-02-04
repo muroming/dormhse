@@ -71,6 +71,7 @@
     <string name="save">Сохранить</string>
     <string name="settings_change_personal_title">Изменить личные данные</string>
     <string name="settings_card_number">Номер карты</string>
+    <string name="settings_card_number_hint">Номер карты без пробелов</string>
     <string name="settings_cardholder_name">Имя владельца</string>
     <string name="settings_card_date">Дата карты</string>
     <string name="settings_card_date_format">%s.%s</string>
@@ -135,7 +136,7 @@
     <string name="todo_create_fields_error">Не все обязательные поля заполнены</string>
     <string name="error_try_later">Произошла ошибка, повторить попытку немного позже</string>
 
-    <string name="schedule_select_or_join_room">Чтобы пользоваться расписание войдите или создайте квартиру</string>
+    <string name="schedule_select_or_join_room">Чтобы пользоваться расписанием войдите или создайте квартиру</string>
     <string name="button_join_room">Присоединиться к квартире</string>
     <string name="button_create_room">Создать свою квартиру</string>
     <string name="title_create_room">Введите номер квартиры</string>

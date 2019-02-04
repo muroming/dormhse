@@ -75,4 +75,6 @@ public class Constants {
     public static final String DUTY_ROOM = "DUTY_ROOM";
     public static final String DUTIES_DATABASE = "duties";
     public static final String ROOM_DUTIES_DATABASE = "room_duties";
+
+    public static final String TARGET_FRAGMENT = "TARGET_FRAGMENT";
 }

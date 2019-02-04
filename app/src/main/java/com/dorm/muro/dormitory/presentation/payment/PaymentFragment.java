@@ -86,6 +86,7 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
         ButterKnife.bind(this, view);
         preferences = getActivity().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
         presenter.setPreferences(preferences);
+        presenter.loadInfo();
         progressTitles = getResources().getStringArray(R.array.payment_progress);
 
         // Set JS interaction
@@ -138,7 +139,7 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
-        if (isVisibleToUser) {
+        if (isVisibleToUser && presenter != null) {
             //Setup user
             presenter.loadInfo();
         }

@@ -1,5 +1,7 @@
 package com.dorm.muro.dormitory.presentation.main;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.constraint.Group;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.AlarmManagerCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.text.SpannableString;
@@ -19,6 +22,7 @@ import android.view.animation.AnimationUtils;
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.dorm.muro.dormitory.network.UserSessionManagement.UserSessionManager;
+import com.dorm.muro.dormitory.paymentnotifications.PaymentNotificationReciever;
 import com.dorm.muro.dormitory.paymentnotifications.PaymentNotificationService;
 import com.dorm.muro.dormitory.presentation.options.OptionsFragment;
 import com.dorm.muro.dormitory.presentation.payment.PaymentFragment;
@@ -36,6 +40,7 @@ import io.reactivex.schedulers.Schedulers;
 
 import static com.dorm.muro.dormitory.Constants.CONTRACT_ID;
 import static com.dorm.muro.dormitory.Constants.SHARED_PREFERENCES;
+import static com.dorm.muro.dormitory.Constants.TARGET_FRAGMENT;
 import static com.dorm.muro.dormitory.Constants.USER_EMAIL;
 import static com.dorm.muro.dormitory.Constants.USER_FIO;
 
@@ -79,6 +84,12 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
 
         setupViewPagerAdapter();
 
+//        AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//        Intent i = new Intent(this, PaymentNotificationReciever.class);
+//        i.putExtra(TARGET_FRAGMENT, PaymentFragment.class.getSimpleName());
+//        PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+//        manager.set(AlarmManager.RTC, System.currentTimeMillis() + 5000, pi);
+
         navigation.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_todo:
@@ -113,7 +124,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
                         Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.splash_slide_up);
                         animation.setAnimationListener(MainActivity.this);
                         mSplashGroup.startAnimation(animation);
-                    }, 2000);
+                    }, 1500);
                 });
     }
 
@@ -168,7 +179,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
     @Override
     protected void onStart() {
         super.onStart();
-        String fragmentToOpen = getIntent().getStringExtra(PaymentNotificationService.TARGET_FRAGMENT);
+        String fragmentToOpen = getIntent().getStringExtra(TARGET_FRAGMENT);
 
         if (fragmentToOpen != null && fragmentToOpen.equals(PaymentFragment.class.getSimpleName())) {
             presenter.showPaymentFragment();

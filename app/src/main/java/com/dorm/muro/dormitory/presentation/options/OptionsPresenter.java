@@ -78,7 +78,7 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
     }
 
     void onChangePersonalDataClicked() {
-        int[] hints = new int[]{R.string.settings_cardholder_name, R.string.settings_card_number, R.string.settings_card_date, R.string.settings_confirm_password};
+        int[] hints = new int[]{R.string.settings_cardholder_name, R.string.settings_card_number_hint, R.string.settings_card_date, R.string.settings_confirm_password};
         String[] values = new String[]{preferences.getString(CARDHOLDER_NAME, ""), preferences.getString(CARD_NUMBER, ""), "", ""};
         if (preferences.contains(CARD_MONTH) && preferences.contains(CARD_YEAR)) {
             values[2] = String.format("%s/%s", preferences.getString(CARD_MONTH, ""), preferences.getString(CARD_YEAR, ""));
