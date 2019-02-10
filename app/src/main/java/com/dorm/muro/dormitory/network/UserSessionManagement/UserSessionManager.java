@@ -15,28 +15,22 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import io.reactivex.subjects.PublishSubject;
 
 import static com.dorm.muro.dormitory.Constants.*;
 
 
 public class UserSessionManager {
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
 
-    private static UserSessionManager instance;
-
-    private UserSessionManager() {
+    @Inject
+    public UserSessionManager(FirebaseAuth mAuth, DatabaseReference mDatabase) {
+        this.mAuth = mAuth;
+        this.mDatabase = mDatabase;
     }
-
-    public static UserSessionManager getInstance() {
-        if (instance == null) {
-            instance = new UserSessionManager();
-        }
-        return instance;
-    }
-
-    //todo inject
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
     public Task<AuthResult> authenticate(String email, String password) {
         return mAuth.signInWithEmailAndPassword(email, password);

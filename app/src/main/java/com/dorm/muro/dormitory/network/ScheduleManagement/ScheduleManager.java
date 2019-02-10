@@ -15,25 +15,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import io.reactivex.subjects.PublishSubject;
 
 import static com.dorm.muro.dormitory.Constants.*;
 
-public class ScheduleManagement {
-
-    private static ScheduleManagement instance;
+public class ScheduleManager {
     private DatabaseReference mDatabase;
 
-    private ScheduleManagement() {
-    }
-
-
-    public static ScheduleManagement getInstance() {
-        if (instance == null) {
-            instance = new ScheduleManagement();
-            instance.mDatabase = FirebaseDatabase.getInstance().getReference();
-        }
-        return instance;
+    @Inject
+    public ScheduleManager(DatabaseReference mDatabase) {
+        this.mDatabase = mDatabase;
     }
 
     public String createRoom(String userKey, String roomNum, String roomId) {

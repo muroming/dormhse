@@ -3,12 +3,11 @@ package com.dorm.muro.dormitory.presentation.schedule;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.dorm.muro.dormitory.R;
-import com.dorm.muro.dormitory.network.ScheduleManagement.ScheduleManagement;
+import com.dorm.muro.dormitory.network.ScheduleManagement.ScheduleManager;
 import com.dorm.muro.dormitory.network.UserSessionManagement.UserSessionManager;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -21,6 +20,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
+
+import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -45,8 +46,18 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
     private boolean isEditing = false, isAdding = false;
     private String dutyKey;
 
-    //todo inject
+    // Dependencies
     private SharedPreferences preferences;
+    private UserSessionManager userSessionManager;
+    private ScheduleManager scheduleManager;
+
+    @Inject
+    public ScheduleFragmentPresenter(SharedPreferences preferences, UserSessionManager userSessionManager, ScheduleManager scheduleManager) {
+        this.preferences = preferences;
+        this.userSessionManager = userSessionManager;
+        this.scheduleManager = scheduleManager;
+    }
+
 
     @Override
     protected void onFirstViewAttach() {
@@ -57,8 +68,8 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
 
     void checkUserInRoom() {
         if (!preferences.getBoolean(SIGNED_IN_ROOM, false)) {
-            String userKey = UserSessionManager.getInstance().getCurrentUser().getUid();
-            disposable.add(ScheduleManagement.getInstance().checkIfUserInRoom(userKey)
+            String userKey = userSessionManager.getCurrentUser().getUid();
+            disposable.add(scheduleManager.checkIfUserInRoom(userKey)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(roomKey -> {
@@ -91,13 +102,13 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
 
     void onCreateRoomClicked(String flatNum, String flatId) {
         //todo move all managers to dagger injection
-        disposable.add(ScheduleManagement.getInstance().roomExists(flatId)
+        disposable.add(scheduleManager.roomExists(flatId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(exists -> {
                     if (!exists) {
-                        String userKey = UserSessionManager.getInstance().getCurrentUser().getUid();
-                        String roomKey = ScheduleManagement.getInstance().createRoom(userKey, flatNum, flatId);
+                        String userKey = userSessionManager.getCurrentUser().getUid();
+                        String roomKey = scheduleManager.createRoom(userKey, flatNum, flatId);
 
                         preferences.edit().putBoolean(SIGNED_IN_ROOM, true).apply();
                         preferences.edit().putString(ROOM_KEY, roomKey).apply();
@@ -111,8 +122,8 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
     }
 
     void onJoinRoomClicked(String flatId) {
-        String userKey = UserSessionManager.getInstance().getCurrentUser().getUid();
-        disposable.add(ScheduleManagement.getInstance().joinRoom(userKey, flatId)
+        String userKey = userSessionManager.getCurrentUser().getUid();
+        disposable.add(scheduleManager.joinRoom(userKey, flatId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(res -> {
@@ -241,13 +252,13 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
 
     void saveDuty() {
         String flatKey = preferences.getString(ROOM_KEY, "");
-        String pushKey = ScheduleManagement.getInstance().uploadDuty(flatKey, currentRoom.get(), rangeStartDate, rangeEndDate);
+        String pushKey = scheduleManager.uploadDuty(flatKey, currentRoom.get(), rangeStartDate, rangeEndDate);
 
         writeDutyToPrefs(pushKey, rangeStartDate, rangeEndDate);
     }
 
     void updateDuty() {
-        ScheduleManagement.getInstance().updateDuty(dutyKey, currentRoom.get(), rangeStartDate, rangeEndDate);
+        scheduleManager.updateDuty(dutyKey, currentRoom.get(), rangeStartDate, rangeEndDate);
         preferences.edit().remove(dutyKey).apply();
         writeDutyToPrefs(dutyKey, rangeStartDate, rangeEndDate);
     }
@@ -256,7 +267,7 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
         String dutyKey = preferences.getString(String.valueOf(rangeStartDate.getDate().getTime()), "");
         String roomKey = preferences.getString(ROOM_KEY, "");
 
-        ScheduleManagement.getInstance().removeDuty(roomKey, dutyKey);
+        scheduleManager.removeDuty(roomKey, dutyKey);
         preferences.edit().remove(String.valueOf(rangeStartDate.getDate().getTime())).apply();
     }
 
@@ -300,7 +311,7 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
 
     void loadDuties() {
         String roomKey = preferences.getString(ROOM_KEY, "");
-        ScheduleManagement.getInstance().getFlatDuties(roomKey).addListenerForSingleValueEvent(new ValueEventListener() {
+        scheduleManager.getFlatDuties(roomKey).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 GenericTypeIndicator<HashMap<String, String>> t = new GenericTypeIndicator<HashMap<String, String>>() {
@@ -312,7 +323,7 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
                 }
 
                 for (String dutyKey : duties.values()) {
-                    disposable.add(ScheduleManagement.getInstance().getDutyByKey(dutyKey)
+                    disposable.add(scheduleManager.getDutyByKey(dutyKey)
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(duty -> {
@@ -337,7 +348,7 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
 
     void initScheduleListener() {
         String flatKey = preferences.getString(ROOM_KEY, "");
-        ScheduleManagement.getInstance().getFlatDuties(flatKey).addChildEventListener(this);
+        scheduleManager.getFlatDuties(flatKey).addChildEventListener(this);
     }
 
     @Override
@@ -348,7 +359,7 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
             return;
         }
 
-        disposable.add(ScheduleManagement.getInstance().getDutyByKey(dutyKey)
+        disposable.add(scheduleManager.getDutyByKey(dutyKey)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(duty -> {

@@ -14,26 +14,18 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import io.reactivex.subjects.PublishSubject;
 
 import static com.dorm.muro.dormitory.Constants.*;
 
 public class TodoManager {
-    private static TodoManager instance;
-
-    private TodoManager() {
-    }
-
     private DatabaseReference mDatabase;
 
-    public static TodoManager getInstance() {
-        if (instance == null) {
-            instance = new TodoManager();
-            instance.mDatabase = FirebaseDatabase.getInstance().getReference();
-            instance.mDatabase.keepSynced(true);
-        }
-
-        return instance;
+    @Inject
+    public TodoManager(DatabaseReference mDatabase) {
+        this.mDatabase = mDatabase;
     }
 
     public Task<Void> uploadTodo(TodoItem item) {
