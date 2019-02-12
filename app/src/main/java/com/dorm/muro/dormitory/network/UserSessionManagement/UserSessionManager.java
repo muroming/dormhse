@@ -22,7 +22,7 @@ import io.reactivex.subjects.PublishSubject;
 import static com.dorm.muro.dormitory.Constants.*;
 
 
-public class UserSessionManager {
+public class UserSessionManager implements IUserSessionManager {
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
 

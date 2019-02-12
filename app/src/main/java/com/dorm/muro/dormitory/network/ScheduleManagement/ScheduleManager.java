@@ -21,7 +21,7 @@ import io.reactivex.subjects.PublishSubject;
 
 import static com.dorm.muro.dormitory.Constants.*;
 
-public class ScheduleManager {
+public class ScheduleManager implements IScheduleManager{
     private DatabaseReference mDatabase;
 
     @Inject

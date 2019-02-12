@@ -7,8 +7,8 @@ import android.support.annotation.Nullable;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.dorm.muro.dormitory.R;
-import com.dorm.muro.dormitory.network.ScheduleManagement.ScheduleManager;
-import com.dorm.muro.dormitory.network.UserSessionManagement.UserSessionManager;
+import com.dorm.muro.dormitory.network.ScheduleManagement.IScheduleManager;
+import com.dorm.muro.dormitory.network.UserSessionManagement.IUserSessionManager;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -48,11 +48,11 @@ public class SchedulePresenter extends MvpPresenter<ScheduleFragmentView> implem
 
     // Dependencies
     private SharedPreferences preferences;
-    private UserSessionManager userSessionManager;
-    private ScheduleManager scheduleManager;
+    private IUserSessionManager userSessionManager;
+    private IScheduleManager scheduleManager;
 
     @Inject
-    public SchedulePresenter(SharedPreferences preferences, UserSessionManager userSessionManager, ScheduleManager scheduleManager) {
+    public SchedulePresenter(SharedPreferences preferences, IUserSessionManager userSessionManager, IScheduleManager scheduleManager) {
         this.preferences = preferences;
         this.userSessionManager = userSessionManager;
         this.scheduleManager = scheduleManager;
@@ -96,12 +96,7 @@ public class SchedulePresenter extends MvpPresenter<ScheduleFragmentView> implem
         getViewState().showCalendar();
     }
 
-    void setPreferences(SharedPreferences preferences) {
-        this.preferences = preferences;
-    }
-
     void onCreateRoomClicked(String flatNum, String flatId) {
-        //todo move all managers to dagger injection
         disposable.add(scheduleManager.roomExists(flatId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

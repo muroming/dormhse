@@ -2,15 +2,10 @@ package com.dorm.muro.dormitory.presentation.todo;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
-import com.dorm.muro.dormitory.network.TodoManagement.TodoManager;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.dorm.muro.dormitory.network.TodoManagement.ITodoManager;
 
 import javax.inject.Inject;
 
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -18,10 +13,10 @@ import io.reactivex.schedulers.Schedulers;
 @InjectViewState
 public class TodoPresenter extends MvpPresenter<TodoView> {
     private Disposable loadTodos;
-    private TodoManager mTodoManager;
+    private ITodoManager mTodoManager;
 
     @Inject
-    public TodoPresenter(TodoManager mTodoManager) {
+    public TodoPresenter(ITodoManager mTodoManager) {
         this.mTodoManager = mTodoManager;
     }
 

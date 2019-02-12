@@ -5,7 +5,9 @@ import android.content.SharedPreferences;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.dorm.muro.dormitory.R;
+import com.dorm.muro.dormitory.network.ScheduleManagement.IScheduleManager;
 import com.dorm.muro.dormitory.network.ScheduleManagement.ScheduleManager;
+import com.dorm.muro.dormitory.network.UserSessionManagement.IUserSessionManager;
 import com.dorm.muro.dormitory.network.UserSessionManagement.UserSessionManager;
 
 import java.util.HashMap;
@@ -28,11 +30,11 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
     private String mail, cardholderName, contract, userName;
     private int cardNum;
     private boolean notifications;
-    private UserSessionManager mUserSessionManager;
-    private ScheduleManager mScheduleManager;
+    private IUserSessionManager mUserSessionManager;
+    private IScheduleManager mScheduleManager;
 
     @Inject
-    public OptionsPresenter(SharedPreferences preferences, UserSessionManager mUserSessionManager, ScheduleManager mScheduleManager) {
+    public OptionsPresenter(SharedPreferences preferences, IUserSessionManager mUserSessionManager, IScheduleManager mScheduleManager) {
         this.preferences = preferences;
         this.mUserSessionManager = mUserSessionManager;
         this.mScheduleManager = mScheduleManager;

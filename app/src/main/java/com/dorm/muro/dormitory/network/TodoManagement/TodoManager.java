@@ -8,7 +8,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
@@ -20,7 +19,7 @@ import io.reactivex.subjects.PublishSubject;
 
 import static com.dorm.muro.dormitory.Constants.*;
 
-public class TodoManager {
+public class TodoManager implements ITodoManager {
     private DatabaseReference mDatabase;
 
     @Inject

@@ -146,9 +146,6 @@ public class ScheduleFragment extends MvpAppCompatFragment implements ScheduleFr
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        //todo inject
-        SharedPreferences preferences = getContext().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        presenter.setPreferences(preferences);
         View view = inflater.inflate(R.layout.fragment_schedule, container, false);
         ButterKnife.bind(this, view);
 

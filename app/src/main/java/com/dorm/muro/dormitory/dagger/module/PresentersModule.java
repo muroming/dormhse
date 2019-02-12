@@ -3,9 +3,9 @@ package com.dorm.muro.dormitory.dagger.module;
 import android.content.SharedPreferences;
 
 import com.dorm.muro.dormitory.dagger.scopes.PresentersScope;
-import com.dorm.muro.dormitory.network.ScheduleManagement.ScheduleManager;
-import com.dorm.muro.dormitory.network.TodoManagement.TodoManager;
-import com.dorm.muro.dormitory.network.UserSessionManagement.UserSessionManager;
+import com.dorm.muro.dormitory.network.ScheduleManagement.IScheduleManager;
+import com.dorm.muro.dormitory.network.TodoManagement.ITodoManager;
+import com.dorm.muro.dormitory.network.UserSessionManagement.IUserSessionManager;
 import com.dorm.muro.dormitory.presentation.login.LoginPresenter;
 import com.dorm.muro.dormitory.presentation.options.OptionsPresenter;
 import com.dorm.muro.dormitory.presentation.payment.PaymentPresenter;
@@ -21,27 +21,27 @@ public class PresentersModule {
     @Provides
     @PresentersScope
     SchedulePresenter provideSchedulePresenter(SharedPreferences preferences,
-                                                       UserSessionManager userSessionManager, ScheduleManager scheduleManager) {
+                                               IUserSessionManager userSessionManager, IScheduleManager scheduleManager) {
         return new SchedulePresenter(preferences, userSessionManager, scheduleManager);
     }
 
     @Provides
     @PresentersScope
-    TodoPresenter provideTodoPresenter(TodoManager todoManager) {
+    TodoPresenter provideTodoPresenter(ITodoManager todoManager) {
         return new TodoPresenter(todoManager);
     }
 
     @Provides
     @PresentersScope
     LoginPresenter provideLoginPresenter(SharedPreferences preferences,
-                                         UserSessionManager userSessionManager) {
+                                         IUserSessionManager userSessionManager) {
         return new LoginPresenter(userSessionManager, preferences);
     }
 
     @Provides
     @PresentersScope
     OptionsPresenter provideOptionPresenter(SharedPreferences preferences,
-                                            UserSessionManager userSessionManager, ScheduleManager scheduleManager) {
+                                            IUserSessionManager userSessionManager, IScheduleManager scheduleManager) {
         return new OptionsPresenter(preferences, userSessionManager, scheduleManager);
     }
 

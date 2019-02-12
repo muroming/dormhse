@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.dorm.muro.dormitory.R;
+import com.dorm.muro.dormitory.network.UserSessionManagement.IUserSessionManager;
 import com.dorm.muro.dormitory.network.UserSessionManagement.UserSessionManager;
 import com.google.firebase.FirebaseNetworkException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -25,12 +26,12 @@ import static com.dorm.muro.dormitory.Constants.*;
 @InjectViewState
 public class LoginPresenter extends MvpPresenter<LoginView> {
 
-    private UserSessionManager mUserSessionmanager;
+    private IUserSessionManager mUserSessionmanager;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private SharedPreferences preferences;
 
     @Inject
-    public LoginPresenter(UserSessionManager mUserSessionmanager, SharedPreferences preferences) {
+    public LoginPresenter(IUserSessionManager mUserSessionmanager, SharedPreferences preferences) {
         this.mUserSessionmanager = mUserSessionmanager;
         this.preferences = preferences;
     }
