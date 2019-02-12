@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -16,9 +18,15 @@ import io.reactivex.schedulers.Schedulers;
 @InjectViewState
 public class TodoPresenter extends MvpPresenter<TodoView> {
     private Disposable loadTodos;
+    private TodoManager mTodoManager;
+
+    @Inject
+    public TodoPresenter(TodoManager mTodoManager) {
+        this.mTodoManager = mTodoManager;
+    }
 
     void loadTodos() {
-        loadTodos = TodoManager.getInstance().loadTodos()
+        loadTodos = mTodoManager.loadTodos()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(item -> {
@@ -34,12 +42,19 @@ public class TodoPresenter extends MvpPresenter<TodoView> {
         getViewState().showTodoDialog(item);
     }
 
-    void finishTodo(int position) {
+    void finishTodo(TodoItem item, int position) {
         getViewState().removeItemAt(position);
+
+
+        mTodoManager.removeTodo(item);
+        mTodoManager.unassignTask(item);
     }
 
     void returnTodo(TodoItem item, int position) {
         getViewState().returnItem(item, position);
+
+        mTodoManager.uploadTodo(item);
+        mTodoManager.assignTask(item);
     }
 
     void pinTodo(TodoItem item) {
@@ -50,7 +65,7 @@ public class TodoPresenter extends MvpPresenter<TodoView> {
             item.setPinned(true);
             getViewState().pinItem(item);
         }
-        TodoManager.getInstance().updateTodo(item);
+        mTodoManager.updateTodo(item);
     }
 
     @Override

@@ -22,8 +22,13 @@ import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.dorm.muro.dormitory.R;
+import com.dorm.muro.dormitory.dagger.Injector;
 import com.dorm.muro.dormitory.presentation.login.LoginActivity;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +40,14 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
 
     @InjectPresenter
     OptionsPresenter presenter;
+
+    @Inject
+    OptionsPresenter presenterProvider;
+
+    @ProvidePresenter
+    OptionsPresenter providePresenter() {
+        return presenterProvider;
+    }
 
     private AlertDialog dialog;
 
@@ -57,10 +70,15 @@ public class OptionsFragment extends MvpAppCompatFragment implements OptionsView
     TextView userName;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        Injector.getInstance().getPresenterComponent().inject(this);
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_options, container, false);
         ButterKnife.bind(this, v);
-        presenter.setPreferences(getActivity().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE));
         return v;
     }
 

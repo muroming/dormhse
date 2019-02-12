@@ -11,5 +11,5 @@ import dagger.Component;
     AppModule.class
 })
 public interface AppComponent {
-    PresentersComponent getPresentersComponent();
+    FirebaseComponent plusFirebaseComponent();
 }

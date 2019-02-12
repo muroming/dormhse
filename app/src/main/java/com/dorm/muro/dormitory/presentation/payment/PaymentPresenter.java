@@ -8,15 +8,16 @@ import com.dorm.muro.dormitory.R;
 
 import java.util.Calendar;
 
+import javax.inject.Inject;
+
 import static com.dorm.muro.dormitory.Constants.*;
 
 @InjectViewState
 public class PaymentPresenter extends MvpPresenter<PaymentView> {
-
-    //todo inject
     private SharedPreferences preferences;
 
-    void setPreferences(SharedPreferences preferences) {
+    @Inject
+    public PaymentPresenter(SharedPreferences preferences) {
         this.preferences = preferences;
     }
 

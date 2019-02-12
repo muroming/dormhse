@@ -3,6 +3,9 @@ package com.dorm.muro.dormitory.dagger;
 import android.content.Context;
 
 import com.dorm.muro.dormitory.dagger.component.AppComponent;
+import com.dorm.muro.dormitory.dagger.component.DaggerAppComponent;
+import com.dorm.muro.dormitory.dagger.component.FirebaseComponent;
+import com.dorm.muro.dormitory.dagger.component.ManagersComponent;
 import com.dorm.muro.dormitory.dagger.component.PresentersComponent;
 import com.dorm.muro.dormitory.dagger.module.AppModule;
 
@@ -13,30 +16,35 @@ import static com.dorm.muro.dormitory.Constants.SHARED_PREFERENCES;
 public class Injector {
     private static Injector mInstance;
     private AppComponent mAppComponent;
+    private ManagersComponent mManagersComponent;
+    private PresentersComponent mPresenterComponent;
 
-    private WeakReference<PresentersComponent> mPresentersComponent;
-
-    private Injector(){
+    private Injector() {
     }
 
     public static void init(Context context) {
-        getInstance().mAppComponent = DaggerAppComponent().builder()
+        mInstance = new Injector();
+        mInstance.mAppComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(context, SHARED_PREFERENCES))
                 .build();
+
+        mInstance.mManagersComponent = mInstance.mAppComponent.plusFirebaseComponent().plusManagersComponent();
+        mInstance.mPresenterComponent = mInstance.mManagersComponent.plusPresentersComponent();
     }
 
     public static Injector getInstance() {
         if (mInstance == null) {
-            mInstance = new Injector();
+            throw new IllegalStateException("Injector's init method wasn't called");
         }
 
         return mInstance;
     }
 
-    public PresentersComponent getScheduleManager() {
-        if (mPresentersComponent.get() == null) {
-            mPresentersComponent = new WeakReference<>(mAppComponent.getPresentersComponent());
-        }
-        return mPresentersComponent.get();
+    public ManagersComponent getManagersComponent() {
+        return mManagersComponent;
+    }
+
+    public PresentersComponent getPresenterComponent() {
+        return mPresenterComponent;
     }
 }

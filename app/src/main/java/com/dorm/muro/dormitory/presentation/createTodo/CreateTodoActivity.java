@@ -13,10 +13,13 @@ import android.widget.Toast;
 
 import com.dorm.muro.dormitory.Constants;
 import com.dorm.muro.dormitory.R;
+import com.dorm.muro.dormitory.dagger.Injector;
 import com.dorm.muro.dormitory.network.TodoManagement.TodoManager;
 import com.dorm.muro.dormitory.presentation.todo.TodoItem;
 
 import java.util.Date;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,8 +40,12 @@ public class CreateTodoActivity extends AppCompatActivity {
 
     private Date mDeadline;
 
+    @Inject
+    TodoManager mTodoManager;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        Injector.getInstance().getManagersComponent().inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_todo);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -55,8 +62,8 @@ public class CreateTodoActivity extends AppCompatActivity {
                 if (chechTodo()) {
                     String todoTitle = mTodoTitle.getText().toString(), todoDescription = mTodoDescription.getText().toString();
                     TodoItem todoItem = new TodoItem(todoTitle, todoDescription, mDeadline);
-                    TodoManager.getInstance().uploadTodo(todoItem);
-                    TodoManager.getInstance().assignTask(todoItem);
+                    mTodoManager.uploadTodo(todoItem);
+                    mTodoManager.assignTask(todoItem);
 
                     Intent todoData = new Intent();
                     todoData.putExtra(TODO_SERIALIZED, todoItem);

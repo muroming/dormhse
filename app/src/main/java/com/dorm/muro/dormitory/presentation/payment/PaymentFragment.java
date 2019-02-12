@@ -27,10 +27,15 @@ import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.dorm.muro.dormitory.R;
+import com.dorm.muro.dormitory.dagger.Injector;
 
 import java.util.Calendar;
 import java.util.Random;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -65,11 +70,15 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
     @BindView(R.id.tv_payment_contract)
     TextView mPaymentContract;
 
-
+    @Inject
     @InjectPresenter
     PaymentPresenter presenter;
 
-    private SharedPreferences preferences;
+    @ProvidePresenter
+    PaymentPresenter providePaymentPresenter() {
+        return presenter;
+    }
+
     private String[] progressTitles;
 
 
@@ -77,6 +86,11 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        Injector.getInstance().getPresenterComponent().inject(this);
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -84,8 +98,6 @@ public class PaymentFragment extends MvpAppCompatFragment implements PaymentView
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_payment, container, false);
         ButterKnife.bind(this, view);
-        preferences = getActivity().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        presenter.setPreferences(preferences);
         presenter.loadInfo();
         progressTitles = getResources().getStringArray(R.array.payment_progress);
 

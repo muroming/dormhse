@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 
+import com.dorm.muro.dormitory.dagger.Injector;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class App extends Application {
@@ -17,6 +18,7 @@ public class App extends Application {
         createNotificationChannel();
 
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        Injector.init(getApplicationContext());
     }
 
     private void createNotificationChannel() {

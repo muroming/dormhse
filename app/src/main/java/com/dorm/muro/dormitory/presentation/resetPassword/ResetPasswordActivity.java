@@ -7,9 +7,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.dorm.muro.dormitory.R;
+import com.dorm.muro.dormitory.dagger.Injector;
 import com.dorm.muro.dormitory.network.UserSessionManagement.UserSessionManager;
 import com.dorm.muro.dormitory.presentation.main.MainActivity;
 import com.google.firebase.FirebaseNetworkException;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,8 +25,12 @@ public class ResetPasswordActivity extends AppCompatActivity {
     @BindView(R.id.et_new_password_repeat)
     EditText mNewPasswordRepeat;
 
+    @Inject
+    UserSessionManager mUserSessionManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Injector.getInstance().getManagersComponent().inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
         setTitle(R.string.activity_reset_password);
@@ -48,7 +55,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
             showToast(R.string.reset_pass_not_watch);
             return;
         }
-        UserSessionManager.getInstance().updateUserPassword(password).addOnCompleteListener(reset -> {
+        mUserSessionManager.updateUserPassword(password).addOnCompleteListener(reset -> {
            if(reset.isSuccessful()) {
                Toast.makeText(this, getString(R.string.reset_pass_successful), Toast.LENGTH_SHORT).show();
                MainActivity.start(this);

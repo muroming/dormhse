@@ -25,18 +25,29 @@ import android.widget.Toast;
 import com.arellomobile.mvp.MvpAppCompatFragment;
 
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.dorm.muro.dormitory.R;
+import com.dorm.muro.dormitory.dagger.Injector;
 import com.dorm.muro.dormitory.network.TodoManagement.TodoManager;
 import com.dorm.muro.dormitory.presentation.createTodo.CreateTodoActivity;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
+
 import static com.dorm.muro.dormitory.Constants.*;
 
 public class TodoFragment extends MvpAppCompatFragment implements TodoView, TodoAdapter.OnTodoClicked, TodoItemTouchHelper.TodoItemTouchHelperListener {
 
+    @Inject
     @InjectPresenter
     TodoPresenter presenter;
+
+    @ProvidePresenter
+    TodoPresenter providePresenter() {
+        return presenter;
+    }
 
     private TodoAdapter adapter;
     private FrameLayout rootLayout;
@@ -46,6 +57,7 @@ public class TodoFragment extends MvpAppCompatFragment implements TodoView, Todo
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Injector.getInstance().getPresenterComponent().inject(this);
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         presenter.loadTodos();
@@ -153,17 +165,10 @@ public class TodoFragment extends MvpAppCompatFragment implements TodoView, Todo
     @Override
     public void onSwipe(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         lastDeleted = adapter.getTodoItem(position);
-        presenter.finishTodo(position);
+        presenter.finishTodo(lastDeleted, position);
         Snackbar snackbar = Snackbar.make(rootLayout, R.string.todo_done, Snackbar.LENGTH_SHORT);
 
-        TodoManager.getInstance().removeTodo(lastDeleted);
-        TodoManager.getInstance().unassignTask(lastDeleted);
-
-        snackbar.setAction(R.string.cancel, v -> {
-            presenter.returnTodo(lastDeleted, position);
-            TodoManager.getInstance().uploadTodo(lastDeleted);
-            TodoManager.getInstance().assignTask(lastDeleted);
-        });
+        snackbar.setAction(R.string.cancel, v -> presenter.returnTodo(lastDeleted, position));
         snackbar.show();
     }
 

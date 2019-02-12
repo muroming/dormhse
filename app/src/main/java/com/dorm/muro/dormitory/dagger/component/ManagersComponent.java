@@ -1,19 +1,19 @@
 package com.dorm.muro.dormitory.dagger.component;
 
-import com.dorm.muro.dormitory.dagger.module.FirebaseModule;
 import com.dorm.muro.dormitory.dagger.module.ManagersModule;
-import com.dorm.muro.dormitory.network.ScheduleManagement.ScheduleManager;
-import com.dorm.muro.dormitory.network.TodoManagement.TodoManager;
-import com.dorm.muro.dormitory.network.UserSessionManagement.UserSessionManager;
+import com.dorm.muro.dormitory.dagger.scopes.ManagersScope;
+import com.dorm.muro.dormitory.presentation.createTodo.CreateTodoActivity;
+import com.dorm.muro.dormitory.presentation.main.MainActivity;
+import com.dorm.muro.dormitory.presentation.resetPassword.ResetPasswordActivity;
 
-import javax.inject.Singleton;
 
-import dagger.Component;
+import dagger.Subcomponent;
 
-@Singleton
-@Component(modules = {ManagersModule.class, FirebaseModule.class})
+@ManagersScope
+@Subcomponent(modules = ManagersModule.class)
 public interface ManagersComponent {
-    UserSessionManager providesUserSessionManager();
-    ScheduleManager providesScheduleManager();
-    TodoManager providesTodoManager();
+    PresentersComponent plusPresentersComponent();
+    void inject(ResetPasswordActivity activity);
+    void inject(MainActivity activity);
+    void inject(CreateTodoActivity activity);
 }

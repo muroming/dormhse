@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
 import io.reactivex.disposables.CompositeDisposable;
 
 import static com.dorm.muro.dormitory.Constants.*;
@@ -23,12 +25,19 @@ import static com.dorm.muro.dormitory.Constants.*;
 @InjectViewState
 public class LoginPresenter extends MvpPresenter<LoginView> {
 
+    private UserSessionManager mUserSessionmanager;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private SharedPreferences preferences;
 
+    @Inject
+    public LoginPresenter(UserSessionManager mUserSessionmanager, SharedPreferences preferences) {
+        this.mUserSessionmanager = mUserSessionmanager;
+        this.preferences = preferences;
+    }
+
     void onSignInClicked(String login, String password) {
         getViewState().showProgressDialog(R.string.sign_in_progress);
-        UserSessionManager.getInstance().authenticate(login, password)
+        mUserSessionmanager.authenticate(login, password)
                 .addOnCompleteListener(authentication -> {
                     getViewState().hideProgressDialog();
                     if (authentication.isSuccessful()) {
@@ -45,10 +54,6 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
                         }
                     }
                 });
-    }
-
-    void setPreferences(SharedPreferences preferences) {
-        this.preferences = preferences;
     }
 
     void registerNextScreen() {
@@ -70,7 +75,7 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
 
     void finishRegistration(String email, String password, String name, String surname, String patronymic, String contractId) {
         getViewState().showProgressDialog(R.string.confirming_registration_progress_title);
-        UserSessionManager.getInstance().registerNewUser(email, password).addOnCompleteListener(registration -> {
+        mUserSessionmanager.registerNewUser(email, password).addOnCompleteListener(registration -> {
             if (registration.isSuccessful()) {
                 Map<String, Object> initialValues = new HashMap<>(3);
                 initialValues.put(USER_NAME_FIELD, name);
@@ -78,7 +83,7 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
                 initialValues.put(USER_PATRONYMIC_FIELD, patronymic);
                 initialValues.put(USER_CONTRACT_ID_FIELD, contractId);
 
-                UserSessionManager.getInstance().updateUserField(initialValues).addOnCompleteListener(
+                mUserSessionmanager.updateUserField(initialValues).addOnCompleteListener(
                         initialization -> {
                             if (initialization.isSuccessful()) {
                                 getViewState().hideProgressDialog();
@@ -116,7 +121,7 @@ public class LoginPresenter extends MvpPresenter<LoginView> {
 
         if (pattern.matcher(mail).find()) {  // Check if email matches pattern. If true, proceed, else show warning
             getViewState().showProgressDialog(R.string.sending_restore_email_progress_title);
-            UserSessionManager.getInstance().sendRestoreEmail(mail).addOnCompleteListener(task -> {
+            mUserSessionmanager.sendRestoreEmail(mail).addOnCompleteListener(task -> {
                 getViewState().hideProgressDialog();
                 getViewState().showForgotEmailCallback(task.isSuccessful(), mail);
             });

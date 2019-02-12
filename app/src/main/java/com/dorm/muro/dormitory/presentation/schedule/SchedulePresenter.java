@@ -30,7 +30,7 @@ import io.reactivex.schedulers.Schedulers;
 import static com.dorm.muro.dormitory.Constants.*;
 
 @InjectViewState
-public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView> implements ChildEventListener {
+public class SchedulePresenter extends MvpPresenter<ScheduleFragmentView> implements ChildEventListener {
 
     // Calendar State
     private ScheduleCell rangeStartDate;
@@ -52,7 +52,7 @@ public class ScheduleFragmentPresenter extends MvpPresenter<ScheduleFragmentView
     private ScheduleManager scheduleManager;
 
     @Inject
-    public ScheduleFragmentPresenter(SharedPreferences preferences, UserSessionManager userSessionManager, ScheduleManager scheduleManager) {
+    public SchedulePresenter(SharedPreferences preferences, UserSessionManager userSessionManager, ScheduleManager scheduleManager) {
         this.preferences = preferences;
         this.userSessionManager = userSessionManager;
         this.scheduleManager = scheduleManager;

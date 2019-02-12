@@ -7,9 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.constraint.Group;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.AlarmManagerCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.text.SpannableString;
@@ -21,9 +19,8 @@ import android.view.animation.AnimationUtils;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.dorm.muro.dormitory.dagger.Injector;
 import com.dorm.muro.dormitory.network.UserSessionManagement.UserSessionManager;
-import com.dorm.muro.dormitory.paymentnotifications.PaymentNotificationReciever;
-import com.dorm.muro.dormitory.paymentnotifications.PaymentNotificationService;
 import com.dorm.muro.dormitory.presentation.options.OptionsFragment;
 import com.dorm.muro.dormitory.presentation.payment.PaymentFragment;
 import com.dorm.muro.dormitory.R;
@@ -31,6 +28,8 @@ import com.dorm.muro.dormitory.presentation.login.LoginActivity;
 import com.dorm.muro.dormitory.presentation.schedule.ScheduleFragment;
 import com.dorm.muro.dormitory.presentation.todo.TodoFragment;
 
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,6 +53,9 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
     @InjectPresenter
     MainActivityPresenter presenter;
 
+    @Inject
+    UserSessionManager mUserSerssion;
+
     @BindView(R.id.splash)
     View mSplashGroup;
 
@@ -61,17 +63,17 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
     BottomNavigationView navigation;
 
     @BindView(R.id.vp_main_framgent_pager)
-    ViewPager mViewPager;
+    CustomViewPager mViewPager;
 
     private ActionBar mBar;
-
     private Disposable userLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Injector.getInstance().getManagersComponent().inject(this);
         super.onCreate(savedInstanceState);
 
-        if (UserSessionManager.getInstance().getCurrentUser() == null) {
+        if (mUserSerssion.getCurrentUser() == null) {
             startActivity(getTargetIntent(LoginActivity.class));
             finish();
             return;
@@ -110,7 +112,7 @@ public class MainActivity extends MvpAppCompatActivity implements MainActivityVi
 
         SharedPreferences preferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
 
-        userLoading = UserSessionManager.getInstance().getUserInfo()
+        userLoading = mUserSerssion.getUserInfo()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(info -> {

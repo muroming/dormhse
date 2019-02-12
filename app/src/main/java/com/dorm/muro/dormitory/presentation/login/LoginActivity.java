@@ -22,8 +22,13 @@ import android.widget.ViewFlipper;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
+import com.dorm.muro.dormitory.dagger.Injector;
 import com.dorm.muro.dormitory.presentation.main.MainActivity;
 import com.dorm.muro.dormitory.R;
+
+import javax.inject.Inject;
+import javax.inject.Provider;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,8 +38,14 @@ import static com.dorm.muro.dormitory.Constants.*;
 
 public class LoginActivity extends MvpAppCompatActivity implements LoginView {
 
+    @Inject
     @InjectPresenter
     LoginPresenter presenter;
+
+    @ProvidePresenter
+    LoginPresenter providePresenter() {
+        return presenter;
+    }
 
     private enum FlipDir {NEXT, PREV}
 
@@ -82,11 +93,10 @@ public class LoginActivity extends MvpAppCompatActivity implements LoginView {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        Injector.getInstance().getPresenterComponent().inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
         ButterKnife.bind(this);
-
-        presenter.setPreferences(getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE));
 
         //Setting flipping animations
         mViewFlipper.setInAnimation(this, R.anim.slide_in_from_right);

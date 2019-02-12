@@ -11,6 +11,8 @@ import com.dorm.muro.dormitory.network.UserSessionManagement.UserSessionManager;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import static com.dorm.muro.dormitory.Constants.*;
 
 
@@ -22,11 +24,19 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
     private static final int PERSONAL = 4;
     private static final int NAME = 5;
 
-    //TODO inject preferences
     private SharedPreferences preferences;
     private String mail, cardholderName, contract, userName;
     private int cardNum;
     private boolean notifications;
+    private UserSessionManager mUserSessionManager;
+    private ScheduleManager mScheduleManager;
+
+    @Inject
+    public OptionsPresenter(SharedPreferences preferences, UserSessionManager mUserSessionManager, ScheduleManager mScheduleManager) {
+        this.preferences = preferences;
+        this.mUserSessionManager = mUserSessionManager;
+        this.mScheduleManager = mScheduleManager;
+    }
 
     @Override
     protected void onFirstViewAttach() {
@@ -55,7 +65,7 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
 
     void onExitClicked() {
         preferences.edit().clear().apply();
-        UserSessionManager.getInstance().logout();
+        mUserSessionManager.logout();
         getViewState().proceedToLoginScreen();
     }
 
@@ -116,13 +126,13 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
         if (pass.equals(preferences.getString(USER_PASSWORD, null))) {
             switch (code) {
                 case PASSWORD: {
-                    UserSessionManager.getInstance().updateUserPassword(newInfo[0]);
+                    mUserSessionManager.updateUserPassword(newInfo[0]);
 
                     preferences.edit().putString(USER_PASSWORD, newInfo[0]).apply();
                     break;
                 }
                 case EMAIL: {
-                    UserSessionManager.getInstance().updateUserEmail(newInfo[0]);
+                    mUserSessionManager.updateUserEmail(newInfo[0]);
                     mail = newInfo[0];
                     preferences.edit().putString(USER_EMAIL, newInfo[0]).apply();
                     break;
@@ -130,7 +140,7 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
                 case CONTRACT: {
                     Map<String, Object> upd = new HashMap<>(2);
                     upd.put(USER_CONTRACT_ID_FIELD, newInfo[0]);
-                    UserSessionManager.getInstance().updateUserField(upd);
+                    mUserSessionManager.updateUserField(upd);
                     contract = newInfo[0];
 
                     preferences.edit().putString(CONTRACT_ID, newInfo[0])
@@ -167,12 +177,12 @@ public class OptionsPresenter extends MvpPresenter<OptionsView> {
     }
 
     void exitRoom() {
-        String userKey = UserSessionManager.getInstance().getCurrentUser().getUid();
+        String userKey = mUserSessionManager.getCurrentUser().getUid();
         String roomKey = preferences.getString(ROOM_KEY, "");
         preferences.edit().putBoolean(SIGNED_IN_ROOM, false).apply();
 
         if (!roomKey.isEmpty()) {
-            ScheduleManager.getInstance().leaveRoom(userKey, roomKey);
+            mScheduleManager.leaveRoom(userKey, roomKey);
             preferences.edit().remove(ROOM_KEY).apply();
         }
         getViewState().closeDialog();
